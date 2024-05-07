@@ -1,0 +1,71 @@
+.Main {
+
+}
+
+.Main-logo {
+
+  /*
+  Design image logo later
+  */
+
+  width: auto;
+  max-width: 150px;
+  pointer-events: none;
+  margin-right: 20px;
+  align-items: center;
+
+}
+
+.Main-title{
+  font-size: 50px; 
+  float: right;
+  text-align: center;
+  align-items: center;
+
+}
+
+.Main-login{
+  max-width: 100px;
+  border: none;
+  background-color: #83acc8;
+  color: white;
+  align-items: top;
+
+
+}
+
+.Main-login,
+.Main-title,
+.Main-login{
+  flex: 1;
+}
+
+
+
+@media (prefers-reduced-motion: no-preference) {
+  .Main-logo {
+    animation: Main-logo-spin infinite 20s linear;
+  }
+}
+
+.Main-header {
+  background-color: #eccdbb;
+  display: flex;
+  flex-direction: row;
+  align-content: stretch;
+
+
+}
+
+.Main-link {
+  color: #61dafb;
+}
+
+.Main-body {
+  text-align: center;
+  align-items: center;
+
+
+}
+
+
