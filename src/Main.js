@@ -4,7 +4,7 @@ import logo from './assets/capy.png'
 
 function Main() {
   return (
-    <div className="Main">
+    <div className="w-screen">
       <header className="Main-header">
         <img src={logo} className="Main-logo" alt="logo"/>
 
