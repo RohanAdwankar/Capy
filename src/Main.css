@@ -2,46 +2,154 @@
 @tailwind components;
 @tailwind utilities;
 
-.Main {
 
+
+
+
+
+
+
+/* container */
+.left-sidebar {
+  display:flex;
+  flex-wrap:wrap;
+}
+
+/* columns */
+.left-sidebar > * {
+  width:100%;
+  padding:1rem;
+}
+
+/* tablet breakpoint */
+@media (min-width:768px) {
+  .left-sidebar > *:nth-child(1) {
+      width: 60%;
+      order: 2;
+  }
+  .left-sidebar > *:nth-child(2) {
+      width: 25%;
+      order: 1;
+  }
+  .left-sidebar > *:nth-child(3) {
+      width: 15%;
+      order: 3;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+MAIN HEADER
+
+
+
+*/
+
+
+.Main-header {
+  display: flex;
+  background-color: white;
+  align-content: stretch;
+  max-width: 400px;
+
+}
+.Main-header > * {
+  width: 100%;
 }
 
 .Main-logo {
 
-  /*
-  Design image logo later
-  */
-
+  height: 25%;
   width: auto;
-  max-width: 150px;
   pointer-events: none;
-  margin-right: 20px;
-  align-items: center;
+  align-items: top;
+  border-radius: 200px;
 
+}
+
+
+
+
+.Header-options{
+  display: flex;
+  flex-direction: column;
 }
 
 .Main-title{
-  font-size: 50px; 
-  float: right;
-  text-align: center;
-  align-items: center;
+  text-align: left;
+
+}
+.Title{
+  font-size: 35px;
+  font-family: 'roboto slab';
+  font-weight: bold;
+  line-height: 35px;
+}
+.Motto{
+  font-size: 15px;
+  font-family: 'roboto slab';
 
 }
 
-.Main-login{
+
+
+
+
+.Main-buttons{
+
+  display:flex;
+  flex-direction: column;
+  max-width: 300px;
+  color: black;
+  font-size: 30px;
+  font-family: 'roboto slab';
+
+}
+.All-Events{
+  text-align: left;
+  width: fit-content;
+  color: black;
+  
+
+}
+.My-Events{
+  text-align: left;
+  width: fit-content;
+  color: #787ce5;
+}
+.Groups{
+  text-align: left;
+  width: fit-content;
+  color: #787ce5;
+}
+.Friends{
+  text-align: left;
+  width: fit-content;
+  color: #787ce5;
+}
+.Profile{
+  text-align: left;
+  width: fit-content;
+  color: #787ce5;
+}
+
+
+
+.Main-profile{
+
   max-width: 100px;
-  border: none;
-  background-color: #83acc8;
-  color: white;
-  align-items: top;
 
-
-}
-
-.Main-login,
-.Main-title,
-.Main-login{
-  flex: 1;
 }
 
 
@@ -52,18 +160,19 @@
   }
 }
 
-.Main-header {
-  background-color: #eccdbb;
-  display: flex;
-  flex-direction: row;
-  align-content: stretch;
 
 
-}
 
-.Main-link {
-  color: #61dafb;
-}
+
+
+
+
+/*
+
+MAIN BODY
+
+
+*/
 
 .Main-body {
   text-align: center;
@@ -72,4 +181,60 @@
 
 }
 
+.Body-Header{
+  text-align: left;
+  color: black;
+  font-weight: bold;
+  font-size: 40px;
+  padding-top: 100px;
 
+}
+
+
+
+
+
+
+
+/*
+
+PROFILE
+
+*/
+
+
+
+
+.Main-profile{
+  display: flex;
+  background-color: white;
+  align-content: right;
+  max-width: 15%;
+  
+}
+
+.Profile-name{
+  text-align: right;
+  padding-right: 20px;
+  font-size: 20px;
+  color: black;
+
+}
+.Sign-Out{
+  text-align: right;
+  width: fit-content;
+  font-size: 10px;
+  float: right;
+  padding-right: 20px;
+  color: #787ce5;
+
+}
+.Profile-Img{
+
+    height: 20%;
+    width: auto;
+    align-items: top;
+    border-radius: 300px;
+    
+
+}
