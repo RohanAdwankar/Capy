@@ -105,11 +105,11 @@ h5,
 h6,.roboto-slab {
   font-size: inherit;
   font-weight: inherit;
-  font-family: "Roboto Slab", serif;
+  font-family: "Roboto Slab", serif !important;
 }
 
 p,a,span {
-  font-family: "Inter", sans-serif;
+  font-family: "Inter", sans-serif !important;
 }
 
 /*
