@@ -215,7 +215,7 @@ PROFILE
 
 .Profile-name{
   text-align: right;
-  padding-right: 20px;
+  padding-right: 10px;
   font-size: 20px;
   color: black;
 
@@ -225,16 +225,15 @@ PROFILE
   width: fit-content;
   font-size: 10px;
   float: right;
-  padding-right: 20px;
+  padding-right: 10px;
   color: #787ce5;
 
 }
 .Profile-Img{
 
-    height: 20%;
+    height: 50px;
     width: auto;
-    align-items: top;
-    border-radius: 300px;
+    border-radius: 50%;
     
 
 }

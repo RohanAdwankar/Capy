@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Roboto+Slab:wght@100..900&display=swap');
+
 /*
 ! tailwindcss v3.4.3 | MIT License | https://tailwindcss.com
 */
@@ -99,9 +102,14 @@ h2,
 h3,
 h4,
 h5,
-h6 {
+h6,.roboto-slab {
   font-size: inherit;
   font-weight: inherit;
+  font-family: "Roboto Slab", serif;
+}
+
+p,a,span {
+  font-family: "Inter", sans-serif;
 }
 
 /*
