@@ -2,8 +2,12 @@ import React, { useEffect, useState } from 'react'
 import './Main.css';
 import logo from './assets/capy.png'
 import profile from './assets/coda.png'
-import Event from "./CreateEvent";
-import Profile from './Profile';
+import Event from "./pages/CreateEvent";
+import Profile from './pages/Profile';
+import Friends from './pages/Friends';
+import Groups from './pages/Groups';
+import MyEvents from './pages/MyEvents';
+import AllEvents from './pages/AllEvents';
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
 function Main() {
@@ -14,7 +18,7 @@ function Main() {
 
   	return (
 		<div className="flex min-h-screen">
-			<div className="flex flex-col h-screen px-10 py-2">
+			<div className="flex flex-col h-screen px-10 py-2 min-w-56">
 				<div className="flex items-center my-5">
 					<img src={logo} alt="Logo" className="w-12 h-auto mr-2 rounded-full" />
 					<div>
@@ -39,10 +43,10 @@ function Main() {
 			{/* main content */}
 			<main className="flex-grow overflow-y-auto p-10 pr-20 pt-20">
 				<Routes>
-					<Route path="/" element={<div>all events</div>}/>
-					<Route path="/my" element={<div>my events</div>}/>
-					<Route path="/groups" element={<div>groups</div>}/>
-					<Route path="/friends" element={<div>friends</div>}/>
+					<Route path="/" element={<AllEvents/>}/>
+					<Route path="/my" element={<MyEvents/>}/>
+					<Route path="/groups" element={<Groups/>}/>
+					<Route path="/friends" element={<Friends/>}/>
 					<Route path="/profile" element={<Profile/>}/>
 					<Route path="/create" element={<Event />}/>
 				</Routes>

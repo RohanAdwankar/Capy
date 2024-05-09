@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 export default function CreateEvent() {
 	return (
-		<div className="place-content-center">
+		<div className="">
 			<h1 className="text-2xl font-bold mb-5">Create a New Event</h1>
 
 			<input type="text" placeholder="Event Title" className="rounded-full bg-gray-100 p-2 pl-5 mb-2"/> <br />
