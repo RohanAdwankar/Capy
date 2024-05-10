@@ -41,15 +41,17 @@ function Main() {
 			</div>
 
 			{/* main content */}
-			<main className="flex-grow overflow-y-auto p-10 pr-20 pt-20">
-				<Routes>
-					<Route path="/" element={<AllEvents/>}/>
-					<Route path="/my" element={<MyEvents/>}/>
-					<Route path="/groups" element={<Groups/>}/>
-					<Route path="/friends" element={<Friends/>}/>
-					<Route path="/profile" element={<Profile/>}/>
-					<Route path="/create" element={<Event />}/>
-				</Routes>
+			<main className="flex-grow overflow-y-auto p-10">
+				<div className="flex justify-center"> 
+					<Routes>
+						<Route path="/" element={<AllEvents/>}/>
+						<Route path="/my" element={<MyEvents/>}/>
+						<Route path="/groups" element={<Groups/>}/>
+						<Route path="/friends" element={<Friends/>}/>
+						<Route path="/profile" element={<Profile/>}/>
+						<Route path="/create" element={<Event />}/>
+					</Routes>
+				</div>
 			</main>
 
 			{/* floating top right section */}
