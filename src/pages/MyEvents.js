@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
-export default function MyEvents() {
+export default function MyEvents({ title }) {
 	return (
-		<div className="place-content-center">
-			<h1 className="text-2xl font-bold mb-5">Your Events</h1>
+		<div className="">
+			<h1 className="text-2xl font-bold mb-5 justify-self-center">{title}</h1>
 
 			<div className="flex items-center my-5">
 				<p>Create an event or click "Pull Up" to an event to see it show up here.</p>
