@@ -8,9 +8,19 @@ import Friends from "./pages/Friends";
 import Groups from "./pages/Groups";
 import MyEvents from "./pages/MyEvents";
 import AllEvents from "./pages/AllEvents";
+import Loading from "./Loading";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
 function Main() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading for 2 seconds
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  }, []);
+
   const location = useLocation();
   const navigate = useNavigate();
   const boldNavClass = (path) =>
@@ -20,7 +30,11 @@ function Main() {
   const [title, setTitle] = useState("INSERT TITLE HERE");
 
   return (
-    <div className="flex min-h-screen">
+    <div className="App">
+      {isLoading ? (
+        <Loading />
+      ) : (
+      <div className="flex min-h-screen">
       <div className="flex flex-col h-screen px-10 py-2 min-w-56">
         <div className="flex items-center my-5">
           <img
@@ -120,6 +134,11 @@ function Main() {
         </div>
         <img src={profile} className="Profile-Img" alt="Profile" />
       </div>
+    </div>
+
+
+      )}
+
     </div>
   );
 }
