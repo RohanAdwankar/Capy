@@ -1,10 +1,10 @@
 import React from 'react';
+import Lottie from 'react-lottie';
 
 function Loading() {
   return (
     <div className="loading">
         Testing
-      {/* Your loading animation or message */}
     </div>
   );
 }
