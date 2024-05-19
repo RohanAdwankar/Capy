@@ -18,7 +18,7 @@ function Main() {
     // Simulate loading for 2 seconds
     setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, 4000);
   }, []);
 
   const location = useLocation();
