@@ -31,3 +31,5 @@ const Post = ({title, content}) => {
 
     );
 };
+
+export default Post;
