@@ -32,7 +32,7 @@ function Main() {
   return (
     <div className="App">
       {isLoading ? (
-        <Loading />
+        <center><Loading /></center>
       ) : (
       <div className="flex min-h-screen">
       <div className="flex flex-col h-screen px-10 py-2 min-w-56">
