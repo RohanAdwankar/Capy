@@ -34,9 +34,9 @@ function Main() {
       {isLoading ? (
         <Loading />
       ) : (
-      <div className="flex min-h-screen">
-      <div className="flex flex-col h-screen px-10 py-2 min-w-56">
-        <div className="flex items-center my-5">
+      <div className="flex min-h-screen bg-gradient-to- from-orange-200 to-transparent">
+      <div className="flex flex-col h-screen px-10 py-2 min-w-56 bg-gradient-to-t from-orange-100 to-transparent">
+        <div className="flex items-center my-5 ">
           <img
             src={logo}
             alt="Logo"
