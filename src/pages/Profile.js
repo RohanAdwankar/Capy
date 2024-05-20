@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import profile from '../assets/coda.png'
-
+import PfpUpload from "./PfpUpload";
 export default function Profile({ title }) {
 	return (
 		<div className="place-content-center">
@@ -10,14 +10,9 @@ export default function Profile({ title }) {
 				<img src={profile} alt="Profile" className="w-24 h-auto m-5 rounded-full"/>
 				<div>
 					<h1 className="text-xl font-bold">Ur Mom</h1>
-					<button className="text-blue-400">Change profile picture</button>
+					<PfpUpload/>
 				</div>
 			</div>
-
-
-            <p>
-
-            </p>
 		</div>
 	);
 }
