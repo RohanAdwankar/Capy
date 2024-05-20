@@ -18,7 +18,7 @@ function Main() {
     // Simulate loading for 2 seconds
     setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, 4000);
   }, []);
 
   const location = useLocation();
@@ -32,7 +32,7 @@ function Main() {
   return (
     <div className="App">
       {isLoading ? (
-        <Loading />
+        <center><Loading /></center>
       ) : (
       <div className="flex min-h-screen bg-gradient-to- from-orange-200 to-transparent">
       <div className="flex flex-col h-screen px-10 py-2 min-w-56 bg-gradient-to-t from-orange-100 to-transparent">
