@@ -9,16 +9,22 @@ import Groups from "./pages/Groups";
 import MyEvents from "./pages/MyEvents";
 import AllEvents from "./pages/AllEvents";
 import Loading from "./Loading";
+import SignIn from "./pages/SignIn";
+import SignOut from "./pages/Signout";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
 function Main() {
+  const [isSignedin, setSignedin] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    setSignedin(true);
+  }, [])
   useEffect(() => {
     // Simulate loading for 2 seconds
     setTimeout(() => {
       setIsLoading(false);
-    }, 4000);
+    }, 2000);
   }, []);
 
   const location = useLocation();
@@ -120,6 +126,8 @@ function Main() {
             <Route path="/friends" element={<Friends />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/create" element={<Event />} />
+            <Route path="/signin" element={<SignIn />}  />
+            <Route path="/signout" element={<SignOut/>} />
           </Routes>
         </div>
       </main>
@@ -127,10 +135,38 @@ function Main() {
       {/* floating top right section */}
       <div className="fixed top-0 right-0 flex items-center p-5">
         <div className="p-0 m-0">
-          <h1 className="Profile-name">Ur Mom</h1>
-          <button type="button" className="Sign-Out" variant="contained">
-            Sign Out
-          </button>
+
+          {isSignedin ? (
+            <div>
+              <h1 className="Profile-name">Ur Mom</h1>
+              <button type="button" variant="contained"
+                
+                onClick={() => {
+                  navigate("/signout");
+                  setTitle("Sign Out");
+                }}
+                className={boldNavClass("/signout")}>
+                Sign Out
+              </button>
+            </div>
+            ) : (
+              <div>
+                <h1 className="Profile-name">Guest</h1>
+                <button type="button" variant="contained"
+                
+                onClick={() => {
+                  navigate("/signin");
+                  setTitle("Sign In");
+                }}
+                className={boldNavClass("/signin")}>
+                  Sign In
+                </button>
+                
+              </div>
+            )
+          }
+
+
         </div>
         <img src={profile} className="Profile-Img" alt="Profile" />
       </div>

@@ -240,7 +240,16 @@ PROFILE
 .Sign-Out{
   text-align: right;
   width: fit-content;
-  font-size: 10px;
+  font-size: 12px;
+  float: right;
+  padding-right: 10px;
+  color: #787ce5;
+
+}
+.Sign-In{
+  text-align: right;
+  width: fit-content;
+  font-size: 12px;
   float: right;
   padding-right: 10px;
   color: #787ce5;
