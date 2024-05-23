@@ -12,14 +12,14 @@ import Loading from "./Loading";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
 function Main() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    // Simulate loading for 2 seconds
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-  }, []);
+  // useEffect(() => {
+  //   // Simulate loading for 2 seconds
+  //   setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 2000);
+  // }, []);
 
   const location = useLocation();
   const navigate = useNavigate();
