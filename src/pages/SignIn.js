@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import "./SignIn.css";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { store } from "../Main.js";
 
 
 export default function SignIn() {
 
+
+	const [isSignedIn, setSignedIn] = store.useState("signedIn", {default: false});
 
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -21,7 +24,16 @@ export default function SignIn() {
 			<input type="checkbox" className="Remember-Me"></input>
 			Remember me?
 			<br />
-			<button className="Sign-In-Button">Sign in</button>
+			<button
+				onClick={() => {
+
+					setSignedIn(true);
+					navigate("/");
+
+				}}
+
+			
+			className="Sign-In-Button">Sign in</button>
 			<br />
 			<br />
 			<div>

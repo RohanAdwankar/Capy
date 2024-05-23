@@ -11,16 +11,21 @@ import AllEvents from "./pages/AllEvents";
 import Loading from "./Loading";
 import SignIn from "./pages/SignIn";
 import SignOut from "./pages/SignOut";
-import SignUp from "./pages/SignUp"
+import SignUp from "./pages/SignUp";
+import { createStore, useGlobalState } from 'state-pool';
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
+
+const store = createStore({"signedIn" : false});
+
+
 function Main() {
-  const [isSignedin, setSignedin] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSignedIn, setSignedIn] = store.useState("signedIn", {default: false});
 
   useEffect(() => {
-    setSignedin(false);
-  }, [])
+    setSignedIn(false);
+  }, []);
   useEffect(() => {
     // Simulate loading for 2 seconds
     setTimeout(() => {
@@ -137,8 +142,7 @@ function Main() {
       {/* floating top right section */}
       <div className="fixed top-0 right-0 flex items-center p-5">
         <div className="p-0 m-0">
-
-          {isSignedin ? (
+          {isSignedIn ? (
             <div>
               <h1 className="Profile-name">Ur Mom</h1>
               <button type="button" variant="contained"
@@ -146,7 +150,9 @@ function Main() {
                 onClick={() => {
                   navigate("/signout");
                   setTitle("Sign Out");
+                  setSignedIn(false);
                 }}
+
                 className={boldNavClass("/signout")}>
                 Sign Out
               </button>
@@ -181,4 +187,5 @@ function Main() {
   );
 }
 
+export { store };
 export default Main;
