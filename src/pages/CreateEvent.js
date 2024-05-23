@@ -10,14 +10,14 @@ export default function CreateEvent() {
 	});
 
 	function handleEventSubmission() {
-		axios.get("/api/createEvent", {
-			method: "POST",
+		axios.post("/api/createEvent", eventData, {
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify(eventData),
 		}).then((res) => {
 			console.log(res);
+		}).catch((error) => {
+			console.error('Error:', error);
 		});
 	}
 

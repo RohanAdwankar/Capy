@@ -15,12 +15,6 @@ db.once('open', () => {
     console.log('Connected to the database');
 });
 
-app.use(express.static(path.join(__dirname, '..', 'build')));
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
-});
-
-
 app.post('/api/createEvent', (req, res) => {
     const user = {
         user: req.body.user,
@@ -31,6 +25,12 @@ app.post('/api/createEvent', (req, res) => {
     };
     res.send('Event created');
 });
+
+app.use(express.static(path.join(__dirname, '..', 'build')));
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
+});
+
 
 // Start the server
 app.listen(port, () => {
