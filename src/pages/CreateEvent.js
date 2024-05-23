@@ -29,18 +29,7 @@ export default function CreateEvent() {
 	const inputFieldClass = "rounded-full bg-gray-100 p-2 pl-5 mb-2"
 
 	return (
-<<<<<<< HEAD
-		<div className="flex items-center my-5">
-			<div>
-				<input type="text" placeholder="Event Title" className="rounded-full bg-gray-100 p-2 pl-5 mb-2"/> <br />
-				<input type="text" placeholder="Event Location" className="rounded-full bg-gray-100 p-2 pl-5 mb-2"/> <br />
-				<input type="text" placeholder="Joe mama london" className="rounded-full bg-gray-100 p-2 pl-5 mb-2" /> <br />
-				<button className="bg-black text-white rounded-full p-2 px-5 mt-10">Create Event</button>
-			</div>
-=======
-		<div className="">
-			<h1 className="text-2xl font-bold mb-5">Create a New Event</h1>
-
+		<div className="mt-5">
 			{!submitted ? (
 				<>
 					<input type="text" placeholder="What you doing?" className={inputFieldClass} onChange={(event)=> 
@@ -66,7 +55,6 @@ export default function CreateEvent() {
 					}>Create Another Event</button>
 				</p>
 			)}
->>>>>>> server
 		</div>
 	);
 }
