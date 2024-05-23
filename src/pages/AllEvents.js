@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 
-export default function MyEvents({ title }) {
+export default function AllEvents() {
 	return (
 		<div className="flex justify-center items-center h-full">
-			<h1 className="text-2xl font-bold mb-5 pr-8">{ title}</h1>
+			<div className="flex items-center my-5">
+				<p>This is where you will see all events.</p>
+			</div>
 		</div>
 	);
 }

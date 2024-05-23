@@ -10,7 +10,7 @@ import MyEvents from "./pages/MyEvents";
 import AllEvents from "./pages/AllEvents";
 import Loading from "./Loading";
 import SignIn from "./pages/SignIn";
-import SignOut from "./pages/SignOut";
+import SignOut from "./pages/Signout";
 import SignUp from "./pages/SignUp";
 import { createStore, useGlobalState } from 'state-pool';
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
@@ -39,7 +39,15 @@ function Main() {
     "text-left ml-5 my-1 " +
     (location.pathname === path ? "font-bold" : "font-light text-sky-400");
   const setPage = (path) => () => navigate(path);
-  const [title, setTitle] = useState("INSERT TITLE HERE");
+  const [title, setTitle] = useState("All Events");
+
+  const pages = {
+    "/": { title: "All Events" },
+    "/my": { title: "My Events" },
+    "/groups": { title: "Groups" },
+    "/friends": { title: "Friends" },
+    "/profile": { title: "Profile" },
+  };
 
   return (
     <div className="App">
@@ -63,55 +71,25 @@ function Main() {
         </div>
 
         {/* navigation */}
-        <button
-          onClick={() => {
-            navigate("/");
-            setTitle("All Events");
-          }}
-          className={boldNavClass("/")}
-        >
-          All Events
-        </button>
-        <button
-          onClick={() => {
-            navigate("/my");
-            setTitle("My Events");
-          }}
-          className={boldNavClass("/my")}
-        >
-          My Events
-        </button>
-        <button
-          onClick={() => {
-            navigate("/groups");
-            setTitle("Groups");
-          }}
-          className={boldNavClass("/groups")}
-        >
-          Groups
-        </button>
-        <button
-          onClick={() => {
-            navigate("/friends");
-            setTitle("Friends");
-          }}
-          className={boldNavClass("/friends")}
-        >
-          Friends
-        </button>
-        <button
-          onClick={() => {
-            navigate("/profile");
-            setTitle("Profile");
-          }}
-          className={boldNavClass("/profile")}
-        >
-          Profile
-        </button>
+        {Object.keys(pages).map((path) => (
+          <button
+            key={path}
+            onClick={() => {
+              setTitle(pages[path].title);
+              navigate(path);
+            }}
+            className={boldNavClass(path)}
+          >
+            {pages[path].title}
+          </button>
+        ))}
 
         {location.pathname !== "/create" ? (
           <button
-            onClick={setPage("/create")}
+            onClick={() => {
+              setTitle("Create Event");
+              navigate("/create");
+            }}
             className="mt-auto px-4 py-2 bg-black text-white rounded-full mb-5"
           >
             New Event
