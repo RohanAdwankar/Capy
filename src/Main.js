@@ -20,6 +20,7 @@ const store = createStore({"signedIn" : false});
 
 
 function Main() {
+<<<<<<< HEAD
   const [isLoading, setIsLoading] = useState(true);
   const [isSignedIn, setSignedIn] = store.useState("signedIn", {default: false});
 
@@ -32,6 +33,16 @@ function Main() {
       setIsLoading(false);
     }, 2000);
   }, []);
+=======
+  const [isLoading, setIsLoading] = useState(false);
+
+  // useEffect(() => {
+  //   // Simulate loading for 2 seconds
+  //   setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 2000);
+  // }, []);
+>>>>>>> server
 
   const location = useLocation();
   const navigate = useNavigate();
