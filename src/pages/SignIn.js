@@ -1,16 +1,38 @@
 import React, { useState } from "react";
+import "./SignIn.css";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+
 
 export default function SignIn() {
+
+
+	const location = useLocation();
+	const navigate = useNavigate();
 	return (
 		<div className="">
 
             <div>
                                        
             </div>
+			<br />
 			<input type="text" placeholder="Username" className="rounded-full bg-gray-100 p-2 pl-5 mb-2"/> <br />
-			<input type="text" placeholder="Password" className="rounded-full bg-gray-100 p-2 pl-5 mb-2"/> <br />
-
-			<button className="bg-black text-white rounded-full p-2 px-5 mt-10">Sign in</button>
+			<input type="text" placeholder="Password" className="rounded-full bg-gray-100 p-2 pl-5 mb-2"/>
+			<br />
+			<input type="checkbox" className="Remember-Me"></input>
+			Remember me?
+			<br />
+			<button className="Sign-In-Button">Sign in</button>
+			<br />
+			<br />
+			<div>
+			New here?
+			</div>
+			<button type="button" variant="contained"
+                
+                onClick={() => {
+                  navigate("/signup");
+                }}
+                className="Sign-Up-Button">Sign Up Here</button>
 			
 		</div>
 	);

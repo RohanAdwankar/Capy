@@ -10,7 +10,8 @@ import MyEvents from "./pages/MyEvents";
 import AllEvents from "./pages/AllEvents";
 import Loading from "./Loading";
 import SignIn from "./pages/SignIn";
-import SignOut from "./pages/Signout";
+import SignOut from "./pages/SignOut";
+import SignUp from "./pages/SignUp"
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
 function Main() {
@@ -18,7 +19,7 @@ function Main() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setSignedin(true);
+    setSignedin(false);
   }, [])
   useEffect(() => {
     // Simulate loading for 2 seconds
@@ -128,6 +129,7 @@ function Main() {
             <Route path="/create" element={<Event />} />
             <Route path="/signin" element={<SignIn />}  />
             <Route path="/signout" element={<SignOut/>} />
+            <Route path="/signup" element={<SignUp/>} />
           </Routes>
         </div>
       </main>
