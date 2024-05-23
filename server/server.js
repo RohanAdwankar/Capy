@@ -16,7 +16,7 @@ db.once('open', () => {
 });
 
 app.post('/api/createEvent', (req, res) => {
-    const user = {
+    const event = {
         user: req.body.user,
         title: req.body.title,
         location: req.body.location,
@@ -24,6 +24,29 @@ app.post('/api/createEvent', (req, res) => {
         description: req.body.description,
     };
     res.send('Event created');
+    console.log("Someone created an event:");
+    console.log(event);
+});
+
+app.post('/api/createUser', (req, res) => {
+    const user = {
+        username: req.body.username,
+        password: req.body.password,
+        email: req.body.email,
+    };
+    res.send('User created');
+    console.log("Someone created a user:");
+    console.log(user);
+});
+
+app.post('/api/login', (req, res) => {
+    const user = {
+        username: req.body.username,
+        password: req.body.password,
+    };
+    res.send('User logged in');
+    console.log("Someone logged in:");
+    console.log(user);
 });
 
 app.use(express.static(path.join(__dirname, '..', 'build')));
