@@ -15,6 +15,9 @@ import SignUp from "./pages/SignUp";
 import { createStore, useGlobalState } from 'state-pool';
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
+  
+  
+
 
 const store = createStore({"signedIn" : false});
 
@@ -23,15 +26,18 @@ function Main() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSignedIn, setSignedIn] = store.useState("signedIn", {default: false});
 
+  const handleLoading = () => {
+    setIsLoading(false);
+  }
+
   useEffect(() => {
     setSignedIn(false);
   }, []);
-  useEffect(() => {
-    // Simulate loading for 2 seconds
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-  }, []);
+  
+  useEffect(()=>{
+    window.addEventListener("load",handleLoading);
+    return () => window.removeEventListener("load",handleLoading);
+  },[])
 
   const location = useLocation();
   const navigate = useNavigate();
