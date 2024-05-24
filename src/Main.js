@@ -10,7 +10,7 @@ import MyEvents from "./pages/MyEvents";
 import AllEvents from "./pages/AllEvents";
 import Loading from "./Loading";
 import SignIn from "./pages/SignIn";
-import SignOut from "./pages/Signout";
+import SignOut from "./pages/SignOut";
 import SignUp from "./pages/SignUp";
 import { createStore, useGlobalState } from 'state-pool';
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
