@@ -1,12 +1,15 @@
 import React, { useState } from "react";
+import FriendList from "../components/FriendsList";
 
 export default function Friends() {
 	return (
 		<div className="place-content-center">
 
 			<div className="flex items-center my-5">
-				<p>You have no friends 😹😹😹</p>
+			<h1 className="text-1xl"></h1>
 			</div>
+			<FriendList />
+
 		</div>
 	);
 }
