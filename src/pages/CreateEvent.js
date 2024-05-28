@@ -3,9 +3,10 @@ import axios from "axios";
 
 export default function CreateEvent() {
 	const [eventData, setEventData] = useState({
+		user: "",
 		title: "",
-		time: "",
 		location: "",
+		date: "",
 		description: "",
 	});
 
@@ -13,6 +14,7 @@ export default function CreateEvent() {
 	const [error, setError] = useState(false);
 
 	async function handleEventSubmission() {
+		console.log(eventData)
 		await axios.post("/api/createEvent", eventData, {
 			headers: {
 				"Content-Type": "application/json",

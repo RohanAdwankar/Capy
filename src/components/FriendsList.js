@@ -12,6 +12,13 @@ const FriendList = () => {
     { id: 3, name: 'IU', profilePic: 'IU.jpg', note: '' },
     { id: 3, name: 'IU', profilePic: 'IU.jpg', note: '' },
     { id: 3, name: 'test', profilePic: 'IU.jpg', note: '' },
+    { id: 3, name: 'test', profilePic: 'IU.jpg', note: '' },
+    { id: 3, name: 'test', profilePic: 'IU.jpg', note: '' },
+    { id: 3, name: 'test', profilePic: 'IU.jpg', note: '' },
+    { id: 3, name: 'test', profilePic: 'IU.jpg', note: '' },
+    { id: 3, name: 'test', profilePic: 'IU.jpg', note: '' },
+    { id: 3, name: 'test', profilePic: 'IU.jpg', note: '' },
+    { id: 3, name: 'test', profilePic: 'IU.jpg', note: '' },
 
   ]);
 

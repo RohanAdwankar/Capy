@@ -1,5 +1,15 @@
 https://www.figma.com/design/kdripkLyiSp4eiUnDEpfsL/Capy?node-id=0-1
 
+
+# Add your MONGO_URI
+Create /server/.env and write the following:
+MONGO_URI="your_mongodb_uri"
+
+# To run the server code
+npm run build
+cd server
+node server.js
+
 Is this good enough for the events? Or do we want the scroll system?
 <img width="1462" alt="image" src="https://github.com/RohanAdwankar/Capy/assets/39285979/075b0261-e1ee-4675-a0ea-c1c11b4e1bc9">
 
