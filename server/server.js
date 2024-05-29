@@ -2,7 +2,10 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cors = require('cors');
+
 const dbURI = process.env.MONGO_URI;
+
 console.log(dbURI);
 
 const app = express();
@@ -80,11 +83,23 @@ app.post('/api/login', (req, res) => {
     console.log(user);
 });
 
+//API Endpoint
+app.use(cors());
+app.use(express.json());
+
+app.get('/api/events', async (req, res) => {
+    try{
+        const events = await Event.find();
+        res.json(events);
+    } catch(err){
+        res.status(500).json({message: err.message})
+    }
+});
+
 app.use(express.static(path.join(__dirname, '..', 'build')));
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
 });
-
 
 // Start the server
 app.listen(port, () => {

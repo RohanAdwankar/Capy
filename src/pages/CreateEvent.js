@@ -41,7 +41,7 @@ export default function CreateEvent() {
 						setEventData({...eventData, location: event.target.value})
 					}}/> <br />
 					<input type="text" placeholder="When?" className={inputFieldClass} onChange={(event) => {
-						setEventData({...eventData, time: event.target.value})
+						setEventData({...eventData, date: event.target.value})
 					}}/> <br />
 
 					<button className="bg-black text-white rounded-full p-2 px-5 mt-10" onClick={handleEventSubmission}>Create Event</button>
