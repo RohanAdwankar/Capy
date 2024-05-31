@@ -1,31 +1,65 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cors = require('cors');
+
+const dbURI = process.env.MONGO_URI;
+
+console.log(dbURI);
 
 const app = express();
 const port = process.env.PORT || 3007;
 const path = require('path');
 
+const userSchema = new mongoose.Schema({
+    username: String,
+    password: String,
+    email: String,
+});
+
+const eventSchema = new mongoose.Schema({
+    user: String,
+    title: String,
+    location: String,
+    date: Date,
+    description: String,
+    datePosted: Date,
+});
+
+const User = mongoose.model('User', userSchema);
+const Event = mongoose.model('Event', eventSchema);
+
 // Middleware
 app.use(bodyParser.json());
 
 const db = mongoose.connection;
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
     console.log('Connected to the database');
 });
 
-app.post('/api/createEvent', (req, res) => {
-    const event = {
-        user: req.body.user,
-        title: req.body.title,
-        location: req.body.location,
-        date: req.body.date,
-        description: req.body.description,
-    };
-    res.send('Event created');
-    console.log("Someone created an event:");
-    console.log(event);
+app.post('/api/createEvent', async (req, res) => {
+    try {
+        const { user, title, location, date, description } = req.body;
+        const datePosted = new Date();
+        const newEvent = new Event({
+            user,
+            title,
+            location,
+            date,
+            description,
+            datePosted
+        });
+        await newEvent.save();
+        res.status(201).send('Event created');
+        console.log("Someone created an event:");
+        console.log(newEvent);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error creating event');
+    }
 });
 
 app.post('/api/createUser', (req, res) => {
@@ -54,11 +88,23 @@ app.post('/api/login', (req, res) => {
     console.log(user);
 });
 
-app.use(express.static(path.join(__dirname, '..', 'build')));
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
+//API Endpoint
+app.use(cors());
+app.use(express.json());
+
+app.get('/api/events', async (req, res) => {
+    try{
+        const events = await Event.find();
+        res.json(events);
+    } catch(err){
+        res.status(500).json({message: err.message})
+    }
 });
 
+app.use(express.static(path.join(__dirname, '..', 'build')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
+});
 
 // Start the server
 app.listen(port, () => {
