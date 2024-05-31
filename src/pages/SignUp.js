@@ -9,6 +9,7 @@ export default function SignUp() {
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [successMessage, setSuccessMessage] = useState("");
+	const [isValid, setIsValid] = useState(true);
 
 
 	const handleUsernameChange = (event) => {
@@ -33,7 +34,19 @@ export default function SignUp() {
 
 
 	const handleSubmit = (event) => {
+		
 		event.preventDefault();
+
+		const regex = /^[^\s@]+@(?:g\.)?ucla\.edu$/;
+
+		const isValidEmail = regex.test(email);
+		setIsValid(isValidEmail);
+
+		if (!isValid){
+			alert("Invalid email address");
+			return;
+		}
+
 
 		if (password !== confirmPassword){
 			alert("Passwords do not match");
@@ -92,13 +105,13 @@ export default function SignUp() {
 				value={username}
 				onChange={handleUsernameChange}
 			/> <br />
-            <input type="text"
+            <input type="email"
 				placeholder="Email"
 				className="rounded-full bg-gray-100 p-2 pl-5 mb-2"
 				value={email}
 				onChange={handleEmailChange}
 			/>
-            <input type="text"
+            <input type="email"
 				placeholder="Re-enter Email"
 				className="rounded-full bg-gray-100 p-2 pl-5 mb-2"
 				value={confirmEmail}

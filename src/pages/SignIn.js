@@ -12,10 +12,43 @@ import {eye} from 'react-icons-kit/feather/eye'
 
 
 
+
 export default function SignIn() {
 	const [password, setPassword] = useState("");
+	const [username, setUsername] = useState("");
 	const [type, setType] = useState('password');
 	const [icon, setIcon] = useState(eyeOff);
+
+
+	const handleUsernameChange = (event) => {
+
+		setUsername(event.target.value);
+	};
+
+	const handlePasswordChange = (event) => {
+		setPassword(event.target.value);
+	};
+
+	const handleSubmit = (event) =>{
+
+		event.preventDefault();
+
+		const userData = {
+			username: username,
+			password: password
+		}
+
+		fetch('/api/login', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(userData),
+		})
+
+
+	};
+
 
 	const handleToggle = () => {
 		if (type==='password'){
@@ -39,14 +72,19 @@ export default function SignIn() {
                                        
             </div>
 			<br />
-			<input type="text" placeholder="Username" className="rounded-full bg-gray-100 p-2 pl-5 mb-2"/> <br />
+			<input type="text"
+				placeholder="Username"
+				className="rounded-full bg-gray-100 p-2 pl-5 mb-2"
+				value={username}
+				onChange={handleUsernameChange}
+				/> <br />
 			<div className="Password-Input">
 				<input 
 					type={type}
 					name="password"
 					placeholder="Password"
 					value={password}
-					onChange={(e) => setPassword(e.target.value)}
+					onChange={handlePasswordChange}
 					autoComplete="current-password"
 					className="rounded-full bg-gray-100 p-2 pl-5 mb-2"
 				/>
@@ -60,14 +98,7 @@ export default function SignIn() {
 			Remember me?
 			<br />
 			<button
-				onClick={() => {
-
-					setSignedIn(true);
-					navigate("/");
-
-				}}
-
-			
+				onClick={handleSubmit}
 			className="Sign-In-Button">Sign in</button>
 			<br />
 			<br />
