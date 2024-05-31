@@ -18,6 +18,10 @@ export default function SignIn() {
 	const [username, setUsername] = useState("");
 	const [type, setType] = useState('password');
 	const [icon, setIcon] = useState(eyeOff);
+	const [isSignedIn, setSignedIn] = store.useState("signedIn", {default: false});
+
+	const location = useLocation();
+	const navigate = useNavigate();
 
 
 	const handleUsernameChange = (event) => {
@@ -45,6 +49,21 @@ export default function SignIn() {
 			},
 			body: JSON.stringify(userData),
 		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Invalid username or password')
+			}
+			return response.text();
+		})
+		.then(responseText => {
+			console.log(responseText);
+			setSignedIn(true);
+			navigate("/my");
+			
+		})
+		.catch(error => {
+			console.error('Invalid password or username', error);
+		});
 
 
 	};
@@ -61,10 +80,7 @@ export default function SignIn() {
 	 }
 
 
-	const [isSignedIn, setSignedIn] = store.useState("signedIn", {default: false});
 
-	const location = useLocation();
-	const navigate = useNavigate();
 	return (
 		<div className="">
 

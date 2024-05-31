@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const app = express();
-const port = process.env.PORT || 3006;
+const port = process.env.PORT || 3007;
 const path = require('path');
 
 // Middleware
@@ -40,11 +40,16 @@ app.post('/api/createUser', (req, res) => {
 });
 
 app.post('/api/login', (req, res) => {
-    const user = {
-        username: req.body.username,
-        password: req.body.password,
-    };
-    res.send('User logged in');
+    const {username, password} = req.body;
+
+    const user = users.find(u => u.username === username);
+
+    if (!user || user.password !== password) {
+        return res.status(401).json({ error: 'Invalid username or password' });
+    }
+
+
+    res.json({ message: 'Login successful', user: user });
     console.log("Someone logged in:");
     console.log(user);
 });
