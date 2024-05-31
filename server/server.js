@@ -76,7 +76,7 @@ app.post('/api/createUser', (req, res) => {
 app.post('/api/login', (req, res) => {
     const {username, password} = req.body;
 
-    const user = users.find(u => u.username === username);
+    const user = userSchema.find(u => u.username === username);
 
     if (!user || user.password !== password) {
         return res.status(401).json({ error: 'Invalid username or password' });
