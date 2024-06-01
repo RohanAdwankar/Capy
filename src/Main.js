@@ -19,6 +19,36 @@ import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 const store = createStore({"signedIn" : false});
 
 
+
+
+const ProfileName = () => {
+  const [username, setUsername] = useState('');
+
+  useEffect(() => {
+      fetch('/api/profile', {
+          method: 'GET',
+          credentials: 'include', 
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Failed to fetch username');
+          }
+          return response.json();
+      })
+      .then(data => {
+          setUsername(data.username);
+      })
+      .catch(error => {
+          console.error('Error fetching username:', error);
+      });
+  }, []); 
+
+  return (
+      <h1 className="Profile-name">{username}</h1>
+  );
+};
+
+
 function Main() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSignedIn, setSignedIn] = store.useState("signedIn", {default: false});
@@ -122,7 +152,7 @@ function Main() {
         <div className="p-0 m-0">
           {isSignedIn ? (
             <div>
-              <h1 className="Profile-name">Ur Mom</h1>
+              <ProfileName />
               <button type="button" variant="contained"
                 
                 onClick={() => {
