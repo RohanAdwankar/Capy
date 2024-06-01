@@ -37,12 +37,12 @@ export default function SignUp() {
 		
 		event.preventDefault();
 
-		const regex = /^[^\s@]+@(?:g\.)?ucla\.edu$/;
+		const regex = /^[^\s@]+@(?:[a-z]+\.)?ucla\.edu$/;
 
 		const isValidEmail = regex.test(email);
 		setIsValid(isValidEmail);
 
-		if (!isValid){
+		if (isValid){
 			alert("Invalid email address");
 			return;
 		}
@@ -76,18 +76,21 @@ export default function SignUp() {
 		})
 		.then(response => {
 			if (!response.ok) {
-				throw new Error('Failed to create user');
+				return response.json();
 			}
 			return response.text();
-
 		})
-		.then(responseText => {
-			console.log(responseText);
-			setSuccessMessage("Account created successfully!");
-
+		.then(responseData => {
+			if (typeof responseData === 'string') {
+				setSuccessMessage(responseData);
+				alert(responseData);
+			} else {
+				alert(responseData.error);
+			}
 		})
 		.catch(error => {
 			console.error('Error creating user:', error);
+			alert('Failed to create user. Please try again later.');
 		});
 
 	};
@@ -105,13 +108,13 @@ export default function SignUp() {
 				value={username}
 				onChange={handleUsernameChange}
 			/> <br />
-            <input type="email"
+            <input type="text"
 				placeholder="Email"
 				className="rounded-full bg-gray-100 p-2 pl-5 mb-2"
 				value={email}
 				onChange={handleEmailChange}
 			/>
-            <input type="email"
+            <input type="text"
 				placeholder="Re-enter Email"
 				className="rounded-full bg-gray-100 p-2 pl-5 mb-2"
 				value={confirmEmail}
