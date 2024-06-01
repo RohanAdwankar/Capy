@@ -9,7 +9,7 @@ const dbURI = process.env.MONGO_URI;
 console.log(dbURI);
 
 const app = express();
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 3013;
 const path = require('path');
 
 const userSchema = new mongoose.Schema({
@@ -84,25 +84,54 @@ app.post('/api/createEvent', async (req, res) => {
     }
 });
 
-app.post('/api/createUser', (req, res) => {
-    const user = {
-        username: req.body.username,
-        password: req.body.password,
-        email: req.body.email,
-    };
-    res.send('User created');
-    console.log("Someone created a user:");
-    console.log(user);
+app.post('/api/createUser', async (req, res) => {
+
+    try {
+        const {username, password, email} = req.body;
+        
+        const newUser = new User({
+            username,
+            password,
+            email,
+        });
+
+
+        await newUser.save();
+
+
+        res.status(201).send('User created');
+
+        console.log("New user created");
+        console.log(newUser);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error creating user');
+    }
+
+
+
 });
 
-app.post('/api/login', (req, res) => {
-    const user = {
-        username: req.body.username,
-        password: req.body.password,
-    };
-    res.send('User logged in');
-    console.log("Someone logged in:");
-    console.log(user);
+app.post('/api/login', async (req, res) => {
+    const { username, password } = req.body;
+    try {
+
+        const user = await User.findOne({ username });
+
+        if (!user || user.password !== password) {
+            return res.status(401).json({ error: 'Invalid username or password' });
+        }
+
+
+        res.json({ message: 'Login successful', user });
+        console.log("Someone logged in:");
+        console.log(user);
+
+    } catch (error) {
+            console.error(error);
+    }
+
+
 });
 
 app.get('/api/events', async (req, res) => {
