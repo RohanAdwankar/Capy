@@ -52,34 +52,13 @@ const Event = mongoose.model('Event', eventSchema);
 // Middleware
 app.use(bodyParser.json());
 
-//API Endpoint
-
-
-const corsOptions = {
-    origin: (origin, callback) => {
-      const allowedOrigins = [
-        /^http:\/\/localhost:\d{4}$/, // Matches localhost with any 4-digit port number
-        "https://capy-rohanadwankars-projects.vercel.app"
-      ];
-      
-      if (!origin || allowedOrigins.some(pattern => typeof pattern === 'string' ? pattern === origin : pattern.test(origin))) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    }
-  };
-  
-
-app.use(cors(corsOptions));
-app.use(express.json());
-
 const db = mongoose.connection;
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
     console.log('Connected to the database');
 });
+
 
 app.post('/api/createEvent', async (req, res) => {
     try {
@@ -108,8 +87,6 @@ app.post('/api/createEvent', async (req, res) => {
         res.status(500).send('Error creating event');
     }
 });
-
-
 
 app.post('/api/createUser', async (req, res) => {
 
@@ -172,11 +149,30 @@ app.post('/api/login', async (req, res) => {
             return res.status(401).json({ error: 'Invalid username or password' });
         }
     } catch (error) {
-            console.error(error);
+        console.error(error);
+        return res.status(500).send('Error logging in');
     }
-
-
 });
+
+
+app.get('/api/profile', (req, res) => {
+
+    const username = req.session.username;
+    if (username) {
+        res.json({ username });
+    } else {
+        res.status(401).json({ error: 'User not logged in' });
+    }
+});
+
+
+
+
+
+
+
+
+
 
 //API Endpoint
 app.use(cors());
@@ -196,15 +192,7 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
 });
 
-
-
-
-
-
-
-
 // Start the server
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
-
