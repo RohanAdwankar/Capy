@@ -9,7 +9,7 @@ const dbURI = process.env.MONGO_URI;
 console.log(dbURI);
 
 const app = express();
-const port = process.env.PORT || 3013;
+const port = process.env.PORT || 3015;
 const path = require('path');
 
 const userSchema = new mongoose.Schema({
@@ -34,11 +34,18 @@ const Event = mongoose.model('Event', eventSchema);
 app.use(bodyParser.json());
 
 const db = mongoose.connection;
-mongoose.connect(dbURI, { useUnifiedTopology: true });
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
     console.log('Connected to the database');
 });
+
+
+
+
+
+
+
 
 app.post('/api/createEvent', async (req, res) => {
     try {
@@ -61,6 +68,8 @@ app.post('/api/createEvent', async (req, res) => {
         res.status(500).send('Error creating event');
     }
 });
+
+
 
 app.post('/api/createUser', async (req, res) => {
 
@@ -100,6 +109,8 @@ app.post('/api/login', async (req, res) => {
             return res.status(401).json({ error: 'Invalid username or password' });
         }
 
+        req.session.userId = user._id;
+
 
         res.json({ message: 'Login successful', user });
         console.log("Someone logged in:");
@@ -118,12 +129,8 @@ app.use(express.json());
 
 app.get('/api/events', async (req, res) => {
     try{
-
         const events = await Event.find();
-        console.log(events);
-
-        res.status(200).json(events);
-        // res.status(200).send(["you got it"]);
+        res.json(events);
     } catch(err){
         res.status(500).json({message: err.message})
     }
@@ -134,7 +141,15 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
 });
 
+
+
+
+
+
+
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
+
