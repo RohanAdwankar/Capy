@@ -10,6 +10,10 @@
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
 */
 
+.translate-x-full {
+  transform: translateX(100%);
+}
+
 *,
 ::before,
 ::after {
