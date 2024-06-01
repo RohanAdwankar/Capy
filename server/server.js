@@ -9,7 +9,7 @@ const dbURI = process.env.MONGO_URI;
 console.log(dbURI);
 
 const app = express();
-const port = process.env.PORT || 3013;
+const port = process.env.PORT || 3002;
 const path = require('path');
 
 const userSchema = new mongoose.Schema({
@@ -38,19 +38,18 @@ app.use(bodyParser.json());
 
 const corsOptions = {
     origin: (origin, callback) => {
-      const allowedOrigins = [
-        /^http:\/\/localhost:\d{4}$/, // Matches localhost with any 4-digit port number
-        "https://capy-rohanadwankars-projects.vercel.app"
-      ];
-      
-      if (!origin || allowedOrigins.some(pattern => typeof pattern === 'string' ? pattern === origin : pattern.test(origin))) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
+        const allowedOrigins = [
+            /^http:\/\/localhost:\d{4}$/, // Matches localhost with any 4-digit port number
+            "https://capy-rohanadwankars-projects.vercel.app"
+        ];
+        
+        if (!origin || allowedOrigins.some(pattern => typeof pattern === 'string' ? pattern === origin : pattern.test(origin))) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
     }
-  };
-  
+};
 
 app.use(cors(corsOptions));
 app.use(express.json());
