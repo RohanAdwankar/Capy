@@ -34,3 +34,15 @@
 .Remember-Me{
     margin-right: 10px;
 }
+
+.Password-Input{
+    position: relative;
+}
+
+.Icon-Container {
+    position: absolute;
+    top: 15%;
+    right: 35px;
+    transform: translateY(-80%);
+    cursor: pointer;
+}
