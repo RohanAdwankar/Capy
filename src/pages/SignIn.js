@@ -51,7 +51,8 @@ export default function SignIn() {
 		})
 		.then(response => {
 			if (!response.ok) {
-				throw new Error('Invalid username or password')
+				throw new Error('Invalid username or password');
+
 			}
 			return response.text();
 		})
@@ -63,6 +64,7 @@ export default function SignIn() {
 		})
 		.catch(error => {
 			console.error('Invalid password or username', error);
+			alert("Invalid password or username");
 		});
 
 
