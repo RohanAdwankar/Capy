@@ -33,6 +33,28 @@ const Event = mongoose.model('Event', eventSchema);
 // Middleware
 app.use(bodyParser.json());
 
+//API Endpoint
+
+
+const corsOptions = {
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        /^http:\/\/localhost:\d{4}$/, // Matches localhost with any 4-digit port number
+        "https://capy-rohanadwankars-projects.vercel.app"
+      ];
+      
+      if (!origin || allowedOrigins.some(pattern => typeof pattern === 'string' ? pattern === origin : pattern.test(origin))) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    }
+  };
+  
+
+app.use(cors(corsOptions));
+app.use(express.json());
+
 const db = mongoose.connection;
 mongoose.connect(dbURI, { useUnifiedTopology: true });
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -82,10 +104,6 @@ app.post('/api/login', (req, res) => {
     console.log("Someone logged in:");
     console.log(user);
 });
-
-//API Endpoint
-app.use(cors());
-app.use(express.json());
 
 app.get('/api/events', async (req, res) => {
     try{
