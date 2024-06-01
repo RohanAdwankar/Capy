@@ -34,7 +34,7 @@ const Event = mongoose.model('Event', eventSchema);
 app.use(bodyParser.json());
 
 const db = mongoose.connection;
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(dbURI, { useUnifiedTopology: true });
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
     console.log('Connected to the database');
@@ -89,8 +89,12 @@ app.use(express.json());
 
 app.get('/api/events', async (req, res) => {
     try{
+
         const events = await Event.find();
-        res.json(events);
+        console.log(events);
+
+        res.status(200).json(events);
+        // res.status(200).send(["you got it"]);
     } catch(err){
         res.status(500).json({message: err.message})
     }
