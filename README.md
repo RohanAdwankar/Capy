@@ -1,5 +1,10 @@
 https://www.figma.com/design/kdripkLyiSp4eiUnDEpfsL/Capy?node-id=0-1
 
+# To run the thingy (easy)
+```
+chmod +x make.sh
+./make.sh [-b if you need to run build (use this if changes were made on the frontend)]
+```
 
 # Add your MONGO_URI
 Create /server/.env and write the following:

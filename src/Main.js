@@ -49,6 +49,15 @@ function Main() {
     "/profile": { title: "Profile" },
   };
 
+  useEffect(() => {
+    if (pages[location.pathname]) {
+      setTitle(pages[location.pathname].title);
+    }
+    if (location.pathname === "/create") {
+      setTitle("Create Event");
+    }
+  }, [location.pathname])
+
   return (
     <div className="App">
       {isLoading ? (
@@ -64,7 +73,7 @@ function Main() {
           />
           <div>
             <h1 className="text-xl font-bold">Capy</h1>
-            <p className="text-sm text-gray-500 roboto-slab font-light text-black">
+            <p className="text-sm roboto-slab font-light text-black">
               ok i pull up
             </p>
           </div>
