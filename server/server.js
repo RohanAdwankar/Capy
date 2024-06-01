@@ -9,7 +9,7 @@ const dbURI = process.env.MONGO_URI;
 console.log(dbURI);
 
 const app = express();
-const port = process.env.PORT || 3013;
+const port = process.env.PORT || 3002;
 const path = require('path');
 
 const userSchema = new mongoose.Schema({
@@ -67,6 +67,21 @@ app.post('/api/createUser', async (req, res) => {
     try {
         const {username, password, email} = req.body;
         
+        const existingUsername = await User.findOne({ username });
+
+
+        if (existingUsername) {
+            return res.status(400).json({ error: 'Username already exists' });
+        }
+
+        const existingEmail = await User.findOne({ email });
+
+        if (existingEmail) {
+            return res.status(400).json({ error: 'Email already exists' });
+        }
+
+
+
         const newUser = new User({
             username,
             password,
@@ -90,10 +105,11 @@ app.post('/api/createUser', async (req, res) => {
 
 });
 
+
+//Login
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
     try {
-
         const user = await User.findOne({ username });
 
         if (!user || user.password !== password) {
@@ -101,16 +117,16 @@ app.post('/api/login', async (req, res) => {
         }
 
 
+
         res.json({ message: 'Login successful', user });
         console.log("Someone logged in:");
         console.log(user);
 
     } catch (error) {
-            console.error(error);
+        console.error(error);
     }
-
-
 });
+
 
 //API Endpoint
 app.use(cors());

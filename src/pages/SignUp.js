@@ -76,18 +76,21 @@ export default function SignUp() {
 		})
 		.then(response => {
 			if (!response.ok) {
-				throw new Error('Failed to create user');
+				return response.json();
 			}
 			return response.text();
-
 		})
-		.then(responseText => {
-			console.log(responseText);
-			setSuccessMessage("Account created successfully!");
-
+		.then(responseData => {
+			if (typeof responseData === 'string') {
+				setSuccessMessage(responseData);
+				alert(responseData);
+			} else {
+				alert(responseData.error);
+			}
 		})
 		.catch(error => {
 			console.error('Error creating user:', error);
+			alert('Failed to create user. Please try again later.');
 		});
 
 	};
