@@ -9,7 +9,7 @@ const dbURI = process.env.MONGO_URI;
 console.log(dbURI);
 
 const app = express();
-const port = process.env.PORT || 3015;
+const port = process.env.PORT || 3002;
 const path = require('path');
 
 const userSchema = new mongoose.Schema({
@@ -108,8 +108,6 @@ app.post('/api/login', async (req, res) => {
         if (!user || user.password !== password) {
             return res.status(401).json({ error: 'Invalid username or password' });
         }
-
-        req.session.userId = user._id;
 
 
         res.json({ message: 'Login successful', user });

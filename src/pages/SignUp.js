@@ -37,12 +37,12 @@ export default function SignUp() {
 		
 		event.preventDefault();
 
-		const regex = /^[^\s@]+@(?:g\.)?ucla\.edu$/;
+		const regex = /^[^\s@]+@(?:[a-z]+\.)?ucla\.edu$/;
 
 		const isValidEmail = regex.test(email);
 		setIsValid(isValidEmail);
 
-		if (!isValid){
+		if (isValid){
 			alert("Invalid email address");
 			return;
 		}
@@ -105,13 +105,13 @@ export default function SignUp() {
 				value={username}
 				onChange={handleUsernameChange}
 			/> <br />
-            <input type="email"
+            <input type="text"
 				placeholder="Email"
 				className="rounded-full bg-gray-100 p-2 pl-5 mb-2"
 				value={email}
 				onChange={handleEmailChange}
 			/>
-            <input type="email"
+            <input type="text"
 				placeholder="Re-enter Email"
 				className="rounded-full bg-gray-100 p-2 pl-5 mb-2"
 				value={confirmEmail}
