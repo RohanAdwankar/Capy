@@ -2,16 +2,21 @@ import defEventPic from '../assets/defEvent.jpg';
 import React, { useState, useEffect } from 'react';
 //import faCalendarDays from FontAwesomeIcon; 
 
-export default function Event({eventData}){
+export default function Event({eventData, userID}){
   const [likes, setLikes] = useState(0);
   const [showComments, setShowComments] = useState(false);
+  const [userLiked, setUserLiked] = useState(false);
+
 
   const handleCommentClick = () =>{
     setShowComments(!showComments);
   };
 
   const handleLikeClick = () => {
+    if(!userLiked) {
     setLikes(likes+1);
+    setUserLiked(true);
+    }
   };
   
   return (
@@ -30,7 +35,10 @@ export default function Event({eventData}){
         <div className='mt-4'>
           <button
           onClick={handleLikeClick} 
-          className="bg-gray-500 text-white px-4 py-2 rounded mr-2"
+          className={`px-4 py-2 rounded mr-2 ${
+            userLiked ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+          }`}
+          disabled={userLiked}
           >
             like({likes})
             </button>
