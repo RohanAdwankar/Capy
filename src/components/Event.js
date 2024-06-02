@@ -2,7 +2,9 @@ import defEventPic from '../assets/defEvent.jpg';
 import React, { useState, useEffect } from 'react';
 import capy from '../assets/pullupCrop.png';
 import song from '../assets/songCrop.mp3';
-//import faCalendarDays from FontAwesomeIcon; 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCalendarDays, faLocationDot } from '@fortawesome/free-solid-svg-icons'
+
 
 export default function Event({eventData, userID}){
   const [likes, setLikes] = useState(0);
@@ -51,7 +53,8 @@ export default function Event({eventData, userID}){
           />
           <h1 className="text-2xl font-bold">{eventData.title}</h1>
           <h2>{eventData.user}</h2>
-          <p>{eventData.location}, {eventData.date}</p>
+          <p> <FontAwesomeIcon icon={faLocationDot}/> {eventData.location}</p>
+          <p>  <FontAwesomeIcon icon={faCalendarDays} /> {eventData.date} </p>
         </div>
         <img src={eventData.image || defEventPic} alt="Event" className="w-full h-64 object-cover rounded" />
         <p>{eventData.description}</p>
