@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
+import "./profile.css";
+
 
 function PfpUpload() {
   const [imagePreview, setImagePreview] = useState(null);
+  const [uploadedImage, setUploadedImage] = useState(null);
+  const [profilePictureUploaded, setProfilePictureUploaded] = useState(false);
 
-  const handleImageChange = (e) => {
+  
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
 
@@ -13,8 +18,38 @@ function PfpUpload() {
 
     if (file) {
       reader.readAsDataURL(file);
+      setUploadedImage(file);
+    }
+  };
 
-      // TODO: Upload the image to the server
+  const handleUploadButtonClick = async () => {
+    if (!uploadedImage) {
+      console.error('No image uploaded');
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('image', uploadedImage);
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include', 
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to upload profile picture');
+      }
+
+
+
+      console.log('Profile picture uploaded successfully');
+
+
+      setProfilePictureUploaded(true);
+    } catch (error) {
+      console.error('Error uploading profile picture:', error);
     }
   };
 
@@ -22,10 +57,16 @@ function PfpUpload() {
     <div>
       <h2>Upload your Square Profile Picture</h2>
       <input type="file" onChange={handleImageChange} accept="image/*" />
-      {/* TODO: Remove this part when server exists */}
       {imagePreview && (
-        <img src={imagePreview} alt="Preview" style={{ width: '100px', height: '100px' }} className="rounded-full "/>
+        <img src={imagePreview} alt="Preview" style={{ maxWidth: '200px', maxHeight: '200px' }} />
       )}
+      <br></br>
+      <button className="Upload-Image" 
+        onClick={handleUploadButtonClick}
+        variant="contained">
+          Upload Profile Picture
+      </button>
+      {profilePictureUploaded && <div>Profile picture uploaded successfully!</div>}
     </div>
   );
 }
