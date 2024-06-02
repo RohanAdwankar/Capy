@@ -85,7 +85,7 @@ export default function Friends() {
 						<p>No friends found.</p>
 					)
 				) : (
-					<p>You have no friends.</p>
+					<p>Click "Add New Friend" to get more friends.</p>
 				)}
 				</div>
 
