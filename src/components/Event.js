@@ -2,8 +2,9 @@ import defEventPic from '../assets/defEvent.jpeg';
 import React, { useState, useEffect } from 'react';
 import capy from '../assets/pullupCrop.png';
 import song from '../assets/songCrop.mp3';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCalendarDays, faLocationDot } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendarDays, faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import Modal from './PullUpModal';
 
 
 export default function Event({eventData, userID}){
@@ -23,12 +24,12 @@ export default function Event({eventData, userID}){
     }
   };
 
-  let audio = new Audio(song)
+  // let audio = new Audio(song)
 
-  const start = () => {
-    audio.play()
-    console.log("playing")
-  }
+  // const start = () => {
+  //   audio.play()
+  //   console.log("playing")
+  // }
   
   return (
     <div className="bg-white shadow-lg rounded-lg p-4">
@@ -40,7 +41,7 @@ export default function Event({eventData, userID}){
           <button
             onClick={() => {
               setShowAnimation(!showAnimation);
-              start();
+              // start();
             }}
             className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-2 rounded"
           >
@@ -77,6 +78,8 @@ export default function Event({eventData, userID}){
             {showComments ? 'Hide Comments' : 'Show Comments'}
           </button>
         </div>
+
+        <Modal eventData={eventData} showModal={showAnimation} onClose={() => setShowAnimation(false)} />
     </div>
   );
 }
