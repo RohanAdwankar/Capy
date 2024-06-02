@@ -4,7 +4,7 @@ import capy from '../assets/pullupCrop.png';
 import song from '../assets/songCrop.mp3';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendarDays, faLocationDot } from '@fortawesome/free-solid-svg-icons'
-
+// import PullUpButton from './PullUpButton';
 
 export default function Event({eventData, userID}){
   const [likes, setLikes] = useState(0);
@@ -38,7 +38,18 @@ export default function Event({eventData, userID}){
       {isModalOpen ? (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-5 rounded shadow-lg w-3/4 h-3/4 overflow-auto relative">
-            <button onClick={() => setIsModalOpen(false)} className="absolute top-2 right-2 bg-red-500 text-white px-4 py-2 rounded">Close</button>
+            <div className="absolute top-2 right-2">
+              <button onClick={() => setIsModalOpen(false)} className=" bg-red-500 text-white px-4 py-2 rounded">Close</button>
+            </div>
+            <button
+                onClick={() => {
+                  setShowAnimation(!showAnimation);
+                  start();
+                }}
+                className="absolute top-2 right-20 bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                Pull Up
+            </button>
             <h1 className="text-4xl mb-4">{eventData.title}</h1>
             <div className="relative flex items-center mb-4">
               <p> <FontAwesomeIcon icon={faLocationDot}/> {eventData.location}</p>
@@ -46,9 +57,16 @@ export default function Event({eventData, userID}){
               <p>  <FontAwesomeIcon icon={faCalendarDays} /> {eventData.date} </p>
               {/* <img src={user.profilePicture} alt="User" className="w-10 h-10 rounded-full mr-4" />
               <h2 className="text-xl">{user.name}</h2> */}
+
             </div>
             {/* <img src={eventData.picture} alt="Event" className="mb-4" /> */}
-            <button className="bg-blue-500 text-white px-4 py-2 rounded mb-4">Pull Up</button>
+
+          <img
+            src={capy}
+            alt="Animation"
+            className={`object-scale-down h-5 w-5 absolute opacity-0 ${showAnimation ? 'animate-fadeInScaleRotate' : ''}`}
+          />
+            {/* <button className="bg-blue-500 text-white px-4 py-2 rounded mb-4">Pull Up</button> */}
             <p className="mb-4">{eventData.description}</p>
             {/* <div>
               {comments.map(comment => (
@@ -63,10 +81,11 @@ export default function Event({eventData, userID}){
       ) : null}
 
         <div className="relative">
+          {/* <PullUpButton/> */}
         {/* Add the "Pull Up" button */}
-          <button className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-2 rounded">
+          {/* <button className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-2 rounded">
             Pull Up
-          </button>
+          </button> */}
           <button
             onClick={() => {
               setShowAnimation(!showAnimation);
