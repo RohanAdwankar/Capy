@@ -4,7 +4,7 @@ import capy from '../assets/pullupCrop.png';
 import song from '../assets/songCrop.mp3';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendarDays, faLocationDot } from '@fortawesome/free-solid-svg-icons'
-
+// import PullUpButton from './PullUpButton';
 
 export default function Event({eventData, userID}){
   const [likes, setLikes] = useState(0);
@@ -48,6 +48,7 @@ export default function Event({eventData, userID}){
               <h2 className="text-xl">{user.name}</h2> */}
             </div>
             {/* <img src={eventData.picture} alt="Event" className="mb-4" /> */}
+
             <button className="bg-blue-500 text-white px-4 py-2 rounded mb-4">Pull Up</button>
             <p className="mb-4">{eventData.description}</p>
             {/* <div>
@@ -63,10 +64,11 @@ export default function Event({eventData, userID}){
       ) : null}
 
         <div className="relative">
+          {/* <PullUpButton/> */}
         {/* Add the "Pull Up" button */}
-          <button className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-2 rounded">
+          {/* <button className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-2 rounded">
             Pull Up
-          </button>
+          </button> */}
           <button
             onClick={() => {
               setShowAnimation(!showAnimation);
