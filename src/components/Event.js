@@ -1,4 +1,4 @@
-import defEventPic from '../assets/defEvent.jpg';
+import defEventPic from '../assets/defEvent.jpeg';
 import React, { useState, useEffect } from 'react';
 import capy from '../assets/pullupCrop.png';
 import song from '../assets/songCrop.mp3';
@@ -56,7 +56,9 @@ export default function Event({eventData, userID}){
           <p> <FontAwesomeIcon icon={faLocationDot}/> {eventData.location}</p>
           <p>  <FontAwesomeIcon icon={faCalendarDays} /> {eventData.date} </p>
         </div>
-        <img src={eventData.image || defEventPic} alt="Event" className="w-full h-64 object-cover rounded" />
+        <div className="saturate-50 flex justify-between items-center mt-4">
+          <img src={eventData.image || defEventPic} alt="Event" className="w-full h-64 object-cover rounded" />
+        </div>
         <p>{eventData.description}</p>
         <div className='mt-4'>
           <button
