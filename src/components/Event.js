@@ -10,8 +10,10 @@ export default function Event({eventData, userID}){
   const [likes, setLikes] = useState(0);
   const [showComments, setShowComments] = useState(false);
   const [showAnimation, setShowAnimation] = useState(false);
+  const [showPopUpAnimation, setShowPopUpAnimation] = useState(false);
   const [userLiked, setUserLiked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   const handleCommentClick = () =>{
     setShowComments(!showComments);
@@ -43,7 +45,7 @@ export default function Event({eventData, userID}){
             </div>
             <button
                 onClick={() => {
-                  setShowAnimation(!showAnimation);
+                  setShowPopUpAnimation(!showPopUpAnimation);
                   start();
                 }}
                 className="absolute top-2 right-20 bg-blue-500 text-white px-4 py-2 rounded-l"
@@ -64,7 +66,7 @@ export default function Event({eventData, userID}){
           <img
             src={capy}
             alt="Animation"
-            className={`object-scale-down h-5 w-5 absolute opacity-0 ${showAnimation ? 'animate-fadeInScaleRotate' : ''}`}
+            className={`object-scale-down h-5 w-5 absolute opacity-0 ${showPopUpAnimation ? 'animate-fadeInScaleRotate' : ''}`}
           />
             {/* <button className="bg-blue-500 text-white px-4 py-2 rounded mb-4">Pull Up</button> */}
             <p className="mb-4">{eventData.description}</p>
