@@ -83,9 +83,6 @@ app.post('/api/createEvent', async (req, res) => {
         const datePosted = new Date();
         const user = req.session.username;
 
-        console.log("User: ", user)
-        console.log(req.session)
-
         if (!user) {
             return res.status(500).json({ error: 'User not logged in' });
         }
