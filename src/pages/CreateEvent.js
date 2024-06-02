@@ -42,10 +42,10 @@ export default function CreateEvent() {
 		<div className="mt-5">
 			{!submitted ? (
 				<>
-					<input type="text" placeholder="What you doing?" className={inputFieldClass} onChange={(event)=> 
+					<input type="text" placeholder="What are you doing?" className={inputFieldClass} onChange={(event)=> 
 						setEventData({...eventData, title: event.target.value})
 					}/> <br />
-					<input type="text" placeholder="Where it at?" className={inputFieldClass} onChange={(event) => {
+					<input type="text" placeholder="Where is it at?" className={inputFieldClass} onChange={(event) => {
 						setEventData({...eventData, location: event.target.value})
 					}}/> <br />
 					{/* <input type="text" placeholder="When?" className={inputFieldClass} onChange={(event) => {
