@@ -5,6 +5,13 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const session = require('express-session');
 
+const fs = require('fs');
+
+const multer = require('multer');
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } });
+
 
 
 const crypto = require('crypto');
@@ -31,6 +38,8 @@ const userSchema = new mongoose.Schema({
     username: String,
     password: String,
     email: String,
+    profilePicture: Buffer,
+
 });
 
 const eventSchema = new mongoose.Schema({
@@ -128,12 +137,13 @@ app.post('/api/createUser', async (req, res) => {
 
 
 
+        const defaultProfilePicture = fs.readFileSync('./server/assets/capy.png');
         const newUser = new User({
             username,
             password,
             email,
+            profilePicture: defaultProfilePicture,
         });
-
 
         await newUser.save();
 
@@ -163,7 +173,14 @@ app.post('/api/login', async (req, res) => {
         }
 
         if (password === user.password) {
+
+
             req.session.username = username;
+
+           
+            req.session.profilePicture = user.profilePicture;
+
+
             return res.json({ message: 'Login successful', username });
         } else {
             return res.status(401).json({ error: 'Invalid username or password' });
@@ -175,11 +192,21 @@ app.post('/api/login', async (req, res) => {
 });
 
 
-app.get('/api/profile', (req, res) => {
+app.get('/api/profile', async (req, res) => {
 
     const username = req.session.username;
+    
+    const user = await User.findOne({ username });
+
+    if (!user) {
+        return res.status(401).json({ error: 'User does not exist' });
+    }
+
+    const profilePicture = user.profilePicture.toString('base64');;
+
     if (username) {
-        res.json({ username });
+        res.json({ username, profilePicture });
+
     } else {
         res.status(401).json({ error: 'User not logged in' });
     }
@@ -188,6 +215,43 @@ app.get('/api/profile', (req, res) => {
 
 
 
+app.post('/api/upload', upload.single('image'), async (req, res) => {
+    try {
+      // Check if a file was uploaded
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+      }
+  
+      // Access the uploaded file from req.file.buffer
+      const imageBuffer = req.file.buffer;
+  
+      // Get the username of the current user from the session
+      const username = req.session.username;
+      if (!username) {
+        return res.status(401).json({ error: 'User not logged in' });
+      }
+  
+      // Find the user by username
+      const user = await User.findOne({ username });
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      // Update the user's profile picture with the uploaded image buffer
+      user.profilePicture = imageBuffer;
+
+      
+
+  
+      // Save the updated user object to the database
+      await user.save();
+  
+      res.status(200).json({ message: 'Profile picture uploaded successfully' });
+    } catch (error) {
+      console.error('Error uploading profile picture:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
 
 
 

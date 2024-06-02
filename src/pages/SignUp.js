@@ -42,8 +42,8 @@ export default function SignUp() {
 		const isValidEmail = regex.test(email);
 		setIsValid(isValidEmail);
 
-		if (isValid){
-			alert("Invalid email address! Make sure to use your UCLA email address.");
+		if (!isValid){
+			alert("Invalid email address");
 			return;
 		}
 
