@@ -51,31 +51,40 @@ const ProfileName = () => {
 
 
 
-//Get Profile Picture
 const ProfilePicture = () => {
   const [profilePicture, setProfilePicture] = useState('');
 
   useEffect(() => {
-    // Make an API call to fetch the user's profile picture
-    axios.get('/api/profile/picture')
+      fetch('/api/profile', {
+          method: 'GET',
+          credentials: 'include', 
+      })
       .then(response => {
-        // Assuming the response contains the profile picture data in base64 format
-        setProfilePicture(response.data.profilePicture);
+          if (!response.ok) {
+              throw new Error('Failed to fetch Profile Picture');
+          }
+          return response.json();
+      })
+      .then(data => {
+
+
+          setProfilePicture(data.profilePicture);
+
       })
       .catch(error => {
-        console.error('Error fetching profile picture:', error);
+          console.error('Error fetching Profile Picture:', error);
       });
-  }, []);
+  }, []); 
 
   return (
     <div>
-      <h2>User Profile</h2>
-      {profilePicture && (
-        <img src={`data:image/jpeg;base64,${profilePicture}`} alt="Profile Picture" />
-      )}
+
+      <img className="Profile-Img" src={`data:image/jpeg;base64,${profilePicture}`}/>
     </div>
+
   );
-}
+};
+
 
 
 function Main() {
@@ -89,7 +98,7 @@ function Main() {
     // Simulate loading for 2 seconds
     setTimeout(() => {
       setIsLoading(false);
-    }, 4000);
+    }, 1000);
   }, []);
 
   const location = useLocation();

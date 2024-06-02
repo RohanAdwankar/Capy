@@ -8,6 +8,7 @@ const session = require('express-session');
 const fs = require('fs');
 
 const multer = require('multer');
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } });
 
@@ -42,6 +43,7 @@ const userSchema = new mongoose.Schema({
     password: String,
     email: String,
     profilePicture: Buffer,
+
 });
 
 const eventSchema = new mongoose.Schema({
@@ -123,7 +125,6 @@ app.post('/api/createUser', async (req, res) => {
             profilePicture: defaultProfilePicture,
         });
 
-
         await newUser.save();
 
 
@@ -152,7 +153,14 @@ app.post('/api/login', async (req, res) => {
         }
 
         if (password === user.password) {
+
+
             req.session.username = username;
+
+           
+            req.session.profilePicture = user.profilePicture;
+
+
             return res.json({ message: 'Login successful', username });
         } else {
             return res.status(401).json({ error: 'Invalid username or password' });
@@ -164,11 +172,21 @@ app.post('/api/login', async (req, res) => {
 });
 
 
-app.get('/api/profile', (req, res) => {
+app.get('/api/profile', async (req, res) => {
 
     const username = req.session.username;
+    
+    const user = await User.findOne({ username });
+
+    if (!user) {
+        return res.status(401).json({ error: 'User does not exist' });
+    }
+
+    const profilePicture = user.profilePicture.toString('base64');;
+
     if (username) {
-        res.json({ username });
+        res.json({ username, profilePicture });
+
     } else {
         res.status(401).json({ error: 'User not logged in' });
     }
@@ -201,6 +219,9 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
   
       // Update the user's profile picture with the uploaded image buffer
       user.profilePicture = imageBuffer;
+
+      
+
   
       // Save the updated user object to the database
       await user.save();
