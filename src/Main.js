@@ -12,6 +12,7 @@ import Loading from "./Loading";
 import SignIn from "./pages/SignIn";
 import SignOut from "./pages/SignOut";
 import SignUp from "./pages/SignUp";
+import axios from 'axios';
 import { createStore, useGlobalState } from 'state-pool';
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
@@ -20,7 +21,7 @@ const store = createStore({"signedIn" : false});
 
 
 
-
+//Get Profile Username
 const ProfileName = () => {
   const [username, setUsername] = useState('');
 
@@ -47,6 +48,43 @@ const ProfileName = () => {
       <h1 className="Profile-name">{username}</h1>
   );
 };
+
+
+
+const ProfilePicture = () => {
+  const [profilePicture, setProfilePicture] = useState('');
+
+  useEffect(() => {
+      fetch('/api/profile', {
+          method: 'GET',
+          credentials: 'include', 
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Failed to fetch Profile Picture');
+          }
+          return response.json();
+      })
+      .then(data => {
+
+
+          setProfilePicture(data.profilePicture);
+
+      })
+      .catch(error => {
+          console.error('Error fetching Profile Picture:', error);
+      });
+  }, []); 
+
+  return (
+    <div>
+
+      <img className="Profile-Img" src={`data:image/jpeg;base64,${profilePicture}`}/>
+    </div>
+
+  );
+};
+
 
 
 function Main() {
@@ -196,4 +234,5 @@ function Main() {
 }
 
 export { store };
+export { ProfilePicture };
 export default Main;

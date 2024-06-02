@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import profile from '../assets/coda.png'
 import PfpUpload from "./PfpUpload";
 import { store } from "../Main.js";
+import { ProfilePicture } from "../Main.js";
 
 
 
@@ -17,7 +18,7 @@ export default function Profile() {
 				<div className="place-content-center">
 
 					<div className="flex items-center my-5">
-						<img src={profile} alt="Profile" className="w-24 h-auto m-5 rounded-full"/>
+						<ProfilePicture />
 						<div>
 							<h1 className="text-xl font-bold">Ur Mom</h1>
 							<PfpUpload/>
