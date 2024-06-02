@@ -43,7 +43,7 @@ export default function SignUp() {
 		setIsValid(isValidEmail);
 
 		if (isValid){
-			alert("Invalid email address");
+			alert("Invalid email address! Make sure to use your UCLA email address.");
 			return;
 		}
 
@@ -109,7 +109,7 @@ export default function SignUp() {
 				onChange={handleUsernameChange}
 			/> <br />
             <input type="text"
-				placeholder="Email"
+				placeholder="Email (UCLA email)"
 				className="rounded-full bg-gray-100 p-2 pl-5 mb-2"
 				value={email}
 				onChange={handleEmailChange}
