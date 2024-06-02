@@ -39,6 +39,8 @@ const userSchema = new mongoose.Schema({
     password: String,
     email: String,
     profilePicture: Buffer,
+    friends: [{ type: String}],
+    myEvents: [{ type: String}],
 
 });
 
@@ -49,6 +51,7 @@ const eventSchema = new mongoose.Schema({
     date: Date,
     description: String,
     datePosted: Date,
+    people: [{ type: String}],
 });
 
 const User = mongoose.model('User', userSchema);
@@ -135,6 +138,7 @@ app.post('/api/createUser', async (req, res) => {
 
 
         const defaultProfilePicture = fs.readFileSync('./server/assets/capy.png');
+
         const newUser = new User({
             username,
             password,
@@ -143,6 +147,11 @@ app.post('/api/createUser', async (req, res) => {
         });
 
         await newUser.save();
+
+
+        //Call login after successfully signing in
+        req.body = { username, password };
+        await login(req, res);
 
 
         res.status(201).send('User created');
