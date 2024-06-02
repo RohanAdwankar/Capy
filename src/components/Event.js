@@ -48,8 +48,21 @@ export default function Event({eventData, userID}){
               <h2 className="text-xl">{user.name}</h2> */}
             </div>
             {/* <img src={eventData.picture} alt="Event" className="mb-4" /> */}
-
-            <button className="bg-blue-500 text-white px-4 py-2 rounded mb-4">Pull Up</button>
+            <button
+            onClick={() => {
+              setShowAnimation(!showAnimation);
+              start();
+            }}
+            className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Pull Up
+          </button>
+          <img
+            src={capy}
+            alt="Animation"
+            className={`object-scale-down h-5 w-5 absolute opacity-0 ${showAnimation ? 'animate-fadeInScaleRotate' : ''}`}
+          />
+            {/* <button className="bg-blue-500 text-white px-4 py-2 rounded mb-4">Pull Up</button> */}
             <p className="mb-4">{eventData.description}</p>
             {/* <div>
               {comments.map(comment => (
