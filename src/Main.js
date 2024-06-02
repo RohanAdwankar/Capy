@@ -225,7 +225,14 @@ function Main() {
                 )
               }
             </div>
+
+            {isSignedIn ? (
+
+                <ProfilePicture />
+            ) : ( 
             <img src={profile} className="Profile-Img" alt="Profile" />
+            )}
+            
           </div>
         </div>
       )}

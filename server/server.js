@@ -41,6 +41,7 @@ const userSchema = new mongoose.Schema({
     profilePicture: Buffer,
     friends: [{ type: String}],
     myEvents: [{ type: String}],
+    signedUpEvents: [{ type: String}],
 
 });
 
@@ -220,6 +221,33 @@ app.get('/api/profile', async (req, res) => {
 
 
 
+app.get('/api/getUserProfile', async (req, res) => {
+    try {
+        const { username: requestedUsername } = req.query;
+        
+
+        if (!requestedUsername) {
+            return res.status(400).json({ error: 'Username parameter is missing' });
+        }
+
+        const user = await User.findOne({ username: requestedUsername });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const profilePicture = user.profilePicture.toString('base64');
+
+        res.json({ username: user.username, profilePicture });
+    } catch (error) {
+        console.error('Error fetching user profile:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+
+
 
 app.post('/api/upload', upload.single('image'), async (req, res) => {
     try {
@@ -258,6 +286,115 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
     }
   });
+
+
+
+
+  //Add Friend
+  app.post('/api/addFriend', async (req, res) => {
+    try {
+        const { friendUsername } = req.body;
+
+
+        const currentUserUsername = req.session.username;
+        if (!currentUserUsername) {
+            return res.status(401).json({ error: 'User not logged in' });
+        }
+
+        const currentUser = await User.findOne({ username: currentUserUsername });
+        if (!currentUser) {
+            return res.status(404).json({ error: 'Current user not found' });
+        }
+
+
+        // Check if the friend user exists
+        const friendUser = await User.findOne({ username: friendUsername });
+        if (!friendUser) {
+            return res.status(404).json({ error: 'Friend user not found' });
+        }
+
+        // Check if the friend is already in the user's friend list
+        if (currentUser.friends.includes(friendUsername)) {
+            return res.status(400).json({ error: 'Friend already exists in the friend list' });
+        }
+
+        // Add friend to the user's friend list
+        currentUser.friends.push(friendUsername);
+        await currentUser.save();
+
+        res.status(200).json({ message: 'Friend added successfully', friend: friendUsername });
+    } catch (error) {
+        console.error('Error adding friend:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+
+app.post('/api/removeFriend', async (req, res) => {
+    try {
+        const { friendUsername } = req.body;
+
+        const currentUserUsername = req.session.username;
+        if (!currentUserUsername) {
+            return res.status(401).json({ error: 'User not logged in' });
+        }
+
+        const currentUser = await User.findOne({ username: currentUserUsername });
+        if (!currentUser) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Check if the friend user exists
+        const friendUser = await User.findOne({ username: friendUsername });
+        if (!friendUser) {
+            return res.status(404).json({ error: 'Friend user not found' });
+        }
+
+        // Check if the friend is in the user's friend list
+        const friendIndex = currentUser.friends.indexOf(friendUsername);
+        if (friendIndex === -1) {
+            return res.status(400).json({ error: 'Friend not found in friend list' });
+        }
+
+        // Remove friend from the user's friend list
+        currentUser.friends.splice(friendIndex, 1);
+        await currentUser.save();
+
+        res.status(200).json({ message: 'Friend removed successfully', friend: friendUsername });
+    } catch (error) {
+        console.error('Error removing friend:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+
+
+app.get('/api/getFriends', async (req, res) => {
+    try {
+        const currentUserUsername = req.session.username;
+
+        // Check if the current user is logged in
+        if (!currentUserUsername) {
+            return res.status(401).json({ error: 'User not logged in' });
+        }
+
+        // Retrieve the current user from the database
+        const currentUser = await User.findOne({ username: currentUserUsername });
+        if (!currentUser) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Retrieve friends of the current user
+        const friends = await User.find({ username: { $in: currentUser.friends } });
+
+        res.status(200).json({ friends });
+    } catch (error) {
+        console.error('Error fetching friends:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 
 
