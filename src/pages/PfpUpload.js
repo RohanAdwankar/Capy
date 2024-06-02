@@ -5,7 +5,9 @@ import "./profile.css";
 function PfpUpload() {
   const [imagePreview, setImagePreview] = useState(null);
   const [uploadedImage, setUploadedImage] = useState(null);
+  const [profilePictureUploaded, setProfilePictureUploaded] = useState(false);
 
+  
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -45,7 +47,7 @@ function PfpUpload() {
       console.log('Profile picture uploaded successfully');
 
 
-      window.location.reload();
+      setProfilePictureUploaded(true);
     } catch (error) {
       console.error('Error uploading profile picture:', error);
     }
@@ -64,6 +66,7 @@ function PfpUpload() {
         variant="contained">
           Upload Profile Picture
       </button>
+      {profilePictureUploaded && <div>Profile picture uploaded successfully!</div>}
     </div>
   );
 }
