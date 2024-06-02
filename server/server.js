@@ -146,6 +146,11 @@ app.post('/api/createUser', async (req, res) => {
         await newUser.save();
 
 
+        //Call login after successfully signing in
+        req.body = { username, password };
+        await login(req, res);
+
+
         res.status(201).send('User created');
 
         console.log("New user created");
