@@ -36,13 +36,30 @@ export default function Event({eventData, userID}){
 
       {/* Pop Up for Bigger View */}
       {isModalOpen ? (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-5 rounded shadow-lg w-3/4 h-3/4 overflow-auto">
-            {/* Detailed view of the event goes here */}
-            <button onClick={() => setIsModalOpen(false)}>Close</button>
+      <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="bg-white p-5 rounded shadow-lg w-3/4 h-3/4 overflow-auto">
+          <h1 className="text-4xl mb-4">{eventData.title}</h1>
+          <div className="flex items-center mb-4">
+            {/* <img src={user.profilePicture} alt="User" className="w-10 h-10 rounded-full mr-4" />
+            <h2 className="text-xl">{user.name}</h2> */}
           </div>
+          <p className="mb-4">{eventData.location}</p>
+          <p className="mb-4">{eventData.date}</p>
+          {/* <img src={eventData.picture} alt="Event" className="mb-4" /> */}
+          <button className="bg-blue-500 text-white px-4 py-2 rounded mb-4">Pull Up</button>
+          <p className="mb-4">{eventData.description}</p>
+          {/* <div>
+            {comments.map(comment => (
+              <div key={comment.id} className="mb-4">
+                <h3 className="text-lg mb-2">{comment.user}</h3>
+                <p>{comment.text}</p>
+              </div>
+            ))}
+          </div> */}
+          <button onClick={() => setIsModalOpen(false)}>Close</button>
         </div>
-      ) : null}
+      </div>
+    ) : null}
 
         <div className="relative">
         {/* Add the "Pull Up" button */}
