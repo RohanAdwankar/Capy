@@ -4,6 +4,7 @@ import capy from '../assets/pullupCrop.png';
 import song from '../assets/songCrop.mp3';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendarDays, faLocationDot } from '@fortawesome/free-solid-svg-icons'
+import axios from 'axios';
 // import PullUpButton from './PullUpButton';
 
 export default function Event({eventData, userID}){
@@ -21,6 +22,15 @@ export default function Event({eventData, userID}){
     if(!userLiked) {
     setLikes(likes+1);
     setUserLiked(true);
+    }
+  };
+
+  const handlePullUpClick = async () => {
+    try {
+      await axios.post('/api/attendEvent', { eventID: eventData._id});
+      console.log('Attendance recorded successfully');
+    } catch (error) {
+      console.error('Error recording attendance:', error);
     }
   };
 
@@ -45,6 +55,7 @@ export default function Event({eventData, userID}){
                 onClick={() => {
                   setShowAnimation(!showAnimation);
                   start();
+                  handlePullUpClick();
                 }}
                 className="absolute top-2 right-20 bg-blue-500 text-white px-4 py-2 rounded"
               >

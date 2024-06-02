@@ -89,7 +89,7 @@ db.once('open', () => {
     console.log('Connected to the database');
 });
 
-app.post('/api/attendEvent', async (req, res) {
+app.post('/api/attendEvent', async (req, res) => {
     try {
         const { eventID } = req.body;
         const username = req.session.username;
