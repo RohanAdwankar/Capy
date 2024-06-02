@@ -138,6 +138,7 @@ app.post('/api/createUser', async (req, res) => {
 
 
         const defaultProfilePicture = fs.readFileSync('./server/assets/capy.png');
+
         const newUser = new User({
             username,
             password,
