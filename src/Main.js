@@ -12,6 +12,7 @@ import Loading from "./Loading";
 import SignIn from "./pages/SignIn";
 import SignOut from "./pages/SignOut";
 import SignUp from "./pages/SignUp";
+import axios from 'axios';
 import { createStore, useGlobalState } from 'state-pool';
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
@@ -20,7 +21,7 @@ const store = createStore({"signedIn" : false});
 
 
 
-
+//Get Profile Username
 const ProfileName = () => {
   const [username, setUsername] = useState('');
 
@@ -47,6 +48,34 @@ const ProfileName = () => {
       <h1 className="Profile-name">{username}</h1>
   );
 };
+
+
+
+//Get Profile Picture
+const ProfilePicture = () => {
+  const [profilePicture, setProfilePicture] = useState('');
+
+  useEffect(() => {
+    // Make an API call to fetch the user's profile picture
+    axios.get('/api/profile/picture')
+      .then(response => {
+        // Assuming the response contains the profile picture data in base64 format
+        setProfilePicture(response.data.profilePicture);
+      })
+      .catch(error => {
+        console.error('Error fetching profile picture:', error);
+      });
+  }, []);
+
+  return (
+    <div>
+      <h2>User Profile</h2>
+      {profilePicture && (
+        <img src={`data:image/jpeg;base64,${profilePicture}`} alt="Profile Picture" />
+      )}
+    </div>
+  );
+}
 
 
 function Main() {
@@ -161,6 +190,7 @@ function Main() {
         <div className="p-0 m-0">
           {isSignedIn ? (
             <div>
+              <div>
               <ProfileName />
               <button type="button" variant="contained"
                 
@@ -173,8 +203,10 @@ function Main() {
                 className={boldNavClass("/signout")}>
                 Sign Out
               </button>
+              </div>
             </div>
             ) : (
+              
               <div>
                 <h1 className="Profile-name">Guest</h1>
                 <button type="button" variant="contained"
@@ -186,14 +218,20 @@ function Main() {
                 className={boldNavClass("/signin")}>
                   Sign In
                 </button>
+
                 
               </div>
             )
           }
-
-
         </div>
-        <img src={profile} className="Profile-Img" alt="Profile" />
+
+        {isSignedIn ? (<div><ProfilePicture /></div>) : (<div><img src={profile} className="Profile-Img" alt="Profile" /> </div>)}
+
+        
+
+
+        
+        
       </div>
     </div>
 
@@ -205,4 +243,5 @@ function Main() {
 }
 
 export { store };
+export { ProfilePicture };
 export default Main;
