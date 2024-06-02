@@ -225,7 +225,6 @@ app.get('/api/getUserProfile', async (req, res) => {
     try {
         const { username: requestedUsername } = req.query;
         
-        console.log(requestedUsername);
 
         if (!requestedUsername) {
             return res.status(400).json({ error: 'Username parameter is missing' });
@@ -329,6 +328,46 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+
+
+app.post('/api/removeFriend', async (req, res) => {
+    try {
+        const { friendUsername } = req.body;
+
+        const currentUserUsername = req.session.username;
+        if (!currentUserUsername) {
+            return res.status(401).json({ error: 'User not logged in' });
+        }
+
+        const currentUser = await User.findOne({ username: currentUserUsername });
+        if (!currentUser) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Check if the friend user exists
+        const friendUser = await User.findOne({ username: friendUsername });
+        if (!friendUser) {
+            return res.status(404).json({ error: 'Friend user not found' });
+        }
+
+        // Check if the friend is in the user's friend list
+        const friendIndex = currentUser.friends.indexOf(friendUsername);
+        if (friendIndex === -1) {
+            return res.status(400).json({ error: 'Friend not found in friend list' });
+        }
+
+        // Remove friend from the user's friend list
+        currentUser.friends.splice(friendIndex, 1);
+        await currentUser.save();
+
+        res.status(200).json({ message: 'Friend removed successfully', friend: friendUsername });
+    } catch (error) {
+        console.error('Error removing friend:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 
 
 

@@ -13,20 +13,18 @@ export default function Friends() {
     const [newFriendOpen, setNewFriendOpen] = useState(false);
     const [friends, setFriends] = useState([]);
 
+	useEffect(() => {
+		const fetchFriends = async () => {
+			try {
+				const response = await axios.get('/api/getFriends');
+				setFriends(response.data.friends);
+			} catch (error) {
+				console.error('Error fetching friends:', error);
+			}
+		};
 	
-    useEffect(() => {
-
-        const fetchFriends = async () => {
-            try {
-                const response = await axios.get('/api/getFriends');
-                setFriends(response.data.friends);
-            } catch (error) {
-                console.error('Error fetching friends:', error);
-            }
-        };
-
-        fetchFriends();
-    }, []);
+		fetchFriends();
+	}, [friends]);
 
 	const handleAddFriend = async () => {
         try {
@@ -80,7 +78,7 @@ export default function Friends() {
 
 				{(friends.length > 0) ? (
 					(friendsFiltered.length > 0) ? (
-						
+
 						<FriendList friends={friendsFiltered} />
 						
 					) : (
