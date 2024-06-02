@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import DatePicker from "react-datepicker";
+import EventImageUpload from "../components/eventImageUpload";
 import "react-datepicker/dist/react-datepicker.css";
 
 export default function CreateEvent() {
@@ -15,6 +16,7 @@ export default function CreateEvent() {
 		date: defaultEventTime,
 		time: `${String(defaultEventTime.getHours()).padStart(2, '0')}:${String(defaultEventTime.getMinutes()).padStart(2, '0')}`,
 		description: "",
+		image: ""
 	});
 
 	const [submitted, setSubmitted] = useState(false);
@@ -42,7 +44,7 @@ export default function CreateEvent() {
 		<div className="mt-5">
 			{!submitted ? (
 				<>
-					<input type="text" placeholder="What you doing?" className={inputFieldClass} onChange={(event)=> 
+					<input type="text" placeholder="HELLO????" className={inputFieldClass} onChange={(event)=> 
 						setEventData({...eventData, title: event.target.value})
 					}/> <br />
 					<input type="text" placeholder="Where it at?" className={inputFieldClass} onChange={(event) => {
@@ -62,6 +64,7 @@ export default function CreateEvent() {
 					<textarea placeholder="Optional event description. What's going down?" className="rounded-lg bg-gray-100 p-2 pl-5 mt-10 mb-2 w-full" onChange={(event) => {
 						setEventData({...eventData, description: event.target.value})
 					}}></textarea> <br />
+					<EventImageUpload/>
 
 					<button className="bg-black text-white rounded-full p-2 px-5 mt-10" onClick={handleEventSubmission}>Create Event</button>
 				</>

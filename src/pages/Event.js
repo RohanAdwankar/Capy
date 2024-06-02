@@ -8,7 +8,11 @@ export default function Event({eventData}){
         <h2>{eventData.user}</h2>
         <p>{eventData.location}, {eventData.date}</p>
         <img src={eventData.image || defEventPic} alt="Event" className="w-full h-64 object-cover rounded" />
-        <p>{eventData.description}</p>
+      <p>{eventData.description}</p>
+      {/* <img
+            src="data:image/<%=image.img.contentType%>;base64,
+                    <%=image.img.data.toString('base64')%>"
+          /> */}
     </div>
   );
 }

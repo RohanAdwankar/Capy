@@ -25,6 +25,11 @@ const eventSchema = new mongoose.Schema({
     date: Date,
     description: String,
     datePosted: Date,
+    image:
+    {
+        data: Buffer,
+        contentType: String
+    }
 });
 
 const User = mongoose.model('User', userSchema);
@@ -42,7 +47,7 @@ db.once('open', () => {
 
 app.post('/api/createEvent', async (req, res) => {
     try {
-        const { user, title, location, date, description } = req.body;
+        const { user, title, location, date, description, image } = req.body;
         const datePosted = new Date();
         const newEvent = new Event({
             user,
@@ -50,7 +55,8 @@ app.post('/api/createEvent', async (req, res) => {
             location,
             date,
             description,
-            datePosted
+            datePosted,
+            image
         });
         await newEvent.save();
         res.status(201).send('Event created');
