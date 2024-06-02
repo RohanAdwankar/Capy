@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./Main.css";
 import logo from "./assets/capy.png";
-import profile from "./assets/coda.png";
+import capy_gif from "./assets/capy.gif";
+import capybara from "./assets/capy.jpg";
+import profile from "./assets/profile.jpg";
 import Event from "./pages/CreateEvent";
 import Profile from "./pages/Profile";
 import Friends from "./pages/Friends";
@@ -18,8 +20,6 @@ import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
 
 const store = createStore({"signedIn" : false});
-
-
 
 //Get Profile Username
 const ProfileName = () => {
@@ -60,28 +60,23 @@ const ProfilePicture = () => {
           credentials: 'include', 
       })
       .then(response => {
-          if (!response.ok) {
-              throw new Error('Failed to fetch Profile Picture');
-          }
           return response.json();
       })
       .then(data => {
-
-
           setProfilePicture(data.profilePicture);
-
       })
       .catch(error => {
           console.error('Error fetching Profile Picture:', error);
       });
-  }, []); 
+  }, [store.useState("signedIn")]); 
 
   return (
     <div>
-
-      <img className="Profile-Img" src={`data:image/jpeg;base64,${profilePicture}`}/>
+      <img className="Profile-Img" src={profilePicture ? 
+        `data:image/jpeg;base64,${profilePicture}` :
+        profile
+      }/>
     </div>
-
   );
 };
 
@@ -135,9 +130,9 @@ function Main() {
           <div className="flex flex-col h-screen px-10 py-2 min-w-56 bg-gradient-to-t from-orange-100 to-transparent fixed">
             <div className="flex items-center my-5 ">
               <img
-                src={logo}
+                src={capybara}
                 alt="Logo"
-                className="w-12 h-auto mr-2 rounded-full"
+                className="w-12 h-auto mr-2"
               />
               <div>
                 <h1 className="text-xl font-bold">Capy</h1>
@@ -225,7 +220,8 @@ function Main() {
                 )
               }
             </div>
-            <img src={profile} className="Profile-Img" alt="Profile" />
+            {/* <img src={profile} className="Profile-Img" alt="Profile" /> */}
+            <ProfilePicture />
           </div>
         </div>
       )}

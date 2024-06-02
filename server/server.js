@@ -186,7 +186,7 @@ app.get('/api/profile', async (req, res) => {
         return res.status(401).json({ error: 'User does not exist' });
     }
 
-    const profilePicture = user.profilePicture.toString('base64');;
+    const profilePicture = user.profilePicture.toString('base64');
 
     if (username) {
         res.json({ username, profilePicture });
