@@ -39,6 +39,8 @@ const userSchema = new mongoose.Schema({
     password: String,
     email: String,
     profilePicture: Buffer,
+    friends: [{ type: String}],
+    myEvents: [{ type: String}],
 
 });
 
@@ -49,6 +51,7 @@ const eventSchema = new mongoose.Schema({
     date: Date,
     description: String,
     datePosted: Date,
+    people: [{ type: String}],
 });
 
 const User = mongoose.model('User', userSchema);
