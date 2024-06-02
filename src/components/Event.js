@@ -66,7 +66,7 @@ export default function Event({eventData, userID}){
           <img
             src={capy}
             alt="Animation"
-            className={`object-scale-down h-5 w-5 absolute opacity-0 ${showPopUpAnimation ? 'animate-fadeInScaleRotate' : ''}`}
+            className={` h-5 w-5 absolute opacity-0 ${showPopUpAnimation ? 'animate-fadeInScaleRotate' : ''}`}
           />
             {/* <button className="bg-blue-500 text-white px-4 py-2 rounded mb-4">Pull Up</button> */}
             <p className="mb-4">{eventData.description}</p>
