@@ -12,11 +12,7 @@ const crypto = require('crypto');
 const secretKey = crypto.randomBytes(32).toString('hex');
 console.log('Generated Secret Key:', secretKey);
 
-
-
 const dbURI = process.env.MONGO_URI;
-
-console.log(dbURI);
 
 const app = express();
 const port = process.env.PORT || 3002;
@@ -85,10 +81,13 @@ app.post('/api/createEvent', async (req, res) => {
     try {
         const { title, location, date, description } = req.body;
         const datePosted = new Date();
-        const user = req.session.user;
+        const user = req.session.username;
+
+        console.log("User: ", user)
+        console.log(req.session)
 
         if (!user) {
-            return res.status(401).json({ error: 'User not logged in' });
+            return res.status(500).json({ error: 'User not logged in' });
         }
 
         const newEvent = new Event({
