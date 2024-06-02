@@ -12,6 +12,7 @@ import Loading from "./Loading";
 import SignIn from "./pages/SignIn";
 import SignOut from "./pages/SignOut";
 import SignUp from "./pages/SignUp";
+import About from "./pages/About";
 import axios from 'axios';
 import { createStore, useGlobalState } from 'state-pool';
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
@@ -115,6 +116,7 @@ function Main() {
     "/groups": { title: "Groups" },
     "/friends": { title: "Friends" },
     "/profile": { title: "Profile" },
+    "/about": {title: "About"}
   };
 
   useEffect(() => {
@@ -190,6 +192,7 @@ function Main() {
                 <Route path="/signin" element={<SignIn />}  />
                 <Route path="/signout" element={<SignOut/>} />
                 <Route path="/signup" element={<SignUp/>} />
+                <Route path="/about" element={<About />} />
               </Routes>
             </div>
           </main>
