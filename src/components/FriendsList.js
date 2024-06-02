@@ -30,9 +30,9 @@ const FriendList = () => {
     );
   };
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-scroll max-h-screen">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {friends.map((friend) => (
-        <div key={friend.id} className="bg-white shadow-lg rounded-lg p-4">
+        <div key={friend.id} className="bg-white shadow-lg rounded-lg p-4 m-3">
           <img
             src={friend.profilePic}
             alt={friend.name}

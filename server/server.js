@@ -3,6 +3,16 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const session = require('express-session');
+
+
+
+const crypto = require('crypto');
+
+const secretKey = crypto.randomBytes(32).toString('hex');
+console.log('Generated Secret Key:', secretKey);
+
+
 
 const dbURI = process.env.MONGO_URI;
 
@@ -10,7 +20,17 @@ console.log(dbURI);
 
 const app = express();
 const port = process.env.PORT || 3002;
+const port = process.env.PORT || 3002;
 const path = require('path');
+
+app.use(session({
+    secret: secretKey,
+    resave: false,
+    saveUninitialized: true,
+}));
+
+app.use(bodyParser.json());
+app.use(cors());
 
 const userSchema = new mongoose.Schema({
     username: String,
@@ -38,19 +58,18 @@ app.use(bodyParser.json());
 
 const corsOptions = {
     origin: (origin, callback) => {
-      const allowedOrigins = [
-        /^http:\/\/localhost:\d{4}$/, // Matches localhost with any 4-digit port number
-        "https://capy-rohanadwankars-projects.vercel.app"
-      ];
-      
-      if (!origin || allowedOrigins.some(pattern => typeof pattern === 'string' ? pattern === origin : pattern.test(origin))) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
+        const allowedOrigins = [
+            /^http:\/\/localhost:\d{4}$/, // Matches localhost with any 4-digit port number
+            "https://capy-rohanadwankars-projects.vercel.app"
+        ];
+        
+        if (!origin || allowedOrigins.some(pattern => typeof pattern === 'string' ? pattern === origin : pattern.test(origin))) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
     }
-  };
-  
+};
 
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -63,18 +82,18 @@ db.once('open', () => {
 });
 
 
-
-
-
-
-
-
 app.post('/api/createEvent', async (req, res) => {
     try {
-        const { user, title, location, date, description } = req.body;
+        const { title, location, date, description } = req.body;
         const datePosted = new Date();
+        const user = req.session.user;
+
+        if (!user) {
+            return res.status(401).json({ error: 'User not logged in' });
+        }
+
         const newEvent = new Event({
-            user,
+            user: user.username,
             title,
             location,
             date,
@@ -91,13 +110,26 @@ app.post('/api/createEvent', async (req, res) => {
     }
 });
 
-
-
 app.post('/api/createUser', async (req, res) => {
 
     try {
         const {username, password, email} = req.body;
         
+        const existingUsername = await User.findOne({ username });
+
+
+        if (existingUsername) {
+            return res.status(400).json({ error: 'Username already exists' });
+        }
+
+        const existingEmail = await User.findOne({ email });
+
+        if (existingEmail) {
+            return res.status(400).json({ error: 'Email already exists' });
+        }
+
+
+
         const newUser = new User({
             username,
             password,
@@ -121,27 +153,52 @@ app.post('/api/createUser', async (req, res) => {
 
 });
 
+
+//User login
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
     try {
-
         const user = await User.findOne({ username });
 
-        if (!user || user.password !== password) {
+        if (!user) {
             return res.status(401).json({ error: 'Invalid username or password' });
         }
 
-
-        res.json({ message: 'Login successful', user });
-        console.log("Someone logged in:");
-        console.log(user);
-
+        if (password === user.password) {
+            req.session.username = username;
+            return res.json({ message: 'Login successful', username });
+        } else {
+            return res.status(401).json({ error: 'Invalid username or password' });
+        }
     } catch (error) {
-            console.error(error);
+        console.error(error);
+        return res.status(500).send('Error logging in');
     }
-
-
 });
+
+
+app.get('/api/profile', (req, res) => {
+
+    const username = req.session.username;
+    if (username) {
+        res.json({ username });
+    } else {
+        res.status(401).json({ error: 'User not logged in' });
+    }
+});
+
+
+
+
+
+
+
+
+
+
+//API Endpoint
+app.use(cors());
+app.use(express.json());
 
 app.get('/api/events', async (req, res) => {
     try{
@@ -157,15 +214,7 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
 });
 
-
-
-
-
-
-
-
 // Start the server
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
-
