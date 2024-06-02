@@ -9,6 +9,7 @@ chmod +x make.sh
 # Add your MONGO_URI
 Create /server/.env and write the following:
 MONGO_URI="your_mongodb_uri"
+Also make sure to have this ignored
 
 # To run the server code
 npm run build
