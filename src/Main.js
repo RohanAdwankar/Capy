@@ -195,30 +195,30 @@ function Main() {
           </main>
 
           {/* floating top right section */}
-          <div className="fixed top-0 right-0 flex items-center p-5">
+          <div className="absolute top-0 right-0 flex items-center p-5">
             <div className="p-0 m-0">
               {isSignedIn ? (
-                <div>
-                  <ProfileName />
+                <div className="mr-3">
+                  <h1 className="Profile-name"><ProfileName /></h1>
                   <button type="button" variant="contained"
                     onClick={() => {
                       navigate("/signout");
                       setTitle("Sign Out");
                       setSignedIn(false);
                     }}
-                    className={boldNavClass("/signout")}>
+                    className="font-light text-sky-400 text-right">
                     Sign Out
                   </button>
                 </div>
-                ) : (
-                  <div>
+              ) : (
+                  <div className="mr-3">
                     <h1 className="Profile-name">Guest</h1>
                     <button type="button" variant="contained"
                       onClick={() => {
                         navigate("/signin");
                         setTitle("Sign In");
                       }}
-                      className={boldNavClass("/signin")}>
+                      className={'text-right ' + (location.pathname === '/signin' ? "font-bold" : "font-light text-sky-400")}>
                       Sign In
                     </button>
                   </div>
