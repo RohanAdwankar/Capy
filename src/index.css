@@ -19,14 +19,18 @@
     opacity: 0;
     transform: scale(0) rotate(0);
   }
-  100% {
+  25% {
     opacity: 1;
-    transform: scale(10) rotate(360deg);
+    transform: translateX(1000%) scale(5) rotate(360deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100000%) scale(10) rotate(360deg);
   }
 }
 
 .animate-fadeInScaleRotate {
-  animation: fadeInScaleRotate 2s;
+  animation: fadeInScaleRotate 6s;
 }
 
 *,
