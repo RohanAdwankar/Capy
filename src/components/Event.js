@@ -46,17 +46,18 @@ export default function Event({eventData, userID}){
               <p>  <FontAwesomeIcon icon={faCalendarDays} /> {eventData.date} </p>
               {/* <img src={user.profilePicture} alt="User" className="w-10 h-10 rounded-full mr-4" />
               <h2 className="text-xl">{user.name}</h2> */}
+              <button
+                onClick={() => {
+                  setShowAnimation(!showAnimation);
+                  start();
+                }}
+                className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                Pull Up
+              </button>
             </div>
             {/* <img src={eventData.picture} alt="Event" className="mb-4" /> */}
-            <button
-            onClick={() => {
-              setShowAnimation(!showAnimation);
-              start();
-            }}
-            className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Pull Up
-          </button>
+
           <img
             src={capy}
             alt="Animation"
