@@ -20,7 +20,6 @@ console.log(dbURI);
 
 const app = express();
 const port = process.env.PORT || 3002;
-const port = process.env.PORT || 3002;
 const path = require('path');
 
 app.use(session({
