@@ -116,7 +116,17 @@ export default function Event({eventData, userID}){
           <h1 className="text-2xl font-bold">{eventData.title}</h1>
           <h2>{eventData.user}</h2>
           <p> <FontAwesomeIcon icon={faLocationDot}/> {eventData.location}</p>
-          <p>  <FontAwesomeIcon icon={faCalendarDays} /> {eventData.date} </p>
+          <p>  
+            <FontAwesomeIcon icon={faCalendarDays} /> {' '}
+            {new Date(eventData.date).toLocaleString('en-US', {
+              hour: 'numeric', 
+              minute:'numeric', 
+              hour12: true}) + " on " + new Date(eventData.date).toLocaleString('en-US', {
+                weekday: 'long', 
+                year:'numeric', 
+                month:'long', 
+                day:'numeric'})}
+          </p>
         </div>
         <div className="saturate-50 flex justify-between items-center mt-4">
           <img src={eventData.image || defEventPic} alt="Event" className="w-full h-64 object-cover rounded" />
