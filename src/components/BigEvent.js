@@ -11,7 +11,6 @@ export default function Event({eventData, userID}){
   const [showComments, setShowComments] = useState(false);
   const [showAnimation, setShowAnimation] = useState(false);
   const [userLiked, setUserLiked] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleCommentClick = () =>{
     setShowComments(!showComments);
@@ -33,17 +32,6 @@ export default function Event({eventData, userID}){
   
   return (
     <div className="bg-white shadow-lg rounded-lg p-4">
-
-      {/* Pop Up for Bigger View */}
-      {isModalOpen ? (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-5 rounded shadow-lg w-3/4 h-3/4 overflow-auto">
-            {/* Detailed view of the event goes here */}
-            <button onClick={() => setIsModalOpen(false)}>Close</button>
-          </div>
-        </div>
-      ) : null}
-
         <div className="relative">
         {/* Add the "Pull Up" button */}
           <button className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-2 rounded">
@@ -82,19 +70,12 @@ export default function Event({eventData, userID}){
           >
             like({likes})
             </button>
-          {/* <button
+          <button
           onClick={handleCommentClick}
           className= "bg-gray-500 text-white px-4 py-2 rounded"
           >
             {showComments ? 'Hide Comments' : 'Show Comments'}
-          </button> */}
-          {/* <button className= "bg-gray-500 text-white px-4 py-2 rounded">
-            {"Show Details"}
-          </button> */}
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className= "bg-gray-500 text-white px-4 py-2 rounded"
-            >More Details</button>
+          </button>
         </div>
     </div>
   );
