@@ -1,3 +1,4 @@
+//Archived Component
 import React, { useState } from 'react';
 
 const Post = ({title, content}) => {
