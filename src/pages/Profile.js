@@ -20,7 +20,6 @@ export default function Profile() {
 					<div className="flex items-center my-5">
 						<ProfilePicture />
 						<div>
-							<h1 className="text-xl font-bold">Ur Mom</h1>
 							<PfpUpload/>
 						</div>
 					</div>
