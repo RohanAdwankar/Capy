@@ -43,7 +43,7 @@ export default function SignUp() {
 		setIsValid(isValidEmail);
 
 		if (isValid){
-			alert("Invalid email address");
+			alert("Invalid email address! Make sure to use your UCLA email address.");
 			return;
 		}
 
