@@ -1,6 +1,6 @@
 import defEventPic from '../assets/defEvent.jpg';
 import React, { useState, useEffect } from 'react';
-import capy from '../assets/capy.png';
+import capy from '../assets/pullupCrop.png';
 import song from '../assets/songCrop.mp3';
 //import faCalendarDays from FontAwesomeIcon; 
 
@@ -44,11 +44,11 @@ export default function Event({eventData, userID}){
           >
             Pull Up
           </button>
-          {/* <img
+          <img
             src={capy}
             alt="Animation"
-            className={`object-scale-down h-10 w-10 absolute transform transition-transform duration-500 ease-in-out ${showAnimation ? 'translate-x-full' : ''}`}
-          /> */}
+            className={`object-scale-down h-5 w-5 absolute opacity-0 ${showAnimation ? 'animate-fadeInScaleRotate' : ''}`}
+          />
           <h1 className="text-2xl font-bold">{eventData.title}</h1>
           <h2>{eventData.user}</h2>
           <p>{eventData.location}, {eventData.date}</p>
