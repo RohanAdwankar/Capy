@@ -51,7 +51,7 @@ const eventSchema = new mongoose.Schema({
     date: Date,
     description: String,
     datePosted: Date,
-    people: [{ type: String}],
+    usersGoing: [{ type: String}],
 });
 
 const User = mongoose.model('User', userSchema);
@@ -88,6 +88,28 @@ db.once('open', () => {
     console.log('Connected to the database');
 });
 
+app.post('/api/attendEvent', async (req, res) {
+    try {
+        const { eventID } = req.body;
+        const username = req.session.username;
+        if (!username) {
+            return res.status(401).json({ error: 'User not logged in'});
+        }
+        const event = await Event.findById(eventID);
+
+        if(!event) {
+            return res.status(404).json({ error: 'Event not found'});
+        }
+        if (!event.usersGoing.includes(username)) {
+            event.usersGoing.push(username);
+            await event.save()
+        }
+        res.status(200).json({message: 'Can\'t wait to see you there!'});''
+    } catch (error) {
+        console.error(error)
+        res.status(500).send('Sorry Error recording attendance');
+    }
+});
 
 app.post('/api/createEvent', async (req, res) => {
     try {
