@@ -52,6 +52,7 @@ const eventSchema = new mongoose.Schema({
     date: Date,
     description: String,
     datePosted: Date,
+    eventImage: Buffer,
     people: [{ type: String}],
 });
 
@@ -100,13 +101,16 @@ app.post('/api/createEvent', async (req, res) => {
             return res.status(500).json({ error: 'User not logged in' });
         }
 
+        const defaultEventImage = fs.readFileSync('./server/assets/defEvent.jpeg');
+
         const newEvent = new Event({
             user: user.username,
             title,
             location,
             date,
             description,
-            datePosted
+            datePosted,
+            eventImage: defaultEventImage,
         });
         await newEvent.save();
         res.status(201).send('Event created');
@@ -398,6 +402,60 @@ app.get('/api/getFriends', async (req, res) => {
 
 
 
+app.post('/api/uploadEventImage', upload.single('image'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+
+        const imageBuffer = req.file.buffer;
+
+        const { eventId } = req.body;
+        if (!eventId) {
+            return res.status(400).json({ error: 'Event ID is missing' });
+        }
+
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ error: 'Event not found' });
+        }
+
+        event.eventImage = imageBuffer;
+
+        await event.save();
+
+        res.status(200).json({ message: 'Event image uploaded successfully' });
+    } catch (error) {
+        console.error('Error uploading event image:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+
+
+
+app.get('/api/eventImage/:eventId', async (req, res) => {
+    try {
+        const eventId = req.params.eventId;
+
+        // Find the event by its ID
+        const event = await Event.findById(eventId);
+
+        if (!event) {
+            return res.status(404).json({ error: 'Event not found' });
+        }
+
+        // Convert the eventImage buffer to base64 string
+        const eventImageBase64 = event.eventImage.toString('base64');
+
+        // Send the base64 string as the response
+        res.json({ eventImageBase64 });
+    } catch (error) {
+        console.error('Error fetching event image:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 
 
