@@ -98,7 +98,7 @@ function Main() {
     // Simulate loading for 2 seconds
     setTimeout(() => {
       setIsLoading(false);
-    }, 1000);
+    }, 10);
   }, []);
 
   const location = useLocation();
@@ -131,122 +131,104 @@ function Main() {
       {isLoading ? (
         <center><Loading /></center>
       ) : (
-      <div className="flex min-h-screen bg-gradient-to- from-orange-200 to-transparent">
-      <div className="flex flex-col h-screen px-10 py-2 min-w-56 bg-gradient-to-t from-orange-100 to-transparent">
-        <div className="flex items-center my-5 ">
-          <img
-            src={logo}
-            alt="Logo"
-            className="w-12 h-auto mr-2 rounded-full"
-          />
-          <div>
-            <h1 className="text-xl font-bold">Capy</h1>
-            <p className="text-sm roboto-slab font-light text-black">
-              ok i pull up
-            </p>
-          </div>
-        </div>
-
-        {/* navigation */}
-        {Object.keys(pages).map((path) => (
-          <button
-            key={path}
-            onClick={() => {
-              setTitle(pages[path].title);
-              navigate(path);
-            }}
-            className={boldNavClass(path)}
-          >
-            {pages[path].title}
-          </button>
-        ))}
-
-        {location.pathname !== "/create" ? (
-          <button
-            onClick={() => {
-              setTitle("Create Event");
-              navigate("/create");
-            }}
-            className="mt-auto px-4 py-2 bg-black text-white rounded-full mb-5"
-          >
-            New Event
-          </button>
-        ) : null}
-      </div>
-
-      {/* main content */}
-      <main className="flex-grow overflow-y-auto p-10 justify-self-center">
-        <div className="flex justify-center roboto-slab font-bold text-2xl">
-          {title}
-        </div>
-        <div className="flex justify-center">
-          <Routes>
-            <Route path="/" element={<AllEvents />} />
-            <Route path="/my" element={<MyEvents />} />
-            <Route path="/groups" element={<Groups />} />
-            <Route path="/friends" element={<Friends />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/create" element={<Event />} />
-            <Route path="/signin" element={<SignIn />}  />
-            <Route path="/signout" element={<SignOut/>} />
-            <Route path="/signup" element={<SignUp/>} />
-          </Routes>
-        </div>
-      </main>
-
-      {/* floating top right section */}
-      <div className="fixed top-0 right-0 flex items-center p-5">
-        <div className="p-0 m-0">
-          {isSignedIn ? (
-            <div>
+        <div className="flex min-h-screen bg-gradient-to- from-orange-200 to-transparent">
+          <div className="flex flex-col h-screen px-10 py-2 min-w-56 bg-gradient-to-t from-orange-100 to-transparent fixed">
+            <div className="flex items-center my-5 ">
+              <img
+                src={logo}
+                alt="Logo"
+                className="w-12 h-auto mr-2 rounded-full"
+              />
               <div>
-              <ProfileName />
-              <button type="button" variant="contained"
-                
-                onClick={() => {
-                  navigate("/signout");
-                  setTitle("Sign Out");
-                  setSignedIn(false);
-                }}
-
-                className={boldNavClass("/signout")}>
-                Sign Out
-              </button>
+                <h1 className="text-xl font-bold">Capy</h1>
+                <p className="text-sm roboto-slab font-light text-black">
+                  ok i pull up
+                </p>
               </div>
             </div>
-            ) : (
-              
-              <div>
-                <h1 className="Profile-name">Guest</h1>
-                <button type="button" variant="contained"
-                
+
+            {/* navigation */}
+            {Object.keys(pages).map((path) => (
+              <button
+                key={path}
                 onClick={() => {
-                  navigate("/signin");
-                  setTitle("Sign In");
+                  setTitle(pages[path].title);
+                  navigate(path);
                 }}
-                className={boldNavClass("/signin")}>
-                  Sign In
-                </button>
+                className={boldNavClass(path)}
+              >
+                {pages[path].title}
+              </button>
+            ))}
 
-                
-              </div>
-            )
-          }
+            {location.pathname !== "/create" ? (
+              <button
+                onClick={() => {
+                  setTitle("Create Event");
+                  navigate("/create");
+                }}
+                className="mt-auto px-4 py-2 bg-black text-white rounded-full mb-5"
+              >
+                New Event
+              </button>
+            ) : null}
+          </div>
+
+          {/* main content */}
+          <main className="flex-grow overflow-y-auto p-10 justify-self-center ml-56"> {/* Adjusted the margin-left */}
+            <div className="flex justify-center roboto-slab font-bold text-2xl">
+              {title}
+            </div>
+            <div className="flex justify-center">
+              <Routes>
+                <Route path="/" element={<AllEvents />} />
+                <Route path="/my" element={<MyEvents />} />
+                <Route path="/groups" element={<Groups />} />
+                <Route path="/friends" element={<Friends />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/create" element={<Event />} />
+                <Route path="/signin" element={<SignIn />}  />
+                <Route path="/signout" element={<SignOut/>} />
+                <Route path="/signup" element={<SignUp/>} />
+              </Routes>
+            </div>
+          </main>
+
+          {/* floating top right section */}
+          <div className="absolute top-0 right-0 flex items-center p-5">
+            <div className="p-0 m-0">
+              {isSignedIn ? (
+                <div className="mr-3">
+                  <h1 className="Profile-name"><ProfileName /></h1>
+                  <button type="button" variant="contained"
+                    onClick={() => {
+                      navigate("/signout");
+                      setTitle("Sign Out");
+                      setSignedIn(false);
+                    }}
+                    className="font-light text-sky-400 text-right">
+                    Sign Out
+                  </button>
+                </div>
+              ) : (
+                  <div className="mr-3">
+                    <h1 className="Profile-name">Guest</h1>
+                    <button type="button" variant="contained"
+                      onClick={() => {
+                        navigate("/signin");
+                        setTitle("Sign In");
+                      }}
+                      className={'text-right ' + (location.pathname === '/signin' ? "font-bold" : "font-light text-sky-400")}>
+                      Sign In
+                    </button>
+                  </div>
+                )
+              }
+            </div>
+            <img src={profile} className="Profile-Img" alt="Profile" />
+          </div>
         </div>
-
-        {isSignedIn ? (<div><ProfilePicture /></div>) : (<div><img src={profile} className="Profile-Img" alt="Profile" /> </div>)}
-
-        
-
-
-        
-        
-      </div>
-    </div>
-
-
       )}
-
     </div>
   );
 }
