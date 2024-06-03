@@ -164,71 +164,72 @@ app.post("/api/createEvent", upload.single("image"), async (req, res) => {
   }
 });
 
-app.post("/api/createUser", async (req, res) => {
-  try {
-    const { username, password, email } = req.body;
 
-    const existingUsername = await User.findOne({ username });
 
-    if (existingUsername) {
-      return res.status(400).json({ error: "Username already exists" });
+async function login(req, res) {
+    const { username, password } = req.body;
+    try {
+      const user = await User.findOne({ username });
+  
+      if (!user) {
+        return res.status(401).json({ error: "Invalid username or password" });
+      }
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (isMatch) {
+        req.session.username = username;
+        req.session.profilePicture = user.profilePicture;
+        return res.json({ message: "Login successful", username });
+      } else {
+        return res.status(401).json({ error: "Invalid username or password" });
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send("Error logging in");
     }
-
-    const existingEmail = await User.findOne({ email });
-
-    if (existingEmail) {
-      return res.status(400).json({ error: "Email already exists" });
-    }
-
-    const defaultProfilePicture = fs.readFileSync("./server/assets/capy.png");
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = new User({
-      username,
-      password: hashedPassword,
-      email,
-      profilePicture: defaultProfilePicture,
-    });
-
-    await newUser.save();
-
-    //Call login after successfully signing in
-    req.body = { username, password };
-    await login(req, res);
-
-    res.status(201).send("User created");
-
-    console.log("New user created");
-    console.log(newUser);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error creating user");
   }
-});
+  
+  app.post("/api/login", login);app.post("/api/createUser", async (req, res) => {
+    try {
+      const { username, password, email } = req.body;
+  
+      const existingUsername = await User.findOne({ username });
+  
+      if (existingUsername) {
+        return res.status(400).json({ error: "Username already exists" });
+      }
+  
+      const existingEmail = await User.findOne({ email });
+  
+      if (existingEmail) {
+        return res.status(400).json({ error: "Email already exists" });
+      }
+  
+      const defaultProfilePicture = fs.readFileSync("./server/assets/capy.png");
+  
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      const newUser = new User({
+        username,
+        password: hashedPassword,
+        email,
+        profilePicture: defaultProfilePicture,
+      });
+  
+      await newUser.save();
+  
+      await login(req, res); 
+  
 
-//User login
-app.post("/api/login", async (req, res) => {
-  const { username, password } = req.body;
-  try {
-    const user = await User.findOne({ username });
+      console.log("New user created");
+      console.log(newUser);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error creating user");
+    }
+  });
 
-    if (!user) {
-      return res.status(401).json({ error: "Invalid username or password" });
-    }
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (isMatch) {
-      req.session.username = username;
-      req.session.profilePicture = user.profilePicture;
-      return res.json({ message: "Login successful", username });
-    } else {
-      return res.status(401).json({ error: "Invalid username or password" });
-    }
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send("Error logging in");
-  }
-});
+  
+
 
 app.get("/api/profile", async (req, res) => {
   const username = req.session.username;

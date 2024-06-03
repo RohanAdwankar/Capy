@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./SignIn.css";
+import { store } from "../Main.js";
 
 export default function SignUp() {
 
@@ -10,6 +11,7 @@ export default function SignUp() {
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [successMessage, setSuccessMessage] = useState("");
 	const [isValid, setIsValid] = useState(true);
+	const [isSignedIn, setSignedIn] = store.useState("signedIn", {default: false});
 
 
 	const handleUsernameChange = (event) => {
@@ -79,11 +81,13 @@ export default function SignUp() {
 				return response.json();
 			}
 			return response.text();
+			
 		})
 		.then(responseData => {
 			if (typeof responseData === 'string') {
-				setSuccessMessage(responseData);
-				alert(responseData);
+				setSignedIn(true);
+				navigate("/signup");
+				
 			} else {
 				alert(responseData.error);
 			}

@@ -161,7 +161,7 @@ function Main() {
               </button>
             ))}
 
-            {location.pathname !== "/create" ? (
+            {location.pathname !== "/create" && isSignedIn ? (
               <button
                 onClick={() => {
                   setTitle("Create Event");
