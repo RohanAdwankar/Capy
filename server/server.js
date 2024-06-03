@@ -115,7 +115,7 @@ app.post("/api/likeEvent", async (req, res) => {
       event.usersLiked.push(username);
       await event.save();
     }
-    console.log(event);
+    console.log("usersLiked jimmy1?", event.usersLiked);
     event.likes = event.likes + 1;
     console.log("EVNET LIKES: ", event.likes);
     await event.save();
@@ -139,13 +139,12 @@ app.post("/api/likeEventUndo", async (req, res) => {
     if (!event) {
       return res.status(404).json({ error: "Event not found" });
     }
-    if (!event.usersLiked.includes(username)) {
-      event.usersLiked.remove(username);
+    if (event.usersLiked.includes(username)) {
+      const userIndex = event.usersLiked.indexOf(username);
+      event.usersLiked.splice(userIndex, 1);
       await event.save();
     }
-    console.log(event);
     event.likes = event.likes - 1;
-    console.log("EVNET LIKES: ", event.likes);
     await event.save();
     res.status(200).json({ message: "You unliked this event!" });
     ("");
