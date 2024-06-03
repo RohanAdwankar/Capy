@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const FriendList = ({ friends, onRemoveFriend, filter }) => {
-  const [friendDetails, setFriendDetails] = useState([]);
+const FriendList = ({ friends, setFriends, onRemoveFriend, filter }) => {
+  // const [friendDetails, setFriendDetails] = useState([]);
   const [hoveredFriend, setHoveredFriend] = useState(null);
 
-  useEffect(() => {
-    setFriendDetails(friends);
-  }, [friends]);
+  // useEffect(() => {
+  //   setFriendDetails(friends);
+  // }, [friends]);
 
     // Filter friends based on the search filter
-    const friendsFiltered = friendDetails.filter((friend) => {
+    const friendsFiltered = friends.filter((friend) => {
       let name = friend.username ? friend.username.toLowerCase() : '';
       return name.includes(filter.toLowerCase());
     });
@@ -18,10 +18,10 @@ const FriendList = ({ friends, onRemoveFriend, filter }) => {
   const handleRemoveFriend = async (friendUsername) => {
     try {
       // Make a POST request to remove the friend
-      await axios.post('/api/removeFriend', { friendUsername });
+      await axios.post('/api/removeFriend', { friendUsername, withCredentials: true });
       
       // Update friendDetails by filtering out the removed friend
-      setFriendDetails(friendDetails.filter(friend => friend.username !== friendUsername));
+      setFriends(friends.filter(friend => friend.username !== friendUsername));
       
       // If there is an onRemoveFriend function passed as prop, call it to update parent state
       if (onRemoveFriend) {

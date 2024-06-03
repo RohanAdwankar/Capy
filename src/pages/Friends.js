@@ -17,7 +17,7 @@ export default function Friends() {
 	useEffect(() => {
 		const fetchFriends = async () => {
 			try {
-				const response = await axios.get('/api/getFriends');
+				const response = await axios.get('/api/getFriends', { withCredentials: true });
 				setFriends(response.data.friends);
 				setStatus('');
 			} catch (error) {
@@ -27,12 +27,12 @@ export default function Friends() {
 		};
 	
 		fetchFriends();
-	}, [friends]);
+	}, []);
 
 	const handleAddFriend = async () => {
         try {
 			setStatus('Adding ' + newFriendUsername + ' as a friend...');
-            const response = await axios.post('/api/addFriend', { friendUsername: newFriendUsername });
+            const response = await axios.post('/api/addFriend', { friendUsername: newFriendUsername, withCredentials: true });
             console.log(response.data);
 
             const addedFriend = response.data.friend;
@@ -85,7 +85,7 @@ export default function Friends() {
 				{(status !== '') && <p>{status}</p>}
 
 				{(friends.length > 0) ? (
-					<FriendList friends={friends} filter={filter} />
+					<FriendList friends={friends} setFriends={setFriends} filter={filter} />
 				) : (
 					<p>Click "Add New Friend" to get more friends.</p>
 				)}
