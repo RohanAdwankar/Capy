@@ -43,7 +43,7 @@ const userSchema = new mongoose.Schema({
     friends: [{ type: String}],
     myEvents: [{ type: String}],
     signedUpEvents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event'}],
-
+    createdEvents: [{type: mongoose.Schema.Types.ObjectId, ref: 'Event' }],
 });
 
 const eventSchema = new mongoose.Schema({
@@ -119,6 +119,22 @@ app.post('/api/attendEvent', async (req, res) => {
     }
 });
 
+app.get('/api/attendedEvents', async (req, res) => {
+    try {
+        const username = req.session.username;
+        if (!username) {
+            return res.status(401).json({ error: 'User not logged in'});
+
+        }
+
+        const user = await User.findOne({username}).populate('signedUpEvents');
+        res.status(200).json({ attendedEvents: user.signedUpEvents});
+    } catch (error) {
+        console.error('Error getting attended events:', error);
+        res.status(500).json({ error: 'Internal server error'});
+    }
+});
+
 app.post('/api/createEvent', async (req, res) => {
     try {
         const { title, location, date, description } = req.body;
@@ -138,6 +154,11 @@ app.post('/api/createEvent', async (req, res) => {
             datePosted
         });
         await newEvent.save();
+
+        const currentUser = await User.findOne({ username: req.session.username});
+        currentUser.createdEvents.push(newEvent._id);
+        await user.save();
+
         res.status(201).send('Event created');
         console.log("Someone created an event:");
         console.log(newEvent);
@@ -223,6 +244,19 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
+app.get('/api/createdEvents', async (req, res) => {
+    try {
+        const username = req.session.username;
+        if(!username) {
+            return res.status(401).json({ error: 'User not logged in'});
+        }
+        const user = await User.findOne({ username }).populate('createdEvents');
+        res.status(200).json({ createdEvents: user.createdEvents});
+    } catch (error) {
+        console.error('Error retreiving created events:', error);
+        res.status(500).json({ error: 'Internal server error'});
+    }
+});
 
 app.get('/api/profile', async (req, res) => {
 
