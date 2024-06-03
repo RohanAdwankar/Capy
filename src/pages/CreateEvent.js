@@ -37,7 +37,7 @@ export default function CreateEvent() {
   async function handleEventSubmission() {
     try {
       for (let field in eventData) {
-        if (!eventData[field] && field !== "description") {
+        if (!eventData[field] && field !== "description" && field !== "likes") {
           alert("Please fill out all required fields.");
           return;
         }
