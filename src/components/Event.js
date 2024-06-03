@@ -9,12 +9,16 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
-export default function Event({ eventData, userID }) {
+export default function Event({ eventData, currentUser }) {
   const [likes, setLikes] = useState(eventData.likes);
+  // tempUserLiked = req.session.username in eventData.usersLiked;
+  // req.session.username;
   const [showComments, setShowComments] = useState(false);
   const [showAnimation, setShowAnimation] = useState(false);
   const [showPopUpAnimation, setShowPopUpAnimation] = useState(false);
-  const [userLiked, setUserLiked] = useState(false);
+  const [userLiked, setUserLiked] = useState(
+    eventData.usersLiked.includes(currentUser)
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [eventImageBase64, setEventImageBase64] = useState(null);
 

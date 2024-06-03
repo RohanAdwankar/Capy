@@ -57,7 +57,7 @@ const eventSchema = new mongoose.Schema({
   datePosted: Date,
   eventImage: Buffer,
   usersGoing: [{ type: String }],
-  people: [{ type: String }],
+  usersLiked: [{ type: String }],
   likes: Number,
 });
 
@@ -111,12 +111,13 @@ app.post("/api/likeEvent", async (req, res) => {
     if (!event) {
       return res.status(404).json({ error: "Event not found" });
     }
-    if (!event.usersGoing.includes(username)) {
-      event.usersGoing.push(username);
+    if (!event.usersLiked.includes(username)) {
+      // event.usersGoing.push(username);
+      event.usersLiked.push(username);
+      event.likes = event.likes + 1;
       await event.save();
     }
     console.log(event);
-    event.likes = event.likes + 1;
     console.log("EVNET LIKES: ", event.likes);
     await event.save();
     res.status(200).json({ message: "You liked this event!" });
@@ -250,22 +251,26 @@ app.get("/api/profile", async (req, res) => {
 
 app.get("/api/getUserProfile", async (req, res) => {
   try {
+    console.log("WHY WHY WHY?");
     const { username: requestedUsername } = req.query;
 
     if (!requestedUsername) {
+      console.log("1");
       return res.status(400).json({ error: "Username parameter is missing" });
     }
 
     const user = await User.findOne({ username: requestedUsername });
 
     if (!user) {
+      console.log("2");
       return res.status(404).json({ error: "User not found" });
     }
 
     const profilePicture = user.profilePicture.toString("base64");
-
-    res.json({ username: user.username, profilePicture });
+    console.log("USERNAME SLKFJ", user.username);
+    return res.json({ username: user.username, profilePicture });
   } catch (error) {
+    console.log("HELLO WORLDLY");
     console.error("Error fetching user profile:", error);
     res.status(500).json({ error: "Internal server error" });
   }
