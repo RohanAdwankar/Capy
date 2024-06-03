@@ -15,6 +15,7 @@ const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } 
 
 
 const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 
 const secretKey = crypto.randomBytes(32).toString('hex');
 console.log('Generated Secret Key:', secretKey);
@@ -168,9 +169,11 @@ app.post('/api/createUser', async (req, res) => {
 
         const defaultProfilePicture = fs.readFileSync('./server/assets/capy.png');
 
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const newUser = new User({
             username,
-            password,
+            password: hashedPassword,
             email,
             profilePicture: defaultProfilePicture,
         });
@@ -206,16 +209,10 @@ app.post('/api/login', async (req, res) => {
         if (!user) {
             return res.status(401).json({ error: 'Invalid username or password' });
         }
-
-        if (password === user.password) {
-
-
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (isMatch) {
             req.session.username = username;
-
-           
             req.session.profilePicture = user.profilePicture;
-
-
             return res.json({ message: 'Login successful', username });
         } else {
             return res.status(401).json({ error: 'Invalid username or password' });
