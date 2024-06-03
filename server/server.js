@@ -127,6 +127,34 @@ app.post("/api/likeEvent", async (req, res) => {
   }
 });
 
+app.post("/api/likeEventUndo", async (req, res) => {
+  try {
+    const { eventID } = req.body;
+    const username = req.session.username;
+    if (!username) {
+      return res.status(401).json({ error: "User not logged in" });
+    }
+    const event = await Event.findById(eventID);
+
+    if (!event) {
+      return res.status(404).json({ error: "Event not found" });
+    }
+    if (!event.usersLiked.includes(username)) {
+      event.usersLiked.remove(username);
+      await event.save();
+    }
+    console.log(event);
+    event.likes = event.likes - 1;
+    console.log("EVNET LIKES: ", event.likes);
+    await event.save();
+    res.status(200).json({ message: "You unliked this event!" });
+    ("");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Sorry Error unliking this event");
+  }
+});
+
 app.post("/api/createEvent", upload.single("image"), async (req, res) => {
   try {
     const { title, location, date, description, likes } = req.body;
