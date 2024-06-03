@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Event from "../components/Event";
 
-export default function AllEvents() {
+export default function AllEvents(currentUser) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [username, setUsername] = useState("");
+  console.log("all events currentUser:", currentUser.currentUser);
 
   useEffect(() => {
     axios
@@ -20,23 +21,23 @@ export default function AllEvents() {
         setError(err);
         setLoading(false);
       });
-    fetch("/api/profile", {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch username");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setUsername(data.username);
-        console.log("Your current username is:", data.username);
-      })
-      .catch((error) => {
-        console.error("Error fetching username:", error);
-      });
+    // fetch("/api/profile", {
+    //   method: "GET",
+    //   credentials: "include",
+    // })
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw new Error("Failed to fetch username");
+    //     }
+    //     return response.json();
+    //   })
+    //   .then((data) => {
+    //     setUsername(data.username);
+    //     console.log("Your current username:", data.username);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error fetching username:", error);
+    //   });
   }, []);
 
   if (loading) return <p>Loading events...</p>;
@@ -47,7 +48,11 @@ export default function AllEvents() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {events
           .map((event) => (
-            <Event key={event._id} eventData={event} currentUser={username} />
+            <Event
+              key={event._id}
+              eventData={event}
+              currentUser={currentUser.currentUser}
+            />
           ))
           .reverse()}
       </div>

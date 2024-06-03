@@ -12,84 +12,74 @@ import SignIn from "./pages/SignIn";
 import SignOut from "./pages/SignOut";
 import SignUp from "./pages/SignUp";
 import About from "./pages/About";
-import axios from 'axios';
-import { createStore, useGlobalState } from 'state-pool';
+import axios from "axios";
+import { createStore, useGlobalState } from "state-pool";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
-
-const store = createStore({"signedIn" : false});
-
-
-
-//Get Profile Username
-const ProfileName = () => {
-  const [username, setUsername] = useState('');
-
-  useEffect(() => {
-      fetch('/api/profile', {
-          method: 'GET',
-          credentials: 'include', 
-      })
-      .then(response => {
-          if (!response.ok) {
-              throw new Error('Failed to fetch username');
-          }
-          return response.json();
-      })
-      .then(data => {
-          setUsername(data.username);
-      })
-      .catch(error => {
-          console.error('Error fetching username:', error);
-      });
-  }, []); 
-
-  return (
-      <h1 className="Profile-name">{username}</h1>
-  );
-};
-
-
+const store = createStore({ signedIn: false });
 
 const ProfilePicture = () => {
-  const [profilePicture, setProfilePicture] = useState('');
+  const [profilePicture, setProfilePicture] = useState("");
 
   useEffect(() => {
-      fetch('/api/profile', {
-          method: 'GET',
-          credentials: 'include', 
+    fetch("/api/profile", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch Profile Picture");
+        }
+        return response.json();
       })
-      .then(response => {
-          if (!response.ok) {
-              throw new Error('Failed to fetch Profile Picture');
-          }
-          return response.json();
+      .then((data) => {
+        setProfilePicture(data.profilePicture);
       })
-      .then(data => {
-
-
-          setProfilePicture(data.profilePicture);
-
-      })
-      .catch(error => {
-          console.error('Error fetching Profile Picture:', error);
+      .catch((error) => {
+        console.error("Error fetching Profile Picture:", error);
       });
-  }, []); 
+  }, []);
 
   return (
     <div>
-
-      <img className="Profile-Img" src={`data:image/jpeg;base64,${profilePicture}`}/>
+      <img
+        className="Profile-Img"
+        src={`data:image/jpeg;base64,${profilePicture}`}
+      />
     </div>
-
   );
 };
 
-
-
 function Main() {
+  //Get Profile Username
+  const [username, setUsername] = useState("");
+  const ProfileName = () => {
+    useEffect(() => {
+      fetch("/api/profile", {
+        method: "GET",
+        credentials: "include",
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to fetch username");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setUsername(data.username);
+        })
+        .catch((error) => {
+          console.error("Error fetching username:", error);
+        });
+    }, []);
+
+    return <h1 className="Profile-name">{username}</h1>;
+  };
+
   const [isLoading, setIsLoading] = useState(true);
-  const [isSignedIn, setSignedIn] = store.useState("signedIn", {default: false});
+  const [isSignedIn, setSignedIn] = store.useState("signedIn", {
+    default: false,
+  });
 
   useEffect(() => {
     setSignedIn(false);
@@ -114,7 +104,7 @@ function Main() {
     "/my": { title: "My Events" },
     "/friends": { title: "Friends" },
     "/profile": { title: "Profile" },
-    "/about": {title: "About"}
+    "/about": { title: "About" },
   };
 
   useEffect(() => {
@@ -124,12 +114,14 @@ function Main() {
     if (location.pathname === "/create") {
       setTitle("Create Event");
     }
-  }, [location.pathname])
+  }, [location.pathname]);
 
   return (
     <div className="App">
       {isLoading ? (
-        <center><Loading /></center>
+        <center>
+          <Loading />
+        </center>
       ) : (
         <div className="flex min-h-screen bg-gradient-to- from-orange-200 to-transparent">
           <div className="flex flex-col h-screen px-10 py-2 min-w-56 bg-gradient-to-t from-orange-100 to-transparent fixed">
@@ -175,20 +167,25 @@ function Main() {
           </div>
 
           {/* main content */}
-          <main className="flex-grow overflow-y-auto p-10 justify-self-center ml-56"> {/* Adjusted the margin-left */}
+          <main className="flex-grow overflow-y-auto p-10 justify-self-center ml-56">
+            {" "}
+            {/* Adjusted the margin-left */}
             <div className="flex justify-center roboto-slab font-bold text-2xl">
               {title}
             </div>
             <div className="flex justify-center">
               <Routes>
-                <Route path="/" element={<AllEvents />} />
+                <Route
+                  path="/"
+                  element={<AllEvents currentUser={username} />}
+                />
                 <Route path="/my" element={<MyEvents />} />
                 <Route path="/friends" element={<Friends />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/create" element={<Event />} />
-                <Route path="/signin" element={<SignIn />}  />
-                <Route path="/signout" element={<SignOut/>} />
-                <Route path="/signup" element={<SignUp/>} />
+                <Route path="/signin" element={<SignIn />} />
+                <Route path="/signout" element={<SignOut />} />
+                <Route path="/signup" element={<SignUp />} />
                 <Route path="/about" element={<About />} />
               </Routes>
             </div>
@@ -199,40 +196,50 @@ function Main() {
             <div className="p-0 m-0">
               {isSignedIn ? (
                 <div className="mr-3">
-                  <h1 className="Profile-name"><ProfileName /></h1>
-                  <button type="button" variant="contained"
+                  <h1 className="Profile-name">
+                    <ProfileName />
+                  </h1>
+                  <button
+                    type="button"
+                    variant="contained"
                     onClick={() => {
                       navigate("/signout");
                       setTitle("Sign Out");
                       setSignedIn(false);
                     }}
-                    className="font-light text-sky-400 text-right">
+                    className="font-light text-sky-400 text-right"
+                  >
                     Sign Out
                   </button>
                 </div>
               ) : (
-                  <div className="mr-3">
-                    <h1 className="Profile-name">Guest</h1>
-                    <button type="button" variant="contained"
-                      onClick={() => {
-                        navigate("/signin");
-                        setTitle("Sign In");
-                      }}
-                      className={'text-right ' + (location.pathname === '/signin' ? "font-bold" : "font-light text-sky-400")}>
-                      Sign In
-                    </button>
-                  </div>
-                )
-              }
+                <div className="mr-3">
+                  <h1 className="Profile-name">Guest</h1>
+                  <button
+                    type="button"
+                    variant="contained"
+                    onClick={() => {
+                      navigate("/signin");
+                      setTitle("Sign In");
+                    }}
+                    className={
+                      "text-right " +
+                      (location.pathname === "/signin"
+                        ? "font-bold"
+                        : "font-light text-sky-400")
+                    }
+                  >
+                    Sign In
+                  </button>
+                </div>
+              )}
             </div>
 
             {isSignedIn ? (
-
-                <ProfilePicture />
-            ) : ( 
-            <img src={profile} className="Profile-Img" alt="Profile" />
+              <ProfilePicture />
+            ) : (
+              <img src={profile} className="Profile-Img" alt="Profile" />
             )}
-            
           </div>
         </div>
       )}

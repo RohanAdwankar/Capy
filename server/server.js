@@ -138,7 +138,10 @@ app.post("/api/likeEventUndo", async (req, res) => {
     if (event.usersLiked.includes(username)) {
       const userIndex = event.usersLiked.indexOf(username);
       event.usersLiked.splice(userIndex, 1);
-      console.log("list of users who liked this event:", event.usersLiked);
+      console.log(
+        "list of users who liked this event (undo version):",
+        event.usersLiked
+      );
       await event.save();
     }
     res.status(200).json({ message: "You unliked this event!" });
@@ -359,9 +362,9 @@ app.post("/api/addFriend", async (req, res) => {
     await currentUser.save();
 
     const newFriend = {
-        username: friendUser.username,
-        profilePicture: friendUser.profilePicture.toString("base64"),
-    }
+      username: friendUser.username,
+      profilePicture: friendUser.profilePicture.toString("base64"),
+    };
 
     res
       .status(200)
@@ -429,10 +432,10 @@ app.get("/api/getFriends", async (req, res) => {
     // Retrieve friends of the current user
     const friends = await User.find({ username: { $in: currentUser.friends } });
     const filtered = friends.map((friend) => {
-        return {
-            username: friend.username,
-            profilePicture: friend.profilePicture.toString("base64"),
-        };
+      return {
+        username: friend.username,
+        profilePicture: friend.profilePicture.toString("base64"),
+      };
     });
 
     res.status(200).json({ friends: filtered });
@@ -471,6 +474,7 @@ app.post("/api/attendEvent", async (req, res) => {
       return res.status(401).json({ error: "User not logged in" });
     }
     const user = await User.findOne({ username });
+    console.log("userData1:", user);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -483,14 +487,12 @@ app.post("/api/attendEvent", async (req, res) => {
     }
 
     if (event.usersGoing.includes(username)) {
-      //   console.log("THIS IS THE ERROR BOZO");
       return res.status(400).json({ error: "User already signed up" });
     }
-    // console.log("REACHED HERE????");
 
     event.usersGoing.push(username);
     console.log("users going to this event johnny:", event.usersGoing);
-    user.signedUpEvents.push(event);
+    // user.signedUpEvents.push(event);
     await event.save();
     await user.save();
   } catch (error) {
@@ -506,6 +508,7 @@ app.post("/api/attendEventUndo", async (req, res) => {
       return res.status(401).json({ error: "User not logged in" });
     }
     const user = await User.findOne({ username });
+    console.log("userData1:", user);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -526,12 +529,12 @@ app.post("/api/attendEventUndo", async (req, res) => {
       );
       await event.save();
     }
-    if (user.signedUpEvents.includes(event)) {
-      const eventIndex = user.signedUpEvents.indexOf(event);
-      user.signedUpEvents.splice(eventIndex, 1);
-      console.log("list of events this user is going to:", user.signedUpEvents);
-      await user.save();
-    }
+    // if (user.signedUpEvents.includes(event)) {
+    //   const eventIndex = user.signedUpEvents.indexOf(event);
+    //   user.signedUpEvents.splice(eventIndex, 1);
+    //   console.log("list of events this user is going to:", user.signedUpEvents);
+    //   await user.save();
+    // }
 
     await event.save();
     await user.save();
