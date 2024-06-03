@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const FriendList = ({ friends, onRemoveFriend }) => {
+const FriendList = ({ friends, onRemoveFriend, filter }) => {
   const [friendDetails, setFriendDetails] = useState([]);
   const [hoveredFriend, setHoveredFriend] = useState(null);
 
@@ -22,6 +22,12 @@ const FriendList = ({ friends, onRemoveFriend }) => {
     fetchFriendDetails();
   }, [friends]);
 
+    // Filter friends based on the search filter
+    const friendsFiltered = friendDetails.filter((friend) => {
+      let name = friend.username ? friend.username.toLowerCase() : '';
+      return name.includes(filter.toLowerCase());
+    });
+
   const handleRemoveFriend = async (friendUsername) => {
     try {
       // Make a POST request to remove the friend
@@ -41,7 +47,7 @@ const FriendList = ({ friends, onRemoveFriend }) => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {friendDetails.map((friend) => (
+      {friendsFiltered.map((friend) => (
         <div
           key={friend.username}
           className="bg-white shadow-lg rounded-lg p-4 m-3 cursor-pointer hover:bg-gray-100"

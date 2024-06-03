@@ -40,11 +40,11 @@ export default function Friends() {
         }
     };
 
-    // Filter friends based on the search filter
-	const friendsFiltered = friends.filter((friend) => {
-		let name = friend.name ? friend.name.toLowerCase() : '';
-		return name.includes(filter.toLowerCase());
-	});
+    // // Filter friends based on the search filter
+	// const friendsFiltered = friends.filter((friend) => {
+	// 	let name = friend.name ? friend.name.toLowerCase() : '';
+	// 	return name.includes(filter.toLowerCase());
+	// });
 
     return (
 
@@ -77,13 +77,7 @@ export default function Friends() {
 				</div>
 
 				{(friends.length > 0) ? (
-					(friendsFiltered.length > 0) ? (
-
-						<FriendList friends={friendsFiltered} />
-						
-					) : (
-						<p>No friends found.</p>
-					)
+					<FriendList friends={friends} filter={filter} />
 				) : (
 					<p>Click "Add New Friend" to get more friends.</p>
 				)}
