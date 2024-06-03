@@ -98,8 +98,7 @@ db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
   console.log("Connected to the database");
 });
-
-app.post("/api/createEvent", async (req, res) => {
+app.post("/api/createEvent", upload.single("image"), async (req, res) => {
   try {
     const { title, location, date, description, likes } = req.body;
     const datePosted = new Date();
