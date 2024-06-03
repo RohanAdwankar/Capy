@@ -6,20 +6,7 @@ const FriendList = ({ friends, onRemoveFriend, filter }) => {
   const [hoveredFriend, setHoveredFriend] = useState(null);
 
   useEffect(() => {
-    const fetchFriendDetails = async () => {
-      try {
-        const friendDetailsPromises = friends.map(async (friend) => {
-          const response = await axios.get(`/api/getUserProfile?username=${friend.username}`);
-          return response.data;
-        });
-        const friendDetailsData = await Promise.all(friendDetailsPromises);
-        setFriendDetails(friendDetailsData);
-      } catch (error) {
-        console.error('Error fetching friend details:', error);
-      }
-    };
-
-    fetchFriendDetails();
+    setFriendDetails(friends);
   }, [friends]);
 
     // Filter friends based on the search filter
