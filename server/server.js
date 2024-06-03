@@ -358,9 +358,14 @@ app.post("/api/addFriend", async (req, res) => {
     currentUser.friends.push(friendUsername);
     await currentUser.save();
 
+    const newFriend = {
+        username: friendUser.username,
+        profilePicture: friendUser.profilePicture.toString("base64"),
+    }
+
     res
       .status(200)
-      .json({ message: "Friend added successfully", friend: friendUsername });
+      .json({ message: "Friend added successfully", friend: newFriend });
   } catch (error) {
     console.error("Error adding friend:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -423,8 +428,14 @@ app.get("/api/getFriends", async (req, res) => {
 
     // Retrieve friends of the current user
     const friends = await User.find({ username: { $in: currentUser.friends } });
+    const filtered = friends.map((friend) => {
+        return {
+            username: friend.username,
+            profilePicture: friend.profilePicture.toString("base64"),
+        };
+    });
 
-    res.status(200).json({ friends });
+    res.status(200).json({ friends: filtered });
   } catch (error) {
     console.error("Error fetching friends:", error);
     res.status(500).json({ error: "Internal server error" });

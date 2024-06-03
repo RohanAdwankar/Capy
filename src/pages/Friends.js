@@ -12,14 +12,17 @@ export default function Friends() {
 	const [newFriendUsername, setNewFriendUsername] = useState('');
     const [newFriendOpen, setNewFriendOpen] = useState(false);
     const [friends, setFriends] = useState([]);
+	const [status, setStatus] = useState('Loading...');
 
 	useEffect(() => {
 		const fetchFriends = async () => {
 			try {
 				const response = await axios.get('/api/getFriends');
 				setFriends(response.data.friends);
+				setStatus('');
 			} catch (error) {
 				console.error('Error fetching friends:', error);
+				setStatus('Error fetching friends');
 			}
 		};
 	
@@ -28,6 +31,7 @@ export default function Friends() {
 
 	const handleAddFriend = async () => {
         try {
+			setStatus('Adding ' + newFriendUsername + ' as a friend...');
             const response = await axios.post('/api/addFriend', { friendUsername: newFriendUsername });
             console.log(response.data);
 
@@ -35,16 +39,18 @@ export default function Friends() {
             setFriends([...friends, addedFriend]);
             setNewFriendUsername('');
             setNewFriendOpen(false);
+			setStatus(newFriendUsername + ' added successfully');
         } catch (error) {
             console.error('Error adding friend:', error);
+			setStatus('Error adding friend');
         }
     };
 
-    // Filter friends based on the search filter
-	const friendsFiltered = friends.filter((friend) => {
-		let name = friend.name ? friend.name.toLowerCase() : '';
-		return name.includes(filter.toLowerCase());
-	});
+    // // Filter friends based on the search filter
+	// const friendsFiltered = friends.filter((friend) => {
+	// 	let name = friend.name ? friend.name.toLowerCase() : '';
+	// 	return name.includes(filter.toLowerCase());
+	// });
 
     return (
 
@@ -76,14 +82,10 @@ export default function Friends() {
 					</button>
 				</div>
 
-				{(friends.length > 0) ? (
-					(friendsFiltered.length > 0) ? (
+				{(status !== '') && <p>{status}</p>}
 
-						<FriendList friends={friendsFiltered} />
-						
-					) : (
-						<p>No friends found.</p>
-					)
+				{(friends.length > 0) ? (
+					<FriendList friends={friends} filter={filter} />
 				) : (
 					<p>Click "Add New Friend" to get more friends.</p>
 				)}
