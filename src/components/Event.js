@@ -172,7 +172,10 @@ export default function Event({ eventData, userID }) {
       </div>
       <p> 
         {/* Shortened Description */}
-        {eventData.description.split('').slice(0, 33).join('')+"..."}
+        {eventData.description.length > 33 
+          ? eventData.description.split('').slice(0, 33).join('') + '...' 
+          : eventData.description
+        }
       </p>
       
       <div className="mt-4">
