@@ -9,7 +9,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
-export default function Event({ eventData, currentUser }) {
+require("./globalVariables");
+console.log(global.myGlobalVar); // Outputs: Hello, world!
+
+export default function Event({ eventData }) {
   const [likes, setLikes] = useState(eventData.usersLiked.length);
   const [numberAttending, setNumberAttending] = useState(
     eventData.usersGoing.length
@@ -18,17 +21,20 @@ export default function Event({ eventData, currentUser }) {
   const [showAnimation, setShowAnimation] = useState(false);
   const [showPopUpAnimation, setShowPopUpAnimation] = useState(false);
   const [userLiked, setUserLiked] = useState(
-    eventData.usersLiked.includes(currentUser) && currentUser !== ""
+    eventData.usersLiked.includes(global.currentUsername) &&
+      global.currentUsername !== ""
   );
   const [userIsPullingUp, setUserIsPullingUp] = useState(
-    eventData.usersGoing.includes(currentUser) && currentUser !== ""
+    eventData.usersGoing.includes(global.currentUsername) &&
+      global.currentUsername !== ""
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [eventImageBase64, setEventImageBase64] = useState(null);
-  // console.log("EVENT DATA:", eventData);
-  // console.log("currentUser:", currentUser);
-  // console.log("userLiked:", userLiked);
-  // console.log("EVENTDATA 2:", eventData);
+  // console.log("TESTING EVENTJS");
+  // console.log(global.currentUsername);
+  // console.log(eventData);
+  // console.log(eventData.usersLiked.includes(global.currentUsername));
+  // console.log(global.currentUsername !== "");
 
   useEffect(() => {
     // Fetch the event image as base64 string
@@ -50,7 +56,7 @@ export default function Event({ eventData, currentUser }) {
 
   const handleLikeClick = async () => {
     console.log("REACHED THIS BOZO");
-    if (currentUser === "") {
+    if (global.currentUsername === "") {
       alert("Must be signed in to like event.");
       return;
     }
@@ -80,7 +86,7 @@ export default function Event({ eventData, currentUser }) {
   };
 
   const handlePullUpClick = async () => {
-    if (currentUser === "") {
+    if (global.currentUsername === "") {
       alert("Must be signed in to pull up to event.");
       return;
     } else {
@@ -145,7 +151,7 @@ export default function Event({ eventData, currentUser }) {
                   : "bg-gray-200 text-gray-700"
               }`}
             >
-              Pull Up
+              Pull Up ({numberAttending})
             </button>
             <h1 className="text-4xl mb-4">{eventData.title}</h1>
             <div className="relative flex items-center mb-4">
