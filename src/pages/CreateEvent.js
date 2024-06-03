@@ -9,7 +9,6 @@ export default function CreateEvent() {
   const defaultEventTime = new Date(oneHourLater.setMinutes(0, 0, 0)); // 1 hour from now, rounded down to the nearest hour
 
   const [eventData, setEventData] = useState({
-    user: "test user",
     title: "",
     location: "",
     date: defaultEventTime,
@@ -34,10 +33,12 @@ export default function CreateEvent() {
     }
   };
 
+  const requiredFields = ["title", "location", "date", "time"];
+
   async function handleEventSubmission() {
     try {
-      for (let field in eventData) {
-        if (!eventData[field] && field !== "description" && field !== "likes") {
+      for (let field of requiredFields) {
+        if (!eventData[field]) {
           alert("Please fill out all required fields.");
           return;
         }
