@@ -2,7 +2,7 @@ import {React} from 'react';
 
 export default function About() {
     return (
-        <div className="flex flex-col md:flex-row bg-gray-100 p-8">
+        <div className="flex flex-col md:flex-row bg-white p-8">
           <div className="md:w-2/3 text-black p-8 space-y-6">
             <h1 className="text-4xl font-bold text-blue-600">
                 Connecting the campus, one "pull up" at a time!
