@@ -29,7 +29,7 @@ export default function About() {
             </ul>
           </div>
           <div className="md:w-1/3 flex items-center justify-center p-8">
-            <img src="src\assets\coda.png" alt="Codas" className="rounded-full w-full" style={{ maxWidth: '600px' }}/>
+            <img src="../assets/coda.png" alt="Codas" className="rounded-full w-full" style={{ maxWidth: '600px' }}/>
           </div>
         </div>
       );

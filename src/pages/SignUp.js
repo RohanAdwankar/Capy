@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./SignIn.css";
 import { store } from "../Main.js";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+
 
 export default function SignUp() {
 
@@ -12,6 +14,8 @@ export default function SignUp() {
 	const [successMessage, setSuccessMessage] = useState("");
 	const [isValid, setIsValid] = useState(true);
 	const [isSignedIn, setSignedIn] = store.useState("signedIn", {default: false});
+	
+	const navigate = useNavigate();
 
 
 	const handleUsernameChange = (event) => {
