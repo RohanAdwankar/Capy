@@ -8,8 +8,9 @@ function PfpUpload() {
   const [profilePictureUploaded, setProfilePictureUploaded] = useState(false);
 
   
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    const allowedFileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     const reader = new FileReader();
 
     reader.onloadend = () => {
@@ -17,8 +18,20 @@ function PfpUpload() {
     };
 
     if (file) {
+      if (!allowedFileTypes.includes(file.type)) {
+        setErrorMessage('Please upload a .jpeg, .jpg, or .png file');
+        return;
+      }
+  
+      setErrorMessage('');
+      let reader = new FileReader();
+  
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+        setUploadedImage(file);
+      }
+  
       reader.readAsDataURL(file);
-      setUploadedImage(file);
     }
   };
 
@@ -57,6 +70,7 @@ function PfpUpload() {
     <div>
       <h2>Upload your Square Profile Picture</h2>
       <input type="file" onChange={handleImageChange} accept="image/*" />
+      {errorMessage && <div>{errorMessage}</div>}
       {imagePreview && (
         <img src={imagePreview} alt="Preview" style={{ maxWidth: '200px', maxHeight: '200px' }} />
       )}
@@ -66,7 +80,7 @@ function PfpUpload() {
         variant="contained">
           Upload Profile Picture
       </button>
-      {profilePictureUploaded && <div>Profile picture uploaded successfully! Reload to see new porfile picture</div>}
+      {profilePictureUploaded && <div>Profile picture uploaded successfully! Reload to see new profile picture</div>}
     </div>
   );
 }
