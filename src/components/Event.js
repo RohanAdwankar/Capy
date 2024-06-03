@@ -170,7 +170,8 @@ export default function Event({ eventData, userID }) {
           className="w-full h-64 object-cover rounded"
         />
       </div>
-      <p>{eventData.description}</p>
+      <p> {eventData.description.split(' ').slice(0, 10).join(' ')+"..."}</p>
+      
       <div className="mt-4">
         <button
           onClick={handleLikeClick}
