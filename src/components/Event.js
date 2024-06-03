@@ -136,6 +136,7 @@ export default function Event({ eventData, currentUser }) {
         <button
           onClick={() => {
             setShowAnimation(!showAnimation);
+            handlePullUpClick();
             start();
           }}
           className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-2 rounded"

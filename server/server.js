@@ -429,6 +429,38 @@ app.get("/api/eventImage/:eventId", async (req, res) => {
   }
 });
 
+app.post("/api/attendEvent", async (req, res) => {
+    try {
+        const username = req.session.username;
+        if (!username) {
+          return res.status(401).json({ error: "User not logged in" });
+        }
+        const user = await User.findOne({ username });
+        if (!user) {
+          return res.status(404).json({ error: "User not found" });
+        }
+
+        const { eventId } = req.body;
+        const event = await Event.findById(eventId);
+
+        if (!event) {
+            return res.status(404).json({ error: "Event not found" });
+        }
+
+        if (event.usersGoing.includes(username)) {
+            return res.status(400).json({ error: "User already signed up" });
+        }
+
+        event.usersGoing.push(username);
+        user.signedUpEvents.push(event);
+        await event.save();
+        await user.save();
+    } catch (error) {
+        console.error("Error pulling up to event:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+})
+
 //API Endpoint
 app.use(cors());
 app.use(express.json());
