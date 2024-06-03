@@ -470,11 +470,56 @@ app.post("/api/attendEvent", async (req, res) => {
     }
 
     if (event.usersGoing.includes(username)) {
+      //   console.log("THIS IS THE ERROR BOZO");
       return res.status(400).json({ error: "User already signed up" });
     }
+    // console.log("REACHED HERE????");
 
     event.usersGoing.push(username);
+    console.log("users going to this event johnny:", event.usersGoing);
     user.signedUpEvents.push(event);
+    await event.save();
+    await user.save();
+  } catch (error) {
+    console.error("Error pulling up to event:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post("/api/attendEventUndo", async (req, res) => {
+  try {
+    const username = req.session.username;
+    if (!username) {
+      return res.status(401).json({ error: "User not logged in" });
+    }
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const { eventId } = req.body;
+    const event = await Event.findById(eventId);
+
+    if (!event) {
+      return res.status(404).json({ error: "Event not found" });
+    }
+
+    if (event.usersGoing.includes(username)) {
+      const userIndex = event.usersGoing.indexOf(username);
+      event.usersGoing.splice(userIndex, 1);
+      console.log(
+        "list of users who are going to this event:",
+        event.usersGoing
+      );
+      await event.save();
+    }
+    if (user.signedUpEvents.includes(event)) {
+      const eventIndex = user.signedUpEvents.indexOf(event);
+      user.signedUpEvents.splice(eventIndex, 1);
+      console.log("list of events this user is going to:", user.signedUpEvents);
+      await user.save();
+    }
+
     await event.save();
     await user.save();
   } catch (error) {

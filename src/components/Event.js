@@ -17,6 +17,9 @@ export default function Event({ eventData, currentUser }) {
   const [userLiked, setUserLiked] = useState(
     eventData.usersLiked.includes(currentUser) && currentUser !== ""
   );
+  const [userIsPullingUp, setUserIsPullingUp] = useState(
+    eventData.usersGoing.includes(currentUser) && currentUser !== ""
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [eventImageBase64, setEventImageBase64] = useState(null);
   console.log("Username is currently johnny:", currentUser !== "");
@@ -72,14 +75,25 @@ export default function Event({ eventData, currentUser }) {
       alert("Must be signed in to pull up to event.");
       return;
     } else {
-      try {
-        await axios.post("/api/attendEvent", { eventId: eventData._id });
-        console.log("Attendance recorded successfully");
-      } catch (error) {
-        console.error("Error recording attendance:", error);
+      if (!userIsPullingUp) {
+        setUserIsPullingUp(true);
+        setShowPopUpAnimation(!showPopUpAnimation);
+        start();
+        try {
+          await axios.post("/api/attendEvent", { eventId: eventData._id });
+          console.log("Attendance recorded successfully");
+        } catch (error) {
+          console.error("Error recording attendance:", error);
+        }
+      } else {
+        setUserIsPullingUp(false);
+        try {
+          await axios.post("/api/attendEventUndo", { eventId: eventData._id });
+          console.log("Attendance undo recorded successfully");
+        } catch (error) {
+          console.error("Error recording attendance:", error);
+        }
       }
-      setShowPopUpAnimation(!showPopUpAnimation);
-      start();
     }
   };
 
@@ -110,7 +124,12 @@ export default function Event({ eventData, currentUser }) {
                 // start();
                 handlePullUpClick();
               }}
-              className="absolute top-2 right-20 bg-blue-500 text-white px-4 py-2 rounded-l"
+              className={`absolute top-2 right-20 px-4 py-2 rounded-l
+              ${
+                userIsPullingUp
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 text-gray-700"
+              }`}
             >
               Pull Up
             </button>
@@ -162,7 +181,12 @@ export default function Event({ eventData, currentUser }) {
             // start();
             handlePullUpClick();
           }}
-          className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-2 rounded"
+          className={`absolute top-0 right-0 px-4 py-2 rounded
+          ${
+            userIsPullingUp
+              ? "bg-blue-500 text-white"
+              : "bg-gray-200 text-gray-700"
+          }`}
         >
           Pull Up
         </button>
