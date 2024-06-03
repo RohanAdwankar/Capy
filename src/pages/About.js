@@ -1,4 +1,6 @@
 import {React} from 'react';
+import logo from '../assets/coda.png';
+
 
 export default function About() {
     return (
@@ -29,7 +31,7 @@ export default function About() {
             </ul>
           </div>
           <div className="md:w-1/3 flex items-center justify-center p-8">
-            <img src="../assets/coda.png" alt="Codas" className="rounded-full w-full" style={{ maxWidth: '600px' }}/>
+            <img src={logo} alt="Codas" className="rounded-full w-full" style={{ maxWidth: '600px' }}/>
           </div>
         </div>
       );
