@@ -32,27 +32,12 @@ export default function AllEvents() {
       })
       .then((data) => {
         setUsername(data.username);
-        console.log("USERNAME ASDF:", data.username);
+        console.log("Your current username is:", data.username);
       })
       .catch((error) => {
         console.error("Error fetching username:", error);
       });
   }, []);
-
-  //   useEffect(() => {
-  //     axios
-  //       .get("http://localhost:3002/api/getUserProfile")
-  //       .then((response) => {
-  //         setUser(response.username);
-  //         console.log("USER:", user);
-  //         setLoading(false);
-  //       })
-  //       .catch((err) => {
-  //         console.error("Error fetchinge events:", err);
-  //         setUser(err);
-  //         setLoading(false);
-  //       });
-  //   }, []);
 
   if (loading) return <p>Loading events...</p>;
   if (error) return <p>Error loading events.</p>;
@@ -60,9 +45,11 @@ export default function AllEvents() {
   return (
     <div className="flex justify-center items-center h-full m-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {events.map((event) => (
-          <Event key={event._id} eventData={event} currentUser={username} />
-        )).reverse()}
+        {events
+          .map((event) => (
+            <Event key={event._id} eventData={event} currentUser={username} />
+          ))
+          .reverse()}
       </div>
     </div>
   );

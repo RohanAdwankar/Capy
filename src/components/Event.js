@@ -10,15 +10,16 @@ import {
 import axios from "axios";
 
 export default function Event({ eventData, currentUser }) {
-  const [likes, setLikes] = useState(eventData.likes);
+  const [likes, setLikes] = useState(eventData.usersLiked.length);
   const [showComments, setShowComments] = useState(false);
   const [showAnimation, setShowAnimation] = useState(false);
   const [showPopUpAnimation, setShowPopUpAnimation] = useState(false);
   const [userLiked, setUserLiked] = useState(
-    eventData.usersLiked.includes(currentUser)
+    eventData.usersLiked.includes(currentUser) && currentUser !== ""
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [eventImageBase64, setEventImageBase64] = useState(null);
+  console.log("Username is currently johnny:", currentUser !== "");
 
   useEffect(() => {
     // Fetch the event image as base64 string
@@ -39,23 +40,27 @@ export default function Event({ eventData, currentUser }) {
   };
 
   const handleLikeClick = async () => {
+    if (currentUser === "") {
+      alert("Must be signed in to like event.");
+      return;
+    }
     if (!userLiked) {
       // console.log("LIKED");
-      setLikes(likes + 1);
-      setUserLiked(true);
       try {
         await axios.post("/api/likeEvent", { eventID: eventData._id });
         console.log("Liked successfully");
+        setLikes(likes + 1);
+        setUserLiked(true);
       } catch (error) {
         console.error("Error liking:", error);
       }
     } else {
       // console.log("UNLIKED");
-      setLikes(likes - 1);
-      setUserLiked(false);
       try {
         await axios.post("/api/likeEventUndo", { eventID: eventData._id });
         console.log("Liked Undo successfully");
+        setLikes(likes - 1);
+        setUserLiked(false);
       } catch (error) {
         console.error("Error Undo liking:", error);
       }
@@ -63,11 +68,18 @@ export default function Event({ eventData, currentUser }) {
   };
 
   const handlePullUpClick = async () => {
-    try {
-      await axios.post("/api/attendEvent", { eventId: eventData._id });
-      console.log("Attendance recorded successfully");
-    } catch (error) {
-      console.error("Error recording attendance:", error);
+    if (currentUser === "") {
+      alert("Must be signed in to pull up to event.");
+      return;
+    } else {
+      try {
+        await axios.post("/api/attendEvent", { eventId: eventData._id });
+        console.log("Attendance recorded successfully");
+      } catch (error) {
+        console.error("Error recording attendance:", error);
+      }
+      setShowPopUpAnimation(!showPopUpAnimation);
+      start();
     }
   };
 
@@ -94,8 +106,8 @@ export default function Event({ eventData, currentUser }) {
             </div>
             <button
               onClick={() => {
-                setShowPopUpAnimation(!showPopUpAnimation);
-                start();
+                // setShowPopUpAnimation(!showPopUpAnimation);
+                // start();
                 handlePullUpClick();
               }}
               className="absolute top-2 right-20 bg-blue-500 text-white px-4 py-2 rounded-l"
@@ -146,9 +158,9 @@ export default function Event({ eventData, currentUser }) {
         </button>
         <button
           onClick={() => {
-            setShowAnimation(!showAnimation);
+            // setShowAnimation(!showAnimation);
+            // start();
             handlePullUpClick();
-            start();
           }}
           className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-2 rounded"
         >
@@ -197,7 +209,7 @@ export default function Event({ eventData, currentUser }) {
           className={`px-4 py-2 rounded mr-2 ${
             userLiked ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
           }`}
-          // disabled={userLiked}
+          // disabled={currentUser === ""}
         >
           like({likes})
         </button>

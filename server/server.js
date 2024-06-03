@@ -58,7 +58,6 @@ const eventSchema = new mongoose.Schema({
   eventImage: Buffer,
   usersGoing: [{ type: String }],
   usersLiked: [{ type: String }],
-  likes: Number,
 });
 
 const User = mongoose.model("User", userSchema);
@@ -113,12 +112,9 @@ app.post("/api/likeEvent", async (req, res) => {
     }
     if (!event.usersLiked.includes(username)) {
       event.usersLiked.push(username);
+      console.log("list of users who liked this event:", event.usersLiked);
       await event.save();
     }
-    console.log("usersLiked jimmy1?", event.usersLiked);
-    event.likes = event.likes + 1;
-    console.log("EVNET LIKES: ", event.likes);
-    await event.save();
     res.status(200).json({ message: "You liked this event!" });
     ("");
   } catch (error) {
@@ -142,10 +138,9 @@ app.post("/api/likeEventUndo", async (req, res) => {
     if (event.usersLiked.includes(username)) {
       const userIndex = event.usersLiked.indexOf(username);
       event.usersLiked.splice(userIndex, 1);
+      console.log("list of users who liked this event:", event.usersLiked);
       await event.save();
     }
-    event.likes = event.likes - 1;
-    await event.save();
     res.status(200).json({ message: "You unliked this event!" });
     ("");
   } catch (error) {
@@ -457,36 +452,36 @@ app.get("/api/eventImage/:eventId", async (req, res) => {
 });
 
 app.post("/api/attendEvent", async (req, res) => {
-    try {
-        const username = req.session.username;
-        if (!username) {
-          return res.status(401).json({ error: "User not logged in" });
-        }
-        const user = await User.findOne({ username });
-        if (!user) {
-          return res.status(404).json({ error: "User not found" });
-        }
-
-        const { eventId } = req.body;
-        const event = await Event.findById(eventId);
-
-        if (!event) {
-            return res.status(404).json({ error: "Event not found" });
-        }
-
-        if (event.usersGoing.includes(username)) {
-            return res.status(400).json({ error: "User already signed up" });
-        }
-
-        event.usersGoing.push(username);
-        user.signedUpEvents.push(event);
-        await event.save();
-        await user.save();
-    } catch (error) {
-        console.error("Error pulling up to event:", error);
-        res.status(500).json({ error: "Internal server error" });
+  try {
+    const username = req.session.username;
+    if (!username) {
+      return res.status(401).json({ error: "User not logged in" });
     }
-})
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const { eventId } = req.body;
+    const event = await Event.findById(eventId);
+
+    if (!event) {
+      return res.status(404).json({ error: "Event not found" });
+    }
+
+    if (event.usersGoing.includes(username)) {
+      return res.status(400).json({ error: "User already signed up" });
+    }
+
+    event.usersGoing.push(username);
+    user.signedUpEvents.push(event);
+    await event.save();
+    await user.save();
+  } catch (error) {
+    console.error("Error pulling up to event:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 //API Endpoint
 app.use(cors());
