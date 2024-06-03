@@ -22,7 +22,6 @@ export default function Event({ eventData, currentUser }) {
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [eventImageBase64, setEventImageBase64] = useState(null);
-  // console.log("Username is currently johnny:", currentUser !== "");
 
   useEffect(() => {
     // Fetch the event image as base64 string
@@ -43,6 +42,7 @@ export default function Event({ eventData, currentUser }) {
   };
 
   const handleLikeClick = async () => {
+    console.log("REACHED THIS BOZO");
     if (currentUser === "") {
       alert("Must be signed in to like event.");
       return;
@@ -230,7 +230,9 @@ export default function Event({ eventData, currentUser }) {
 
       <div className="mt-4">
         <button
-          onClick={handleLikeClick}
+          onClick={() => {
+            handleLikeClick();
+          }}
           className={`px-4 py-2 rounded mr-2 ${
             userLiked ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
           }`}

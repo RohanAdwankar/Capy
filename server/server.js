@@ -151,7 +151,8 @@ app.post("/api/likeEventUndo", async (req, res) => {
 
 app.post("/api/createEvent", upload.single("image"), async (req, res) => {
   try {
-    const { title, location, date, description, likes } = req.body;
+    const { title, location, date, description, usersLiked, usersGoing } =
+      req.body;
     const datePosted = new Date();
     const user = req.session.username;
 
@@ -172,7 +173,8 @@ app.post("/api/createEvent", upload.single("image"), async (req, res) => {
       description,
       datePosted,
       eventImage, // Use the uploaded image if available, otherwise use the default image
-      likes,
+      usersLiked,
+      usersGoing,
     });
 
     await newEvent.save();
