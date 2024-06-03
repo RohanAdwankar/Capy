@@ -16,9 +16,21 @@ export default function CreateEvent() {
 		time: `${String(defaultEventTime.getHours()).padStart(2, '0')}:${String(defaultEventTime.getMinutes()).padStart(2, '0')}`,
 		description: "",
 	});
+	const [uploadedImage, setUploadedImage] = useState(null);
 
 	const [submitted, setSubmitted] = useState(false);
 	const [error, setError] = useState(false);
+
+
+	const handleImageChange = async (e) => {
+		const file = e.target.files[0];
+		const reader = new FileReader();
+
+		if (file) {
+			reader.readAsDataURL(file);
+			setUploadedImage(file);
+		}
+	}
 
 	async function handleEventSubmission() {
 		console.log(eventData)
@@ -70,6 +82,8 @@ export default function CreateEvent() {
 						setEventData({...eventData, description: event.target.value})
 					}}></textarea> <br />
 
+					<input type="file" onChange={handleImageChange} accept="image/*" />
+					<br />
 					<button className="bg-black text-white rounded-full p-2 px-5 mt-10" onClick={handleEventSubmission}>Create Event</button>
 				</>
 			) : (
