@@ -37,7 +37,6 @@ export default function CreateEvent() {
 
   async function handleEventSubmission() {
     try {
-      console.log("eventData:", eventData);
       for (let field of requiredFields) {
         if (!eventData[field]) {
           alert("Please fill out all required fields.");

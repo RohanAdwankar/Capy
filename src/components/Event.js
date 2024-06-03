@@ -27,7 +27,7 @@ export default function Event({ eventData, currentUser }) {
         const response = await axios.get(`/api/eventImage/${eventData._id}`);
         setEventImageBase64(response.data.eventImageBase64);
       } catch (error) {
-        console.error("Error fetching event image:", error);
+        console.error("Error Fetching Event Image:", error);
       }
     }
 
@@ -40,14 +40,25 @@ export default function Event({ eventData, currentUser }) {
 
   const handleLikeClick = async () => {
     if (!userLiked) {
+      // console.log("LIKED");
       setLikes(likes + 1);
       setUserLiked(true);
-    }
-    try {
-      await axios.post("/api/likeEvent", { eventID: eventData._id });
-      console.log("Liked successfully");
-    } catch (error) {
-      console.error("Error liking:", error);
+      try {
+        await axios.post("/api/likeEvent", { eventID: eventData._id });
+        console.log("Liked successfully");
+      } catch (error) {
+        console.error("Error liking:", error);
+      }
+    } else {
+      // console.log("UNLIKED");
+      setLikes(likes - 1);
+      setUserLiked(false);
+      try {
+        await axios.post("/api/likeEventUndo", { eventID: eventData._id });
+        console.log("Liked Undo successfully");
+      } catch (error) {
+        console.error("Error Undo liking:", error);
+      }
     }
   };
 
@@ -186,7 +197,7 @@ export default function Event({ eventData, currentUser }) {
           className={`px-4 py-2 rounded mr-2 ${
             userLiked ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
           }`}
-          disabled={userLiked}
+          // disabled={userLiked}
         >
           like({likes})
         </button>
