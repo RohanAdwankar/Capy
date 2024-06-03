@@ -66,7 +66,7 @@ function PfpUpload() {
         variant="contained">
           Upload Profile Picture
       </button>
-      {profilePictureUploaded && <div>Profile picture uploaded successfully! Reload to see new porfile picture</div>}
+      {profilePictureUploaded && <div>Profile picture uploaded successfully!</div>}
     </div>
   );
 }
