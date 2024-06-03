@@ -17,7 +17,7 @@ export default function CreateEvent() {
       defaultEventTime.getMinutes()
     ).padStart(2, "0")}`,
     description: "",
-    likes: 500,
+    likes: 0,
   });
   const [uploadedImage, setUploadedImage] = useState(null);
 
