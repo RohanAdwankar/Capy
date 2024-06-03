@@ -5,7 +5,6 @@ import profile from "./assets/coda.png";
 import Event from "./pages/CreateEvent";
 import Profile from "./pages/Profile";
 import Friends from "./pages/Friends";
-import Groups from "./pages/Groups";
 import MyEvents from "./pages/MyEvents";
 import AllEvents from "./pages/AllEvents";
 import Loading from "./Loading";
@@ -113,7 +112,6 @@ function Main() {
   const pages = {
     "/": { title: "All Events" },
     "/my": { title: "My Events" },
-    "/groups": { title: "Groups" },
     "/friends": { title: "Friends" },
     "/profile": { title: "Profile" },
     "/about": {title: "About"}
@@ -185,7 +183,6 @@ function Main() {
               <Routes>
                 <Route path="/" element={<AllEvents />} />
                 <Route path="/my" element={<MyEvents />} />
-                <Route path="/groups" element={<Groups />} />
                 <Route path="/friends" element={<Friends />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/create" element={<Event />} />
