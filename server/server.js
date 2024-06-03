@@ -90,8 +90,8 @@ db.once('open', () => {
     console.log('Connected to the database');
 });
 
-
-app.post('/api/createEvent', async (req, res) => {
+// Modify the route handler to use multer for parsing multipart/form-data
+app.post('/api/createEvent', upload.single('image'), async (req, res) => {
     try {
         const { title, location, date, description } = req.body;
         const datePosted = new Date();
@@ -101,7 +101,8 @@ app.post('/api/createEvent', async (req, res) => {
             return res.status(500).json({ error: 'User not logged in' });
         }
 
-        const defaultEventImage = fs.readFileSync('./server/assets/defEvent.jpeg');
+        // Check if an image file was uploaded
+        const eventImage = req.file ? req.file.buffer : fs.readFileSync('./server/assets/defEvent.jpeg');
 
         const newEvent = new Event({
             user: user.username,
@@ -110,9 +111,11 @@ app.post('/api/createEvent', async (req, res) => {
             date,
             description,
             datePosted,
-            eventImage: defaultEventImage,
+            eventImage, // Use the uploaded image if available, otherwise use the default image
         });
+
         await newEvent.save();
+
         res.status(201).send('Event created');
         console.log("Someone created an event:");
         console.log(newEvent);
@@ -121,6 +124,7 @@ app.post('/api/createEvent', async (req, res) => {
         res.status(500).send('Error creating event');
     }
 });
+
 
 app.post('/api/createUser', async (req, res) => {
 
@@ -399,38 +403,6 @@ app.get('/api/getFriends', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-
-
-
-app.post('/api/uploadEventImage', upload.single('image'), async (req, res) => {
-    try {
-        if (!req.file) {
-            return res.status(400).json({ error: 'No file uploaded' });
-        }
-
-        const imageBuffer = req.file.buffer;
-
-        const { eventId } = req.body;
-        if (!eventId) {
-            return res.status(400).json({ error: 'Event ID is missing' });
-        }
-
-        const event = await Event.findById(eventId);
-        if (!event) {
-            return res.status(404).json({ error: 'Event not found' });
-        }
-
-        event.eventImage = imageBuffer;
-
-        await event.save();
-
-        res.status(200).json({ message: 'Event image uploaded successfully' });
-    } catch (error) {
-        console.error('Error uploading event image:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
 
 
 

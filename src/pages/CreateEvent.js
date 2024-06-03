@@ -33,27 +33,36 @@ export default function CreateEvent() {
 	}
 
 	async function handleEventSubmission() {
-		console.log(eventData)
-		for (let field in eventData) {
-			if (!eventData[field] && field !== "description") {
-				alert("Please fill out all required fields.");
-				return;
-			}
-		}
+		try {
 
-		eventData.date.setTime(eventData.date.getTime())
-		await axios.post("/api/createEvent", eventData, {
-			headers: {
-				"Content-Type": "application/json",
-			},
-		}).then((res) => {
-			console.log(res);
+			for (let field in eventData) {
+				if (!eventData[field] && field !== "description") {
+					alert("Please fill out all required fields.");
+					return;
+				}
+			}
+	
+			const formData = new FormData();
+	
+			for (let field in eventData) {
+				formData.append(field, eventData[field]);
+			}
+	
+			formData.append('image', uploadedImage);
+	
+			await axios.post("/api/createEvent", formData, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			});
+	
 			setSubmitted(true);
-		}).catch((error) => {
+		} catch (error) {
 			console.error('Error:', error);
 			setError(true);
-		});
+		}
 	}
+	
 
 	const inputFieldClass = "rounded-full bg-gray-100 p-2 pl-5 mb-2 w-full"
 
