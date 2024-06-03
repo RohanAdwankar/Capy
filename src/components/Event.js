@@ -22,7 +22,7 @@ export default function Event({ eventData, currentUser }) {
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [eventImageBase64, setEventImageBase64] = useState(null);
-  console.log("Username is currently johnny:", currentUser !== "");
+  // console.log("Username is currently johnny:", currentUser !== "");
 
   useEffect(() => {
     // Fetch the event image as base64 string
@@ -49,21 +49,21 @@ export default function Event({ eventData, currentUser }) {
     }
     if (!userLiked) {
       // console.log("LIKED");
+      setLikes(likes + 1);
+      setUserLiked(true);
       try {
         await axios.post("/api/likeEvent", { eventID: eventData._id });
         console.log("Liked successfully");
-        setLikes(likes + 1);
-        setUserLiked(true);
       } catch (error) {
         console.error("Error liking:", error);
       }
     } else {
       // console.log("UNLIKED");
+      setLikes(likes - 1);
+      setUserLiked(false);
       try {
         await axios.post("/api/likeEventUndo", { eventID: eventData._id });
         console.log("Liked Undo successfully");
-        setLikes(likes - 1);
-        setUserLiked(false);
       } catch (error) {
         console.error("Error Undo liking:", error);
       }
@@ -77,7 +77,7 @@ export default function Event({ eventData, currentUser }) {
     } else {
       if (!userIsPullingUp) {
         setUserIsPullingUp(true);
-        setShowPopUpAnimation(!showPopUpAnimation);
+        setShowPopUpAnimation(true);
         start();
         try {
           await axios.post("/api/attendEvent", { eventId: eventData._id });
@@ -87,6 +87,7 @@ export default function Event({ eventData, currentUser }) {
         }
       } else {
         setUserIsPullingUp(false);
+        setShowPopUpAnimation(false);
         try {
           await axios.post("/api/attendEventUndo", { eventId: eventData._id });
           console.log("Attendance undo recorded successfully");
@@ -194,7 +195,7 @@ export default function Event({ eventData, currentUser }) {
           src={capy}
           alt="Animation"
           className={`object-scale-down h-5 w-5 absolute opacity-0 ${
-            showAnimation ? "animate-fadeInScaleRotate" : ""
+            showPopUpAnimation ? "animate-fadeInScaleRotate" : ""
           }`}
         />
         <h1 className="text-2xl font-bold">{eventData.title}</h1>
