@@ -10,7 +10,7 @@ import {
 import axios from "axios";
 
 export default function Event({ eventData, userID }) {
-  const [likes, setLikes] = useState(0);
+  const [likes, setLikes] = useState(eventData.likes);
   const [showComments, setShowComments] = useState(false);
   const [showAnimation, setShowAnimation] = useState(false);
   const [showPopUpAnimation, setShowPopUpAnimation] = useState(false);
@@ -36,10 +36,16 @@ export default function Event({ eventData, userID }) {
     setShowComments(!showComments);
   };
 
-  const handleLikeClick = () => {
+  const handleLikeClick = async () => {
     if (!userLiked) {
       setLikes(likes + 1);
       setUserLiked(true);
+    }
+    try {
+      await axios.post("/api/likeEvent", { eventID: eventData._id });
+      console.log("Liked successfully");
+    } catch (error) {
+      console.error("Error liking:", error);
     }
   };
 
