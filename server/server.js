@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema({
     profilePicture: Buffer,
     friends: [{ type: String}],
     myEvents: [{ type: String}],
-    signedUpEvents: [{ type: String}],
+    signedUpEvents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event'}],
 
 });
 
@@ -91,12 +91,14 @@ db.once('open', () => {
 
 app.post('/api/attendEvent', async (req, res) => {
     try {
-        const { eventID } = req.body;
+        const { eventId } = req.body;
         const username = req.session.username;
         if (!username) {
             return res.status(401).json({ error: 'User not logged in'});
         }
-        const event = await Event.findById(eventID);
+
+        const event = await Event.findById(eventId);
+        const user = await User.findOne({ username });
 
         if(!event) {
             return res.status(404).json({ error: 'Event not found'});
@@ -104,6 +106,10 @@ app.post('/api/attendEvent', async (req, res) => {
         if (!event.usersGoing.includes(username)) {
             event.usersGoing.push(username);
             await event.save()
+        }
+        if (!user.signedUpEvents.includes(eventId)) {
+            user.signedUpEvents.push(eventId);
+            await user.save();
         }
         res.status(200).json({message: 'Can\'t wait to see you there!'});''
     } catch (error) {

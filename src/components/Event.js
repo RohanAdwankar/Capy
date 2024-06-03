@@ -29,7 +29,7 @@ export default function Event({eventData, userID}){
 
   const handlePullUpClick = async () => {
     try {
-      await axios.post('/api/attendEvent', { eventID: eventData._id});
+      await axios.post('/api/attendEvent', { eventId: eventData._id});
       console.log('Attendance recorded successfully');
     } catch (error) {
       console.error('Error recording attendance:', error);
@@ -103,6 +103,7 @@ export default function Event({eventData, userID}){
             onClick={() => {
               setShowAnimation(!showAnimation);
               start();
+              handlePullUpClick();
             }}
             className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-2 rounded"
           >
