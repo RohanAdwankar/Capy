@@ -167,12 +167,16 @@ app.post("/api/createEvent", upload.single("image"), async (req, res) => {
 app.post("/api/createUser", async (req, res) => {
   try {
     const { username, password, email } = req.body;
-
     const existingUsername = await User.findOne({ username });
-
-    if (existingUsername) {
-      return res.status(400).json({ error: "Username already exists" });
+    try{
+        if (existingUsername) {
+            return res.status(400).json({ error: "Username already exists" });
+          }
+    } catch(error){
+        console.error(error);
+        res.status(500).send("Wee WOOO WEE WOOO");
     }
+
 
     const existingEmail = await User.findOne({ email });
 
@@ -195,7 +199,12 @@ app.post("/api/createUser", async (req, res) => {
 
     //Call login after successfully signing in
     req.body = { username, password };
-    await login(req, res);
+    try{
+        //This part has a bug which means that the user is created but not actually signed in
+        await login(req, res);
+    } catch (error){
+        console.error(error);
+    }
 
     res.status(201).send("User created");
 
@@ -423,6 +432,7 @@ app.get("/api/eventImage/:eventId", async (req, res) => {
     }
 
     // Convert the eventImage buffer to base64 string
+    //This event image is undefined
     const eventImageBase64 = event.eventImage.toString("base64");
 
     // Send the base64 string as the response
