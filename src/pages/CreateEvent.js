@@ -16,32 +16,53 @@ export default function CreateEvent() {
 		time: `${String(defaultEventTime.getHours()).padStart(2, '0')}:${String(defaultEventTime.getMinutes()).padStart(2, '0')}`,
 		description: "",
 	});
+	const [uploadedImage, setUploadedImage] = useState(null);
 
 	const [submitted, setSubmitted] = useState(false);
 	const [error, setError] = useState(false);
 
-	async function handleEventSubmission() {
-		console.log(eventData)
-		for (let field in eventData) {
-			if (!eventData[field] && field !== "description") {
-				alert("Please fill out all required fields.");
-				return;
-			}
-		}
 
-		eventData.date.setTime(eventData.date.getTime())
-		await axios.post("/api/createEvent", eventData, {
-			headers: {
-				"Content-Type": "application/json",
-			},
-		}).then((res) => {
-			console.log(res);
+	const handleImageChange = async (e) => {
+		const file = e.target.files[0];
+		const reader = new FileReader();
+
+		if (file) {
+			reader.readAsDataURL(file);
+			setUploadedImage(file);
+		}
+	}
+
+	async function handleEventSubmission() {
+		try {
+
+			for (let field in eventData) {
+				if (!eventData[field] && field !== "description") {
+					alert("Please fill out all required fields.");
+					return;
+				}
+			}
+	
+			const formData = new FormData();
+	
+			for (let field in eventData) {
+				formData.append(field, eventData[field]);
+			}
+	
+			formData.append('image', uploadedImage);
+	
+			await axios.post("/api/createEvent", formData, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			});
+	
 			setSubmitted(true);
-		}).catch((error) => {
+		} catch (error) {
 			console.error('Error:', error);
 			setError(true);
-		});
+		}
 	}
+	
 
 	const inputFieldClass = "rounded-full bg-gray-100 p-2 pl-5 mb-2 w-full"
 
@@ -70,6 +91,8 @@ export default function CreateEvent() {
 						setEventData({...eventData, description: event.target.value})
 					}}></textarea> <br />
 
+					<input type="file" onChange={handleImageChange} accept="image/*" />
+					<br />
 					<button className="bg-black text-white rounded-full p-2 px-5 mt-10" onClick={handleEventSubmission}>Create Event</button>
 				</>
 			) : (

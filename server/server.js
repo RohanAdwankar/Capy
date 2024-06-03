@@ -53,7 +53,9 @@ const eventSchema = new mongoose.Schema({
     date: Date,
     description: String,
     datePosted: Date,
+    eventImage: Buffer,
     usersGoing: [{ type: String}],
+    people: [{ type: String}],
 });
 
 const User = mongoose.model('User', userSchema);
@@ -90,34 +92,6 @@ db.once('open', () => {
     console.log('Connected to the database');
 });
 
-app.post('/api/attendEvent', async (req, res) => {
-    try {
-        const { eventId } = req.body;
-        const username = req.session.username;
-        if (!username) {
-            return res.status(401).json({ error: 'User not logged in'});
-        }
-
-        const event = await Event.findById(eventId);
-        const user = await User.findOne({ username });
-
-        if(!event) {
-            return res.status(404).json({ error: 'Event not found'});
-        }
-        if (!event.usersGoing.includes(username)) {
-            event.usersGoing.push(username);
-            await event.save()
-        }
-        if (!user.signedUpEvents.includes(eventId)) {
-            user.signedUpEvents.push(eventId);
-            await user.save();
-        }
-        res.status(200).json({message: 'Can\'t wait to see you there!'});''
-    } catch (error) {
-        console.error(error)
-        res.status(500).send('Sorry Error recording attendance');
-    }
-});
 
 app.post('/api/createEvent', async (req, res) => {
     try {
@@ -129,15 +103,21 @@ app.post('/api/createEvent', async (req, res) => {
             return res.status(500).json({ error: 'User not logged in' });
         }
 
+        // Check if an image file was uploaded
+        const eventImage = req.file ? req.file.buffer : fs.readFileSync('./server/assets/defEvent.jpeg');
+
         const newEvent = new Event({
             user: user.username,
             title,
             location,
             date,
             description,
-            datePosted
+            datePosted,
+            eventImage, // Use the uploaded image if available, otherwise use the default image
         });
+
         await newEvent.save();
+
         res.status(201).send('Event created');
         console.log("Someone created an event:");
         console.log(newEvent);
@@ -146,6 +126,7 @@ app.post('/api/createEvent', async (req, res) => {
         res.status(500).send('Error creating event');
     }
 });
+
 
 app.post('/api/createUser', async (req, res) => {
 
@@ -423,6 +404,28 @@ app.get('/api/getFriends', async (req, res) => {
 
 
 
+
+app.get('/api/eventImage/:eventId', async (req, res) => {
+    try {
+        const eventId = req.params.eventId;
+
+        // Find the event by its ID
+        const event = await Event.findById(eventId);
+
+        if (!event) {
+            return res.status(404).json({ error: 'Event not found' });
+        }
+
+        // Convert the eventImage buffer to base64 string
+        const eventImageBase64 = event.eventImage.toString('base64');
+
+        // Send the base64 string as the response
+        res.json({ eventImageBase64 });
+    } catch (error) {
+        console.error('Error fetching event image:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 
 
