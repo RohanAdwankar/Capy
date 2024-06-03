@@ -57,7 +57,7 @@ const eventSchema = new mongoose.Schema({
   datePosted: Date,
   eventImage: Buffer,
   usersGoing: [{ type: String }],
-  people: [{ type: String }],
+  usersLiked: [{ type: String }],
   likes: Number,
 });
 
@@ -111,8 +111,8 @@ app.post("/api/likeEvent", async (req, res) => {
     if (!event) {
       return res.status(404).json({ error: "Event not found" });
     }
-    if (!event.usersGoing.includes(username)) {
-      event.usersGoing.push(username);
+    if (!event.usersLiked.includes(username)) {
+      event.usersLiked.push(username);
       await event.save();
     }
     console.log(event);
@@ -164,72 +164,67 @@ app.post("/api/createEvent", upload.single("image"), async (req, res) => {
   }
 });
 
-
-
 async function login(req, res) {
-    const { username, password } = req.body;
-    try {
-      const user = await User.findOne({ username });
-  
-      if (!user) {
-        return res.status(401).json({ error: "Invalid username or password" });
-      }
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (isMatch) {
-        req.session.username = username;
-        req.session.profilePicture = user.profilePicture;
-        return res.json({ message: "Login successful", username });
-      } else {
-        return res.status(401).json({ error: "Invalid username or password" });
-      }
-    } catch (error) {
-      console.error(error);
-      return res.status(500).send("Error logging in");
+  const { username, password } = req.body;
+  try {
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(401).json({ error: "Invalid username or password" });
     }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (isMatch) {
+      req.session.username = username;
+      req.session.profilePicture = user.profilePicture;
+      return res.json({ message: "Login successful", username });
+    } else {
+      return res.status(401).json({ error: "Invalid username or password" });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Error logging in");
   }
-  
-  app.post("/api/login", login);app.post("/api/createUser", async (req, res) => {
-    try {
-      const { username, password, email } = req.body;
-  
-      const existingUsername = await User.findOne({ username });
-  
-      if (existingUsername) {
-        return res.status(400).json({ error: "Username already exists" });
-      }
-  
-      const existingEmail = await User.findOne({ email });
-  
-      if (existingEmail) {
-        return res.status(400).json({ error: "Email already exists" });
-      }
-  
-      const defaultProfilePicture = fs.readFileSync("./server/assets/capy.png");
-  
-      const hashedPassword = await bcrypt.hash(password, 10);
-  
-      const newUser = new User({
-        username,
-        password: hashedPassword,
-        email,
-        profilePicture: defaultProfilePicture,
-      });
-  
-      await newUser.save();
-  
-      await login(req, res); 
-  
+}
 
-      console.log("New user created");
-      console.log(newUser);
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Error creating user");
+app.post("/api/login", login);
+app.post("/api/createUser", async (req, res) => {
+  try {
+    const { username, password, email } = req.body;
+
+    const existingUsername = await User.findOne({ username });
+
+    if (existingUsername) {
+      return res.status(400).json({ error: "Username already exists" });
     }
-  });
 
-  
+    const existingEmail = await User.findOne({ email });
 
+    if (existingEmail) {
+      return res.status(400).json({ error: "Email already exists" });
+    }
+
+    const defaultProfilePicture = fs.readFileSync("./server/assets/capy.png");
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new User({
+      username,
+      password: hashedPassword,
+      email,
+      profilePicture: defaultProfilePicture,
+    });
+
+    await newUser.save();
+
+    await login(req, res);
+
+    console.log("New user created");
+    console.log(newUser);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error creating user");
+  }
+});
 
 app.get("/api/profile", async (req, res) => {
   const username = req.session.username;
