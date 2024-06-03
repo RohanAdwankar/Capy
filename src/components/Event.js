@@ -170,7 +170,10 @@ export default function Event({ eventData, userID }) {
           className="w-full h-64 object-cover rounded"
         />
       </div>
-      <p> {eventData.description.split('').slice(0, 36).join('')+"..."}</p>
+      <p> 
+        {/* Shortened Description */}
+        {eventData.description.split('').slice(0, 36).join('')+"..."}
+      </p>
       
       <div className="mt-4">
         <button
