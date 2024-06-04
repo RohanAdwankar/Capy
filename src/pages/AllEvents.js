@@ -3,9 +3,6 @@ import axios from "axios";
 import Event from "../components/Event";
 
 require("../components/globalVariables");
-// console.log(global.currentUsername);
-// global.currentUsername = "new username";
-// console.log(global.currentUsername);
 
 export default function AllEvents() {
   const [events, setEvents] = useState([]);
