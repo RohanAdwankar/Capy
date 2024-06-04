@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Event from "../components/Event";
+import Loading from "../components/Loading"
 
 require("../components/globalVariables");
 // console.log(global.currentUsername);
@@ -27,7 +28,7 @@ export default function AllEvents() {
       });
   }, []);
 
-  if (loading) return <p>Loading events...</p>;
+  if (loading) return <Loading />;
   if (error) return <p>Error loading events.</p>;
 
   return (
