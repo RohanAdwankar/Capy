@@ -39,13 +39,14 @@ app.use(bodyParser.json());
 app.use(cors());
 
 const userSchema = new mongoose.Schema({
-  username: String,
-  password: String,
-  email: String,
-  profilePicture: Buffer,
-  friends: [{ type: String }],
-  myEvents: [{ type: String }],
-  signedUpEvents: [{ type: mongoose.Schema.Types.ObjectId, ref: "Event" }],
+    username: String,
+    password: String,
+    email: String,
+    profilePicture: Buffer,
+    friends: [{ type: String }],
+    myEvents: [{ type: String }],
+    signedUpEvents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event'}],
+    createdEvents: [{type: mongoose.Schema.Types.ObjectId, ref: 'Event' }],
 });
 
 const eventSchema = new mongoose.Schema({
@@ -145,11 +146,26 @@ app.post("/api/likeEventUndo", async (req, res) => {
       await event.save();
     }
     res.status(200).json({ message: "You unliked this event!" });
-    ("");
   } catch (error) {
     console.error(error);
     res.status(500).send("Sorry Error unliking this event");
   }
+});
+
+app.get('/api/attendedEvents', async (req, res) => {
+    try {
+        const username = req.session.username;
+        if (!username) {
+            return res.status(401).json({ error: 'User not logged in'});
+
+        }
+
+        const user = await User.findOne({username}).populate('signedUpEvents');
+        res.status(200).json({ attendedEvents: user.signedUpEvents});
+    } catch (error) {
+        console.error('Error getting attended events:', error);
+        res.status(500).json({ error: 'Internal server error'});
+    }
 });
 
 app.post("/api/createEvent", upload.single("image"), async (req, res) => {
@@ -159,7 +175,8 @@ app.post("/api/createEvent", upload.single("image"), async (req, res) => {
     const datePosted = new Date();
     const user = req.session.username;
 
-    if (!user) {
+    const userObj = await User.findOne({ username: user });
+    if (!userObj) {
       return res.status(500).json({ error: "User not logged in" });
     }
 
@@ -182,14 +199,32 @@ app.post("/api/createEvent", upload.single("image"), async (req, res) => {
 
     await newEvent.save();
 
+    // Add the event to the user's createdEvents list
+    await userObj.updateOne({ $push: { createdEvents: newEvent } });
+
     res.status(201).send("Event created");
     console.log("Someone created an event:");
-    console.log(newEvent);
+    // console.log(newEvent);
   } catch (error) {
     console.error(error);
     res.status(500).send("Error creating event");
   }
 });
+
+app.get('/api/createdEvents', async (req, res) => {
+  try {
+      const username = req.session.username;
+      if(!username) {
+          return res.status(401).json({ error: 'User not logged in'});
+      }
+      const user = await User.findOne({ username }).populate('createdEvents');
+      res.status(200).json({ createdEvents: user.createdEvents});
+  } catch (error) {
+      console.error('Error retreiving created events:', error);
+      res.status(500).json({ error: 'Internal server error'});
+  }
+});
+
 
 async function login(req, res) {
   const { username, password } = req.body;
@@ -470,7 +505,7 @@ app.post("/api/attendEvent", async (req, res) => {
       return res.status(401).json({ error: "User not logged in" });
     }
     const user = await User.findOne({ username });
-    console.log("userData1:", user);
+    // console.log("userData1:", user);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -487,7 +522,9 @@ app.post("/api/attendEvent", async (req, res) => {
     }
 
     event.usersGoing.push(username);
-    console.log("users going to this event johnny:", event.usersGoing);
+    // await event.updateOne({ $push: { usersGoing: username } });
+    await user.updateOne({ $push: { signedUpEvents: event } });
+    console.log("users going to this event:", event.usersGoing);
     // user.signedUpEvents.push(event);
     await event.save();
     await user.save();
@@ -519,11 +556,16 @@ app.post("/api/attendEventUndo", async (req, res) => {
     if (event.usersGoing.includes(username)) {
       const userIndex = event.usersGoing.indexOf(username);
       event.usersGoing.splice(userIndex, 1);
+      // const eventIndex = user.signedUpEvents.indexOf(event);
+      // user.signedUpEvents.splice(eventIndex, 1);
       console.log(
         "list of users who are going to this event:",
         event.usersGoing
       );
+      // await event.updateOne({ $pull: { usersGoing: username } });
+      await user.updateOne({ $pull: { signedUpEvents: event } });
       await event.save();
+      // await user.save();
     }
     // if (user.signedUpEvents.includes(event)) {
     //   const eventIndex = user.signedUpEvents.indexOf(event);
@@ -532,8 +574,8 @@ app.post("/api/attendEventUndo", async (req, res) => {
     //   await user.save();
     // }
 
-    await event.save();
-    await user.save();
+    // await event.save();
+    // await user.save();
   } catch (error) {
     console.error("Error pulling up to event:", error);
     res.status(500).json({ error: "Internal server error" });
