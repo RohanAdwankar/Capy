@@ -352,14 +352,16 @@ app.post("/api/addFriend", async (req, res) => {
 
     // Check if the friend is already in the user's friend list
     if (currentUser.friends.includes(friendUsername)) {
-      return res
-        .status(400)
-        .json({ error: "Friend already exists in the friend list" });
+      return res.status(400).json({ error: "Friend already exists in the friend list" });
+    }
+
+    // Check if the friend is the same as the current user
+    if (currentUser.username === friendUsername) {
+      return res.status(401).json({ error: "Cannot add yourself as a friend" });
     }
 
     // Add friend to the user's friend list
-    currentUser.friends.push(friendUsername);
-    await currentUser.save();
+    await currentUser.updateOne({ $push: { friends: friendUsername } });
 
     const newFriend = {
       username: friendUser.username,
@@ -376,41 +378,30 @@ app.post("/api/addFriend", async (req, res) => {
 });
 
 app.post("/api/removeFriend", async (req, res) => {
-  try {
-    const { friendUsername } = req.body;
+    try {
+        const { friendUsername } = req.body;
 
-    const currentUserUsername = req.session.username;
-    if (!currentUserUsername) {
-      return res.status(401).json({ error: "User not logged in" });
-    }
+        const currentUserUsername = req.session.username;
+        if (!currentUserUsername) {
+            return res.status(401).json({ error: "User not logged in" });
+        }
 
-    const currentUser = await User.findOne({ username: currentUserUsername });
-    if (!currentUser) {
-      return res.status(404).json({ error: "User not found" });
-    }
+        const currentUser = await User.findOne({ username: currentUserUsername });
+        if (!currentUser) {
+            return res.status(404).json({ error: "Current user not found" });
+        }
 
-    // Check if the friend user exists
-    const friendUser = await User.findOne({ username: friendUsername });
-    if (!friendUser) {
-      return res.status(404).json({ error: "Friend user not found" });
-    }
+        // Check if the friend user exists
+        const friendUser = await User.findOne({ username: friendUsername });
+        if (!friendUser) {
+            return res.status(404).json({ error: "Friend user not found" });
+        }
 
-    // Check if the friend is in the user's friend list
-    const friendIndex = currentUser.friends.indexOf(friendUsername);
-    if (friendIndex === -1) {
-      return res.status(400).json({ error: "Friend not found in friend list" });
-    }
-
-    // Remove friend from the user's friend list
-    currentUser.friends.splice(friendIndex, 1);
-    await currentUser.save();
-
-    res
-      .status(200)
-      .json({ message: "Friend removed successfully", friend: friendUsername });
+        await currentUser.updateOne({ $pull: { friends: friendUsername } });
+        res.status(200).json({ message: "Friend removed successfully" });
   } catch (error) {
-    console.error("Error removing friend:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Error removing friend");
+    res.status(500).json({ error: "Internal server error", error });
   }
 });
 

@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import FriendList from "../components/FriendsList";
 import { store } from "../Main.js";
+import Loading from "../components/Loading"
 import axios from "axios";
+import { set } from "mongoose";
 
 export default function Friends() {
 
 	const [isSignedIn, setSignedIn] = store.useState("signedIn", {default: false});
 
+	const [loading, setLoading] = useState(true);
 
     const [filter, setFilter] = useState('');
 	const [newFriendUsername, setNewFriendUsername] = useState('');
@@ -20,9 +23,11 @@ export default function Friends() {
 				const response = await axios.get('/api/getFriends', { withCredentials: true });
 				setFriends(response.data.friends);
 				setStatus('');
+				setLoading(false);
 			} catch (error) {
 				console.error('Error fetching friends:', error);
 				setStatus('Error fetching friends');
+				setLoading(false);
 			}
 		};
 	
@@ -41,16 +46,48 @@ export default function Friends() {
             setNewFriendOpen(false);
 			setStatus(newFriendUsername + ' added successfully');
         } catch (error) {
-            console.error('Error adding friend:', error);
-			setStatus('Error adding friend');
+            // console.error('Error adding friend:', error);
+			console.log(error);
+			if (error.response && error.response.status === 404) {
+				setStatus(`User ${newFriendUsername} not found`);
+			} else if (error.response && error.response.status === 400) {
+				setStatus(`${newFriendUsername} is already your friend`);
+			} else if (error.response && error.response.status === 401) {
+				setStatus("Bruh you're literally " + newFriendUsername + " wtf are you really that lonely");
+			} else {
+				setStatus('Error adding friend');
+			}
         }
     };
+
+	const handleRemoveFriend = async (friendUsername) => {
+		try {
+			setStatus('Removing ' + friendUsername + ' from friends...')
+		  	// Make a POST request to remove the friend
+		  	const response = await axios.post('/api/removeFriend', { friendUsername: friendUsername, withCredentials: true });
+		 	// console.log(response.data);
+		  
+		 	// Update friendDetails by filtering out the removed friend
+			setFriends(friends.filter(friend => friend.username !== friendUsername));
+			setStatus(friendUsername + ' removed successfully');
+		} catch (error) {
+			console.log(error);
+			if (error.response && error.response.status === 404) {
+				setStatus(`${friendUsername} is not your friend`);
+			} else {
+				setStatus('Error removing friend');
+			}
+		}
+	  };
 
     // // Filter friends based on the search filter
 	// const friendsFiltered = friends.filter((friend) => {
 	// 	let name = friend.name ? friend.name.toLowerCase() : '';
 	// 	return name.includes(filter.toLowerCase());
 	// });
+
+
+	if (loading) return <Loading />;
 
     return (
 
@@ -85,7 +122,7 @@ export default function Friends() {
 				{(status !== '') && <p>{status}</p>}
 
 				{(friends.length > 0) ? (
-					<FriendList friends={friends} setFriends={setFriends} filter={filter} />
+					<FriendList friends={friends} setFriends={setFriends} filter={filter} onRemoveFriend={handleRemoveFriend} />
 				) : (
 					<p>Click "Add New Friend" to get more friends.</p>
 				)}
