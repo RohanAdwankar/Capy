@@ -154,10 +154,12 @@ app.post('/api/createEvent', async (req, res) => {
             datePosted
         });
         await newEvent.save();
+        console.log("new event is saved", newEvent);
 
         const currentUser = await User.findOne({ username: req.session.username});
         currentUser.createdEvents.push(newEvent._id);
-        await user.save();
+        console.log('event is added to users ')
+        await currentUser.save();
 
         res.status(201).send('Event created');
         console.log("Someone created an event:");
