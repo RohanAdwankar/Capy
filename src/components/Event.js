@@ -17,24 +17,28 @@ export default function Event({ eventData }) {
   const [numberAttending, setNumberAttending] = useState(
     eventData.usersGoing.length
   );
-  const [showComments, setShowComments] = useState(false);
+  
+  const [comment, setComment] = useState(false);
+  const [userComment, setUserCommented] = useState(
+    eventData.usersCommented.includes(global.currentUsername) &&
+      global.currentUsername !== ""
+  );
+
   const [showAnimation, setShowAnimation] = useState(false);
   const [showPopUpAnimation, setShowPopUpAnimation] = useState(false);
+
   const [userLiked, setUserLiked] = useState(
     eventData.usersLiked.includes(global.currentUsername) &&
       global.currentUsername !== ""
   );
+
   const [userIsPullingUp, setUserIsPullingUp] = useState(
     eventData.usersGoing.includes(global.currentUsername) &&
       global.currentUsername !== ""
   );
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [eventImageBase64, setEventImageBase64] = useState(null);
-  // console.log("TESTING EVENTJS");
-  // console.log(global.currentUsername);
-  // console.log(eventData);
-  // console.log(eventData.usersLiked.includes(global.currentUsername));
-  // console.log(global.currentUsername !== "");
 
   useEffect(() => {
     // Fetch the event image as base64 string
@@ -50,8 +54,22 @@ export default function Event({ eventData }) {
     fetchEventImage();
   }, [eventData._id]);
 
-  const handleCommentClick = () => {
-    setShowComments(!showComments);
+  const handleCommentClick = async (event) => {
+    event.preventDefault();
+
+    const comment = event.target.elements.comment.value;
+    
+    try{
+      await axios.post("/api/events/comments/addComment", {
+        eventID: eventData._id, 
+        comment,
+      });
+
+      console.log("Comment submitted successfully");
+
+    } catch(error) {
+      console.error('Failed to add comment from form', error);
+    }
   };
 
   const handleLikeClick = async () => {
@@ -170,6 +188,7 @@ export default function Event({ eventData }) {
 
   }
 
+  //Display --------------------------------
   return (
     <div className="bg-white shadow-lg rounded-lg p-4">
       {/* Pop Up for Bigger View */}
@@ -212,18 +231,37 @@ export default function Event({ eventData }) {
               </p>
             </div>
 
-
-
-
-            <img
-              src={capy}
-              alt="Animation"
-              className={` h-5 w-5 absolute opacity-0 ${
-                showPopUpAnimation ? "animate-fadeInScaleRotate" : ""
-              }`}
-            />
-            {/* <button className="bg-blue-500 text-white px-4 py-2 rounded mb-4">Pull Up</button> */}
-            <p className="mb-4">{eventData.description}</p>
+            <div className="flex flex-row"> {/* flex container*/}
+              <div className="w-1/2 mr-4">   
+                <div className="saturate-50 flex justify-between items-center mt-4">
+                  {/* Use the fetched event image base64 string */}
+                  <img
+                    src={
+                        eventImageBase64
+                        ? `data:image/jpeg;base64,${eventImageBase64}`
+                        : defEventPic
+                    }
+                    alt="Event"
+                    className="w-full h-64 object-cover rounded"
+                  />
+                </div>
+                <p className="mb-4">{eventData.description}</p>
+              </div>
+              <div className="w-1/2">
+                <form onSubmit={handleCommentClick}>
+                  <textarea
+                    className="w-full border rounded p-2 mb-2"
+                    placeholder="Type your comment here..."
+                  ></textarea>
+                  <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                    type="submit"
+                  >
+                    Add Comment
+                  </button>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
       ) : null}

@@ -5,6 +5,12 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const session = require("express-session");
 
+//All Routes:
+const CommentRouter = require('./CommentRouter');
+
+//Import schemas
+const {User, Event} = require('./models');
+
 const fs = require("fs");
 
 const multer = require("multer");
@@ -37,32 +43,6 @@ app.use(
 
 app.use(bodyParser.json());
 app.use(cors());
-
-const userSchema = new mongoose.Schema({
-    username: String,
-    password: String,
-    email: String,
-    profilePicture: Buffer,
-    friends: [{ type: String }],
-    myEvents: [{ type: String }],
-    signedUpEvents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event'}],
-    createdEvents: [{type: mongoose.Schema.Types.ObjectId, ref: 'Event' }],
-});
-
-const eventSchema = new mongoose.Schema({
-  user: String,
-  title: String,
-  location: String,
-  date: Date,
-  description: String,
-  datePosted: Date,
-  eventImage: Buffer,
-  usersGoing: [{ type: String }],
-  usersLiked: [{ type: String }],
-});
-
-const User = mongoose.model("User", userSchema);
-const Event = mongoose.model("Event", eventSchema);
 
 // Middleware
 app.use(bodyParser.json());
@@ -97,6 +77,43 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
   console.log("Connected to the database");
+});
+
+app.post("/api/addComment", async (req, res) =>{
+  try{
+    const { eventID, comment } = req.body;
+    const username = req.session.username;
+
+    if(!username){
+      return res.status(401).json({ error: "User not logged in"});
+    }
+
+    //find event by ID
+    const event = await Event.findById(eventID);
+
+    if(!event || !comment){
+      return res.status(400).json({error: "Event not Found"});
+    }
+
+    //add comment
+    event.comments.push(comment);
+
+    //add user to comment list
+    const user = await User.findOne({username: username});
+    if(!user){
+      return res.status(404).json({error: "User not found"});
+    }
+
+    if(!event.usersCommented.includes(user.username)){
+      event.usersCommented.push(user.username);
+    }
+    await event.save();
+
+    res.status(201).send({message: 'Comment added successfully', event: event});
+  } catch(error){
+    console.error('Failed to add a comment:', error);
+    res.status(500).send({message: 'Failed to add a comment'});
+  }
 });
 
 app.post("/api/likeEvent", async (req, res) => {
@@ -599,6 +616,9 @@ app.use(express.static(path.join(__dirname, "..", "build")));
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "build", "index.html"));
 });
+
+//router files
+app.use('/api/events/comments', CommentRouter);
 
 // Start the server
 app.listen(port, () => {
