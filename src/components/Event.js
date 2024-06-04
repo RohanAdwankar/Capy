@@ -17,7 +17,7 @@ export default function Event({ eventData }) {
   const [numberAttending, setNumberAttending] = useState(
     eventData.usersGoing.length
   );
-  
+
   const [comment, setComment] = useState(false);
   const [userComment, setUserCommented] = useState(
     eventData.usersCommented.includes(global.currentUsername) &&
@@ -58,17 +58,16 @@ export default function Event({ eventData }) {
     event.preventDefault();
 
     const comment = event.target.elements.comment.value;
-    
-    try{
+
+    try {
       await axios.post("/api/events/comments/addComment", {
-        eventID: eventData._id, 
+        eventID: eventData._id,
         comment,
       });
 
       console.log("Comment submitted successfully");
-
-    } catch(error) {
-      console.error('Failed to add comment from form', error);
+    } catch (error) {
+      console.error("Failed to add comment from form", error);
     }
   };
 
@@ -79,26 +78,28 @@ export default function Event({ eventData }) {
       return;
     }
     if (!userLiked) {
-      // console.log("LIKED");
+      console.log("liked on frontend");
       setLikes(likes + 1);
       setUserLiked(true);
       try {
         await axios.post("/api/likeEvent", { eventID: eventData._id });
-        console.log("Liked successfully");
+        console.log("Liked successfully on backend");
+        // The eventData variable is passed into Event and is constant
         console.log("Current Event Data:", eventData);
       } catch (error) {
-        console.error("Error liking:", error);
+        console.error("Error liking on backend:", error);
       }
     } else {
-      // console.log("UNLIKED");
+      console.log("unliked on frontend");
       setLikes(likes - 1);
       setUserLiked(false);
       try {
         await axios.post("/api/likeEventUndo", { eventID: eventData._id });
-        console.log("Liked Undo successfully");
+        console.log("Liked Undo successfully on backend");
+        // The eventData variable is passed into Event and is constant
         console.log("Current Event Data:", eventData);
       } catch (error) {
-        console.error("Error Undo liking:", error);
+        console.error("Error Undo liking on backend:", error);
       }
     }
   };
@@ -109,24 +110,30 @@ export default function Event({ eventData }) {
       return;
     } else {
       if (!userIsPullingUp) {
+        console.log("attended on frontend");
         setUserIsPullingUp(true);
         setNumberAttending(numberAttending + 1);
         setShowPopUpAnimation(true);
         start();
         try {
+          console.log("attempting to record attendance on backend");
           await axios.post("/api/attendEvent", { eventId: eventData._id });
-          console.log("Attendance recorded successfully");
+          console.log("Attendance recorded successfully on backend");
+          // The eventData variable is passed into Event and is constant
           console.log("Current Event Data:", eventData);
         } catch (error) {
           console.error("Error recording attendance:", error);
         }
       } else {
+        console.log("unattended on frontend");
         setUserIsPullingUp(false);
         setNumberAttending(numberAttending - 1);
         setShowPopUpAnimation(false);
         try {
+          console.log("attempting to record undo attendance on backend");
           await axios.post("/api/attendEventUndo", { eventId: eventData._id });
-          console.log("Attendance undo recorded successfully");
+          console.log("Attendance undo recorded successfully on backend");
+          // The eventData variable is passed into Event and is constant
           console.log("Current Event Data:", eventData);
         } catch (error) {
           console.error("Error recording attendance undo:", error);
@@ -134,7 +141,6 @@ export default function Event({ eventData }) {
       }
     }
   };
-
 
   let audio = new Audio(song);
 
@@ -144,49 +150,63 @@ export default function Event({ eventData }) {
   };
 
   const EventDateDisplay = ({ eventData }) => {
-    if(!eventData.date){
-      return <p> <FontAwesomeIcon icon={faCalendarDays} /> {' '} Error: Could not display date </p>;
+    if (!eventData.date) {
+      return (
+        <p>
+          {" "}
+          <FontAwesomeIcon icon={faCalendarDays} /> Error: Could not display
+          date{" "}
+        </p>
+      );
     }
 
-    const TimeString = new Date(eventData.date).toLocaleString('en-US', {
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true
+    const TimeString = new Date(eventData.date).toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
     });
 
-    const DateString = new Date(eventData.date).toLocaleString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    const DateString = new Date(eventData.date).toLocaleString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
 
     return (
       <p>
-        <FontAwesomeIcon icon={faCalendarDays} /> {' '}
+        <FontAwesomeIcon icon={faCalendarDays} />{" "}
         {TimeString + " on " + DateString}
       </p>
     );
   };
 
-  const EventLocationClick = ({eventData}) => {
-    if(!eventData.location){
-      return <p> <FontAwesomeIcon icon={faLocationDot}/> {' '} Error: Could not display location </p>
+  const EventLocationClick = ({ eventData }) => {
+    if (!eventData.location) {
+      return (
+        <p>
+          {" "}
+          <FontAwesomeIcon icon={faLocationDot} /> Error: Could not display
+          location{" "}
+        </p>
+      );
     }
 
     const MapsURL = "https://www.google.com/maps/search/?api=1&query=";
-    const LocationString = eventData.location.replace(/ /g, '+');
+    const LocationString = eventData.location.replace(/ /g, "+");
 
     const fullURL = MapsURL + LocationString;
 
-    return(
+    return (
       <p>
-        <FontAwesomeIcon icon={faLocationDot}/> {' '}
-        <a href={fullURL} target="_blank" rel="noopener noreferrer"> {eventData.location} </a>
+        <FontAwesomeIcon icon={faLocationDot} />{" "}
+        <a href={fullURL} target="_blank" rel="noopener noreferrer">
+          {" "}
+          {eventData.location}{" "}
+        </a>
       </p>
-    )
-
-  }
+    );
+  };
 
   //Display --------------------------------
   return (
@@ -205,7 +225,6 @@ export default function Event({ eventData }) {
             </div>
             <button
               onClick={() => {
-
                 handlePullUpClick();
               }}
               className={`absolute top-2 right-20 px-4 py-2 rounded-l
@@ -231,13 +250,15 @@ export default function Event({ eventData }) {
               </p>
             </div>
 
-            <div className="flex flex-row"> {/* flex container*/}
-              <div className="w-1/2 mr-4">   
+            <div className="flex flex-row">
+              {" "}
+              {/* flex container*/}
+              <div className="w-1/2 mr-4">
                 <div className="saturate-50 flex justify-between items-center mt-4">
                   {/* Use the fetched event image base64 string */}
                   <img
                     src={
-                        eventImageBase64
+                      eventImageBase64
                         ? `data:image/jpeg;base64,${eventImageBase64}`
                         : defEventPic
                     }

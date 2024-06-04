@@ -6,11 +6,10 @@ const cors = require("cors");
 const session = require("express-session");
 
 //All Routes:
-const CommentRouter = require('./CommentRouter');
-
+const CommentRouter = require("./CommentRouter");
 
 //Import schemas
-const {User, Event} = require('./models');
+const { User, Event } = require("./models");
 
 const fs = require("fs");
 
@@ -80,73 +79,19 @@ db.once("open", () => {
   console.log("Connected to the database");
 });
 
-app.post("/api/likeEvent", async (req, res) => {
+app.get("/api/attendedEvents", async (req, res) => {
   try {
-    const { eventID } = req.body;
     const username = req.session.username;
     if (!username) {
       return res.status(401).json({ error: "User not logged in" });
     }
-    const event = await Event.findById(eventID);
 
-    if (!event) {
-      return res.status(404).json({ error: "Event not found" });
-    }
-    if (!event.usersLiked.includes(username)) {
-      event.usersLiked.push(username);
-      console.log("list of users who liked this event:", event.usersLiked);
-      await event.save();
-    }
-    res.status(200).json({ message: "You liked this event!" });
-    ("");
+    const user = await User.findOne({ username }).populate("signedUpEvents");
+    res.status(200).json({ attendedEvents: user.signedUpEvents });
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Sorry Error liking this event");
+    console.error("Error getting attended events:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
-});
-
-app.post("/api/likeEventUndo", async (req, res) => {
-  try {
-    const { eventID } = req.body;
-    const username = req.session.username;
-    if (!username) {
-      return res.status(401).json({ error: "User not logged in" });
-    }
-    const event = await Event.findById(eventID);
-
-    if (!event) {
-      return res.status(404).json({ error: "Event not found" });
-    }
-    if (event.usersLiked.includes(username)) {
-      const userIndex = event.usersLiked.indexOf(username);
-      event.usersLiked.splice(userIndex, 1);
-      console.log(
-        "list of users who liked this event (undo version):",
-        event.usersLiked
-      );
-      await event.save();
-    }
-    res.status(200).json({ message: "You unliked this event!" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Sorry Error unliking this event");
-  }
-});
-
-app.get('/api/attendedEvents', async (req, res) => {
-    try {
-        const username = req.session.username;
-        if (!username) {
-            return res.status(401).json({ error: 'User not logged in'});
-
-        }
-
-        const user = await User.findOne({username}).populate('signedUpEvents');
-        res.status(200).json({ attendedEvents: user.signedUpEvents});
-    } catch (error) {
-        console.error('Error getting attended events:', error);
-        res.status(500).json({ error: 'Internal server error'});
-    }
 });
 
 app.post("/api/createEvent", upload.single("image"), async (req, res) => {
@@ -192,20 +137,19 @@ app.post("/api/createEvent", upload.single("image"), async (req, res) => {
   }
 });
 
-app.get('/api/createdEvents', async (req, res) => {
+app.get("/api/createdEvents", async (req, res) => {
   try {
-      const username = req.session.username;
-      if(!username) {
-          return res.status(401).json({ error: 'User not logged in'});
-      }
-      const user = await User.findOne({ username }).populate('createdEvents');
-      res.status(200).json({ createdEvents: user.createdEvents});
+    const username = req.session.username;
+    if (!username) {
+      return res.status(401).json({ error: "User not logged in" });
+    }
+    const user = await User.findOne({ username }).populate("createdEvents");
+    res.status(200).json({ createdEvents: user.createdEvents });
   } catch (error) {
-      console.error('Error retreiving created events:', error);
-      res.status(500).json({ error: 'Internal server error'});
+    console.error("Error retreiving created events:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 async function login(req, res) {
   const { username, password } = req.body;
@@ -369,7 +313,9 @@ app.post("/api/addFriend", async (req, res) => {
 
     // Check if the friend is already in the user's friend list
     if (currentUser.friends.includes(friendUsername)) {
-      return res.status(400).json({ error: "Friend already exists in the friend list" });
+      return res
+        .status(400)
+        .json({ error: "Friend already exists in the friend list" });
     }
 
     // Check if the friend is the same as the current user
@@ -395,32 +341,34 @@ app.post("/api/addFriend", async (req, res) => {
 });
 
 app.post("/api/removeFriend", async (req, res) => {
-    try {
-        const { friendUsername } = req.body;
+  try {
+    const { friendUsername } = req.body;
 
-        const currentUserUsername = req.session.username;
-        if (!currentUserUsername) {
-            return res.status(401).json({ error: "User not logged in" });
-        }
+    const currentUserUsername = req.session.username;
+    if (!currentUserUsername) {
+      return res.status(401).json({ error: "User not logged in" });
+    }
 
-        const currentUser = await User.findOne({ username: currentUserUsername });
-        if (!currentUser) {
-            return res.status(404).json({ error: "Current user not found" });
-        }
+    const currentUser = await User.findOne({ username: currentUserUsername });
+    if (!currentUser) {
+      return res.status(404).json({ error: "Current user not found" });
+    }
 
-        // Check if the friend user exists
-        const friendUser = await User.findOne({ username: friendUsername });
-        if (!friendUser) {
-            return res.status(404).json({ error: "Friend user not found" });
-        }
+    // Check if the friend user exists
+    const friendUser = await User.findOne({ username: friendUsername });
+    if (!friendUser) {
+      return res.status(404).json({ error: "Friend user not found" });
+    }
 
-        // Check if the friend is already in the user's friend list
-        if (!currentUser.friends.includes(friendUsername)) {
-            return res.status(404).json({ error: "Friend does not exist in the friend list" });
-        }
+    // Check if the friend is already in the user's friend list
+    if (!currentUser.friends.includes(friendUsername)) {
+      return res
+        .status(404)
+        .json({ error: "Friend does not exist in the friend list" });
+    }
 
-        await currentUser.updateOne({ $pull: { friends: friendUsername } });
-        res.status(200).json({ message: "Friend removed successfully" });
+    await currentUser.updateOne({ $pull: { friends: friendUsername } });
+    res.status(200).json({ message: "Friend removed successfully" });
   } catch (error) {
     console.error("Error removing friend");
     res.status(500).json({ error: "Internal server error", error });
@@ -480,6 +428,51 @@ app.get("/api/eventImage/:eventId", async (req, res) => {
   }
 });
 
+app.post("/api/likeEvent", async (req, res) => {
+  try {
+    const { eventID } = req.body;
+    const username = req.session.username;
+    if (!username) {
+      return res.status(401).json({ error: "User not logged in" });
+    }
+    const event = await Event.findById(eventID);
+
+    if (!event) {
+      return res.status(404).json({ error: "Event not found" });
+    }
+    // Start updating server
+    await event.updateOne({ $push: { usersLiked: username } });
+    console.log("list of users who liked this event:", event.usersLiked);
+    res.status(200).json({ message: "You liked this event!" });
+    ("");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Sorry Error liking this event");
+  }
+});
+
+app.post("/api/likeEventUndo", async (req, res) => {
+  try {
+    const { eventID } = req.body;
+    const username = req.session.username;
+    if (!username) {
+      return res.status(401).json({ error: "User not logged in" });
+    }
+    const event = await Event.findById(eventID);
+
+    if (!event) {
+      return res.status(404).json({ error: "Event not found" });
+    }
+    // Start updating server
+    await event.updateOne({ $pull: { usersLiked: username } });
+    console.log("list of users who liked this event:", event.usersLiked);
+    res.status(200).json({ message: "You unliked this event!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Sorry Error unliking this event");
+  }
+});
+
 app.post("/api/attendEvent", async (req, res) => {
   try {
     const username = req.session.username;
@@ -503,13 +496,27 @@ app.post("/api/attendEvent", async (req, res) => {
       return res.status(400).json({ error: "User already signed up" });
     }
 
-    event.usersGoing.push(username);
-    // await event.updateOne({ $push: { usersGoing: username } });
-    await user.updateOne({ $push: { signedUpEvents: event } });
-    console.log("users going to this event:", event.usersGoing);
-    // user.signedUpEvents.push(event);
-    await event.save();
-    await user.save();
+    console.log("attemping to add user from usersGoing list in event");
+    await event.updateOne({ $push: { usersGoing: username } });
+    console.log("finished adding user from usersGoing list in event");
+    // for some reason, event.usersGoing is not updated
+    console.log("users which are pull up to this event:", event.usersGoing);
+
+    console.log("attempting to add event from user");
+    await user.updateOne({ $push: { signedUpEvents: event._id } });
+    console.log("finished adding event from user");
+    // for some reason, user.signedUpEvents is not updated.
+    console.log("events this user is attending:", user.signedUpEvents);
+
+    // event.usersGoing.push(username);
+    // console.log("list of users pulling up to this event:", event.usersGoing);
+    // // await event.updateOne({ $push: { usersGoing: username } });
+    // console.log("attempting to add event to user");
+    // await user.updateOne({ $push: { signedUpEvents: event._id } });
+    // console.log("finished to add event to user");
+    // // user.signedUpEvents.push(event);
+    // await event.save();
+    // await user.save();
   } catch (error) {
     console.error("Error pulling up to event:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -523,7 +530,7 @@ app.post("/api/attendEventUndo", async (req, res) => {
       return res.status(401).json({ error: "User not logged in" });
     }
     const user = await User.findOne({ username });
-    console.log("userData1:", user);
+    // console.log("userData1:", user);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -535,29 +542,22 @@ app.post("/api/attendEventUndo", async (req, res) => {
       return res.status(404).json({ error: "Event not found" });
     }
 
-    if (event.usersGoing.includes(username)) {
-      const userIndex = event.usersGoing.indexOf(username);
-      event.usersGoing.splice(userIndex, 1);
-      // const eventIndex = user.signedUpEvents.indexOf(event);
-      // user.signedUpEvents.splice(eventIndex, 1);
-      console.log(
-        "list of users who are going to this event:",
-        event.usersGoing
-      );
-      // await event.updateOne({ $pull: { usersGoing: username } });
-      await user.updateOne({ $pull: { signedUpEvents: event } });
-      await event.save();
-      // await user.save();
-    }
-    // if (user.signedUpEvents.includes(event)) {
-    //   const eventIndex = user.signedUpEvents.indexOf(event);
-    //   user.signedUpEvents.splice(eventIndex, 1);
-    //   console.log("list of events this user is going to:", user.signedUpEvents);
-    //   await user.save();
-    // }
+    console.log("attemping to remove user from usersGoing list in event");
+    await event.updateOne({ $pull: { usersGoing: username } });
+    console.log("finished removing user from usersGoing list in event");
+    console.log(
+      "users which are pull up to this event (undo version):",
+      event.usersGoing
+    );
 
-    // await event.save();
-    // await user.save();
+    console.log("attempting to remove event from user");
+    await user.updateOne({ $pull: { signedUpEvents: event._id } });
+    console.log("finished removing event from user");
+    // for some reason, user.signedUpEvents is not updated.
+    console.log(
+      "events this user is attending (undo version):",
+      user.signedUpEvents
+    );
   } catch (error) {
     console.error("Error pulling up to event:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -583,7 +583,7 @@ app.get("*", (req, res) => {
 });
 
 //router files
-app.use('/api/events/comments', CommentRouter);
+app.use("/api/events/comments", CommentRouter);
 
 // Start the server
 app.listen(port, () => {
