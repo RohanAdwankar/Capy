@@ -397,6 +397,11 @@ app.post("/api/removeFriend", async (req, res) => {
             return res.status(404).json({ error: "Friend user not found" });
         }
 
+        // Check if the friend is already in the user's friend list
+        if (!currentUser.friends.includes(friendUsername)) {
+            return res.status(404).json({ error: "Friend does not exist in the friend list" });
+        }
+
         await currentUser.updateOne({ $pull: { friends: friendUsername } });
         res.status(200).json({ message: "Friend removed successfully" });
   } catch (error) {
