@@ -151,6 +151,25 @@ export default function Event({ eventData }) {
     );
   };
 
+  const EventLocationClick = ({eventData}) => {
+    if(!eventData.location){
+      return <p> <FontAwesomeIcon icon={faLocationDot}/> {' '} Error: Could not display location </p>
+    }
+
+    const MapsURL = "https://www.google.com/maps/search/?api=1&query=";
+    const LocationString = eventData.location.replace(/ /g, '+');
+
+    const fullURL = MapsURL + LocationString;
+
+    return(
+      <p>
+        <FontAwesomeIcon icon={faLocationDot}/> {' '}
+        <a href={fullURL} target="_blank" rel="noopener noreferrer"> {eventData.location} </a>
+      </p>
+    )
+
+  }
+
   return (
     <div className="bg-white shadow-lg rounded-lg p-4">
       {/* Pop Up for Bigger View */}
@@ -167,8 +186,7 @@ export default function Event({ eventData }) {
             </div>
             <button
               onClick={() => {
-                // setShowPopUpAnimation(!showPopUpAnimation);
-                // start();
+
                 handlePullUpClick();
               }}
               className={`absolute top-2 right-20 px-4 py-2 rounded-l
@@ -180,21 +198,22 @@ export default function Event({ eventData }) {
             >
               Pull Up ({numberAttending})
             </button>
+
             <h1 className="text-4xl mb-4">{eventData.title}</h1>
             <div className="relative flex items-center mb-4">
               <p>
                 {" "}
-                <FontAwesomeIcon icon={faLocationDot} /> {eventData.location}
+                <EventLocationClick eventData={eventData} />
               </p>
               <p>&nbsp;&nbsp;</p>
               <p>
                 {" "}
                 <EventDateDisplay eventData={eventData} />
               </p>
-              {/* <img src={user.profilePicture} alt="User" className="w-10 h-10 rounded-full mr-4" />
-              <h2 className="text-xl">{user.name}</h2> */}
             </div>
-            {/* <img src={eventData.picture} alt="Event" className="mb-4" /> */}
+
+
+
 
             <img
               src={capy}
@@ -205,17 +224,11 @@ export default function Event({ eventData }) {
             />
             {/* <button className="bg-blue-500 text-white px-4 py-2 rounded mb-4">Pull Up</button> */}
             <p className="mb-4">{eventData.description}</p>
-            {/* <div>
-              {comments.map(comment => (
-                <div key={comment.id} className="mb-4">
-                  <h3 className="text-lg mb-2">{comment.user}</h3>
-                  <p>{comment.text}</p>
-                </div>
-              ))}
-            </div> */}
           </div>
         </div>
       ) : null}
+
+      {/*Normal Event Component*/}
 
       <div className="relative">
         {/* Add the "Pull Up" button */}
@@ -248,7 +261,7 @@ export default function Event({ eventData }) {
         <h2>{eventData.user}</h2>
         <p>
           {" "}
-          <FontAwesomeIcon icon={faLocationDot} /> {eventData.location}
+          <EventLocationClick eventData={eventData} />
         </p>
         <p>
           {" "}
