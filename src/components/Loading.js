@@ -1,17 +1,12 @@
 import React from 'react';
 import Lottie from 'react-lottie';
-import animationData from '../assets/capy.json'
+import animationData from '../assets/loading.gif'
 
 function Loading() {
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: animationData,
-  };
 
   return (
     <div className="loading">
-      <Lottie options={defaultOptions} speed={10.0} height={500} width={500} />
+      <img src={animationData} />
     </div>
   );
 }

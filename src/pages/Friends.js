@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import FriendList from "../components/FriendsList";
 import { store } from "../Main.js";
+import Loading from "../components/Loading"
 import axios from "axios";
 
 export default function Friends() {
 
 	const [isSignedIn, setSignedIn] = store.useState("signedIn", {default: false});
 
+	const [loading, setLoading] = useState(true);
 
     const [filter, setFilter] = useState('');
 	const [newFriendUsername, setNewFriendUsername] = useState('');
@@ -20,9 +22,11 @@ export default function Friends() {
 				const response = await axios.get('/api/getFriends', { withCredentials: true });
 				setFriends(response.data.friends);
 				setStatus('');
+				setLoading(false);
 			} catch (error) {
 				console.error('Error fetching friends:', error);
 				setStatus('Error fetching friends');
+				setLoading(false);
 			}
 		};
 	
@@ -51,6 +55,9 @@ export default function Friends() {
 	// 	let name = friend.name ? friend.name.toLowerCase() : '';
 	// 	return name.includes(filter.toLowerCase());
 	// });
+
+
+	if (loading) return <Loading />;
 
     return (
 
