@@ -1,6 +1,6 @@
 import React from 'react';
 import Lottie from 'react-lottie';
-import animationData from './assets/capy.json'
+import animationData from '../assets/capy.json'
 
 function Loading() {
   const defaultOptions = {

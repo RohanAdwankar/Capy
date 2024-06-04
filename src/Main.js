@@ -7,7 +7,6 @@ import Profile from "./pages/Profile";
 import Friends from "./pages/Friends";
 import MyEvents from "./pages/MyEvents";
 import AllEvents from "./pages/AllEvents";
-import Loading from "./Loading";
 import SignIn from "./pages/SignIn";
 import SignOut from "./pages/SignOut";
 import SignUp from "./pages/SignUp";
