@@ -16,7 +16,33 @@ import axios from "axios";
 import { createStore, useGlobalState } from "state-pool";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
+require("./components/globalVariables");
+
 const store = createStore({ signedIn: false });
+
+//Get Profile Username
+
+const ProfileName = () => {
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const fetchUsername = async () => {
+      try {
+        const response = await axios.get("/api/profile", {
+          withCredentials: true,
+        });
+        setUsername(response.data.username);
+        global.currentUsername = response.data.username;
+        console.log("current username is now:", global.currentUsername);
+      } catch (error) {
+        console.error("Error fetching username:", error);
+      }
+    };
+
+    fetchUsername();
+  }, []);
+  return <h1 className="Profile-name">{username}</h1>;
+};
 
 const ProfilePicture = () => {
   const [profilePicture, setProfilePicture] = useState("");
@@ -51,31 +77,6 @@ const ProfilePicture = () => {
 };
 
 function Main() {
-  //Get Profile Username
-  const [username, setUsername] = useState("");
-  const ProfileName = () => {
-    useEffect(() => {
-      fetch("/api/profile", {
-        method: "GET",
-        credentials: "include",
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Failed to fetch username");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          setUsername(data.username);
-        })
-        .catch((error) => {
-          console.error("Error fetching username:", error);
-        });
-    }, []);
-
-    return <h1 className="Profile-name">{username}</h1>;
-  };
-
   const [isLoading, setIsLoading] = useState(true);
   const [isSignedIn, setSignedIn] = store.useState("signedIn", {
     default: false,
@@ -175,10 +176,7 @@ function Main() {
             </div>
             <div className="flex justify-center">
               <Routes>
-                <Route
-                  path="/"
-                  element={<AllEvents currentUser={username} />}
-                />
+                <Route path="/" element={<AllEvents />} />
                 <Route path="/my" element={<MyEvents />} />
                 <Route path="/friends" element={<Friends />} />
                 <Route path="/profile" element={<Profile />} />
