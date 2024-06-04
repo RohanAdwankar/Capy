@@ -117,11 +117,38 @@ export default function Event({ eventData }) {
     }
   };
 
+
   let audio = new Audio(song);
 
   const start = () => {
     audio.play();
     console.log("playing");
+  };
+
+  const EventDateDisplay = ({ eventData }) => {
+    if(!eventData.date){
+      return <p> <FontAwesomeIcon icon={faCalendarDays} /> {' '} Error: Could not display date </p>;
+    }
+
+    const TimeString = new Date(eventData.date).toLocaleString('en-US', {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true
+    });
+
+    const DateString = new Date(eventData.date).toLocaleString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    return (
+      <p>
+        <FontAwesomeIcon icon={faCalendarDays} /> {' '}
+        {TimeString + " on " + DateString}
+      </p>
+    );
   };
 
   return (
@@ -162,7 +189,7 @@ export default function Event({ eventData }) {
               <p>&nbsp;&nbsp;</p>
               <p>
                 {" "}
-                <FontAwesomeIcon icon={faCalendarDays} /> {eventData.date}{" "}
+                <EventDateDisplay eventData={eventData} />
               </p>
               {/* <img src={user.profilePicture} alt="User" className="w-10 h-10 rounded-full mr-4" />
               <h2 className="text-xl">{user.name}</h2> */}
@@ -225,7 +252,7 @@ export default function Event({ eventData }) {
         </p>
         <p>
           {" "}
-          <FontAwesomeIcon icon={faCalendarDays} /> {eventData.date}{" "}
+          <EventDateDisplay eventData={eventData} />
         </p>
       </div>
       <div className="saturate-50 flex justify-between items-center mt-4">
