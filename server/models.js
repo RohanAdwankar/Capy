@@ -26,6 +26,8 @@ const eventSchema = new mongoose.Schema({
   comments: [{type: String}]
 });
 
+eventSchema.index({ date: 1 })
+
 module.exports = {
     User: mongoose.model("User", userSchema),
     Event: mongoose.model("Event", eventSchema),
