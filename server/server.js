@@ -436,12 +436,13 @@ app.use(express.json());
 
 const RESULTS_PER_PAGE = 10;
 
-app.get("/api/events", async (req, res) => {
+app.get("/api/events/:page", async (req, res) => {
   try {
     const now = new Date();
     const startOfToday = new Date(now.setHours(0, 0, 0, 0));
 
-    const page = parseInt(req.query.page) || 1;
+    console.log(req.params.page)
+    const page = parseInt(req.params.page) || 1;
     const skip = (page - 1) * RESULTS_PER_PAGE;
     const numEvents = await Event.countDocuments({ date: { $gte: startOfToday } });
 
@@ -453,7 +454,7 @@ app.get("/api/events", async (req, res) => {
       .exec();
 
     const hasNextPage = skip + events.length < numEvents;
-    res.json({ events, hasNextPage, numEvents, hasPrevPage: page > 1 });
+    res.json({ events, hasNextPage, numEvents, hasPrevPage: page > 1, start: skip });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
