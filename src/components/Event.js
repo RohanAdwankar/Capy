@@ -82,7 +82,9 @@ export default function Event({ eventData }) {
       setLikes(likes + 1);
       setUserLiked(true);
       try {
-        await axios.post("/api/likeEvent", { eventID: eventData._id });
+        await axios.post("/api/events/likes/likeEvent", {
+          eventID: eventData._id,
+        });
         console.log("Liked successfully on backend");
         // The eventData variable is passed into Event and is constant
         console.log("Current Event Data:", eventData);
@@ -94,7 +96,9 @@ export default function Event({ eventData }) {
       setLikes(likes - 1);
       setUserLiked(false);
       try {
-        await axios.post("/api/likeEventUndo", { eventID: eventData._id });
+        await axios.post("/api/events/likes/likeEventUndo", {
+          eventID: eventData._id,
+        });
         console.log("Liked Undo successfully on backend");
         // The eventData variable is passed into Event and is constant
         console.log("Current Event Data:", eventData);
@@ -117,7 +121,9 @@ export default function Event({ eventData }) {
         start();
         try {
           console.log("attempting to record attendance on backend");
-          await axios.post("/api/attendEvent", { eventId: eventData._id });
+          await axios.post("/api/events/likes/attendEvent", {
+            eventID: eventData._id,
+          });
           console.log("Attendance recorded successfully on backend");
           // The eventData variable is passed into Event and is constant
           console.log("Current Event Data:", eventData);
@@ -131,7 +137,9 @@ export default function Event({ eventData }) {
         setShowPopUpAnimation(false);
         try {
           console.log("attempting to record undo attendance on backend");
-          await axios.post("/api/attendEventUndo", { eventId: eventData._id });
+          await axios.post("/api/events/likes/attendEventUndo", {
+            eventID: eventData._id,
+          });
           console.log("Attendance undo recorded successfully on backend");
           // The eventData variable is passed into Event and is constant
           console.log("Current Event Data:", eventData);

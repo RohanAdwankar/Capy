@@ -7,6 +7,8 @@ const session = require("express-session");
 
 //All Routes:
 const CommentRouter = require("./CommentRouter");
+const LikeRouter = require("./LikeRouter");
+// const FriendsRouter = require("./FriendsRouter");
 
 //Import schemas
 const { User, Event } = require("./models");
@@ -290,8 +292,8 @@ app.post("/api/upload", upload.single("image"), async (req, res) => {
   }
 });
 
-//Add Friend
-app.post("/api/addFriend", async (req, res) => {
+// //Add Friend
+app.post("/api/user/friends/addFriend", async (req, res) => {
   try {
     const { friendUsername } = req.body;
 
@@ -340,7 +342,7 @@ app.post("/api/addFriend", async (req, res) => {
   }
 });
 
-app.post("/api/removeFriend", async (req, res) => {
+app.post("/api/user/friends/removeFriend", async (req, res) => {
   try {
     const { friendUsername } = req.body;
 
@@ -375,7 +377,7 @@ app.post("/api/removeFriend", async (req, res) => {
   }
 });
 
-app.get("/api/getFriends", async (req, res) => {
+app.get("/api/user/friends/getFriends", async (req, res) => {
   try {
     const currentUserUsername = req.session.username;
 
@@ -428,142 +430,6 @@ app.get("/api/eventImage/:eventId", async (req, res) => {
   }
 });
 
-app.post("/api/likeEvent", async (req, res) => {
-  try {
-    const { eventID } = req.body;
-    const username = req.session.username;
-    if (!username) {
-      return res.status(401).json({ error: "User not logged in" });
-    }
-    const event = await Event.findById(eventID);
-
-    if (!event) {
-      return res.status(404).json({ error: "Event not found" });
-    }
-    // Start updating server
-    await event.updateOne({ $push: { usersLiked: username } });
-    console.log("list of users who liked this event:", event.usersLiked);
-    res.status(200).json({ message: "You liked this event!" });
-    ("");
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Sorry Error liking this event");
-  }
-});
-
-app.post("/api/likeEventUndo", async (req, res) => {
-  try {
-    const { eventID } = req.body;
-    const username = req.session.username;
-    if (!username) {
-      return res.status(401).json({ error: "User not logged in" });
-    }
-    const event = await Event.findById(eventID);
-
-    if (!event) {
-      return res.status(404).json({ error: "Event not found" });
-    }
-    // Start updating server
-    await event.updateOne({ $pull: { usersLiked: username } });
-    console.log("list of users who liked this event:", event.usersLiked);
-    res.status(200).json({ message: "You unliked this event!" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Sorry Error unliking this event");
-  }
-});
-
-app.post("/api/attendEvent", async (req, res) => {
-  try {
-    const username = req.session.username;
-    if (!username) {
-      return res.status(401).json({ error: "User not logged in" });
-    }
-    const user = await User.findOne({ username });
-    // console.log("userData1:", user);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    const { eventId } = req.body;
-    const event = await Event.findById(eventId);
-
-    if (!event) {
-      return res.status(404).json({ error: "Event not found" });
-    }
-
-    if (event.usersGoing.includes(username)) {
-      return res.status(400).json({ error: "User already signed up" });
-    }
-
-    console.log("attemping to add user from usersGoing list in event");
-    await event.updateOne({ $push: { usersGoing: username } });
-    console.log("finished adding user from usersGoing list in event");
-    // for some reason, event.usersGoing is not updated
-    console.log("users which are pull up to this event:", event.usersGoing);
-
-    console.log("attempting to add event from user");
-    await user.updateOne({ $push: { signedUpEvents: event._id } });
-    console.log("finished adding event from user");
-    // for some reason, user.signedUpEvents is not updated.
-    console.log("events this user is attending:", user.signedUpEvents);
-
-    // event.usersGoing.push(username);
-    // console.log("list of users pulling up to this event:", event.usersGoing);
-    // // await event.updateOne({ $push: { usersGoing: username } });
-    // console.log("attempting to add event to user");
-    // await user.updateOne({ $push: { signedUpEvents: event._id } });
-    // console.log("finished to add event to user");
-    // // user.signedUpEvents.push(event);
-    // await event.save();
-    // await user.save();
-  } catch (error) {
-    console.error("Error pulling up to event:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-app.post("/api/attendEventUndo", async (req, res) => {
-  try {
-    const username = req.session.username;
-    if (!username) {
-      return res.status(401).json({ error: "User not logged in" });
-    }
-    const user = await User.findOne({ username });
-    // console.log("userData1:", user);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    const { eventId } = req.body;
-    const event = await Event.findById(eventId);
-
-    if (!event) {
-      return res.status(404).json({ error: "Event not found" });
-    }
-
-    console.log("attemping to remove user from usersGoing list in event");
-    await event.updateOne({ $pull: { usersGoing: username } });
-    console.log("finished removing user from usersGoing list in event");
-    console.log(
-      "users which are pull up to this event (undo version):",
-      event.usersGoing
-    );
-
-    console.log("attempting to remove event from user");
-    await user.updateOne({ $pull: { signedUpEvents: event._id } });
-    console.log("finished removing event from user");
-    // for some reason, user.signedUpEvents is not updated.
-    console.log(
-      "events this user is attending (undo version):",
-      user.signedUpEvents
-    );
-  } catch (error) {
-    console.error("Error pulling up to event:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
 //API Endpoint
 app.use(cors());
 app.use(express.json());
@@ -577,6 +443,15 @@ app.get("/api/events", async (req, res) => {
   }
 });
 
+// app.get("/api/user", async (req, res) => {
+//   try {
+//     const user = await User.find();
+//     res.json(user);
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// });
+
 app.use(express.static(path.join(__dirname, "..", "build")));
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "build", "index.html"));
@@ -584,6 +459,8 @@ app.get("*", (req, res) => {
 
 //router files
 app.use("/api/events/comments", CommentRouter);
+app.use("/api/events/likes", LikeRouter);
+// app.use("/api/user/friends", FriendsRouter);
 
 // Start the server
 app.listen(port, () => {
