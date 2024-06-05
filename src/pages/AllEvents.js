@@ -56,7 +56,7 @@ export default function AllEvents() {
           {hasPrevPage && <button className="bg-black text-white rounded-full p-2 px-5 mr-10 hover:bg-gray-500" onClick={gotoPrevPage}>Previous</button>}
         </div>
         <div>
-          Showing {eventNumRangeStart + 1}-{eventNumRangeStart + events.length + 1} of {numTotalEvents} events
+          Showing {eventNumRangeStart + 1}-{eventNumRangeStart + events.length} of {numTotalEvents} events
         </div>
         <div>
           {hasNextPage && <button className="bg-black text-white rounded-full p-2 px-5 ml-10 hover:bg-gray-500" onClick={gotoNextPage}>Next</button>}
