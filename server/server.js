@@ -434,10 +434,26 @@ app.get("/api/eventImage/:eventId", async (req, res) => {
 app.use(cors());
 app.use(express.json());
 
+const RESULTS_PER_PAGE = 10;
+
 app.get("/api/events", async (req, res) => {
   try {
-    const events = await Event.find();
-    res.json(events);
+    const now = new Date();
+    const startOfToday = new Date(now.setHours(0, 0, 0, 0));
+
+    const page = parseInt(req.query.page) || 1;
+    const skip = (page - 1) * RESULTS_PER_PAGE;
+    const numEvents = await Event.countDocuments({ date: { $gte: startOfToday } });
+
+    const events = await Event
+      .find({ date: {$gte: startOfToday} })
+      .sort({ date: 1 })
+      .skip(skip)
+      .limit(RESULTS_PER_PAGE)
+      .exec();
+
+    const hasNextPage = skip + events.length < numEvents;
+    res.json({ events, hasNextPage, numEvents, hasPrevPage: page > 1 });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
