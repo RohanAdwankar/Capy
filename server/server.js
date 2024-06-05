@@ -7,7 +7,7 @@ const session = require("express-session");
 
 //All Routes:
 const CommentRouter = require("./CommentRouter");
-const LikeRouter = require("./LikeRouter");
+const LikeAndAttendRouter = require("./LikeAndAttendRouter");
 // const FriendsRouter = require("./FriendsRouter");
 
 //Import schemas
@@ -459,7 +459,7 @@ app.get("*", (req, res) => {
 
 //router files
 app.use("/api/events/comments", CommentRouter);
-app.use("/api/events/likes", LikeRouter);
+app.use("/api/events/likes", LikeAndAttendRouter);
 // app.use("/api/user/friends", FriendsRouter);
 
 // Start the server
