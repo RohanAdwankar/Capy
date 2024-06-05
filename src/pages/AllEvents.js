@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Event from "../components/Event";
-import Loading from "../components/Loading"
-
-require("../components/globalVariables");
+import Loading from "../components/Loading";
 
 export default function AllEvents() {
   const [events, setEvents] = useState([]);

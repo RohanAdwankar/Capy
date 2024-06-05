@@ -2,6 +2,7 @@ import defEventPic from "../assets/defEvent.jpeg";
 import React, { useState, useEffect } from "react";
 import capy from "../assets/pullupCrop.png";
 import song from "../assets/songCrop.mp3";
+import { store } from "../Main.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarDays,
@@ -9,10 +10,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 
-require("./globalVariables");
-console.log(global.myGlobalVar); // Outputs: Hello, world!
-
 export default function Event({ eventData }) {
+  const [isSignedIn, setSignedIn] = store.useState("signedIn", {
+    default: false,
+  });
+  const [signedInUsername, setSignedInUsername] = store.useState(
+    "signedInUsername",
+    { default: "" }
+  );
   const [likes, setLikes] = useState(eventData.usersLiked.length);
   const [numberAttending, setNumberAttending] = useState(
     eventData.usersGoing.length
@@ -20,21 +25,18 @@ export default function Event({ eventData }) {
 
   const [comment, setComment] = useState(false);
   const [userComment, setUserCommented] = useState(
-    eventData.usersCommented.includes(global.currentUsername) &&
-      global.currentUsername !== ""
+    eventData.usersCommented.includes(signedInUsername) && isSignedIn
   );
 
   const [showAnimation, setShowAnimation] = useState(false);
   const [showPopUpAnimation, setShowPopUpAnimation] = useState(false);
 
   const [userLiked, setUserLiked] = useState(
-    eventData.usersLiked.includes(global.currentUsername) &&
-      global.currentUsername !== ""
+    eventData.usersLiked.includes(signedInUsername) && isSignedIn
   );
 
   const [userIsPullingUp, setUserIsPullingUp] = useState(
-    eventData.usersGoing.includes(global.currentUsername) &&
-      global.currentUsername !== ""
+    eventData.usersGoing.includes(signedInUsername) && isSignedIn
   );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -73,7 +75,7 @@ export default function Event({ eventData }) {
 
   const handleLikeClick = async () => {
     console.log("REACHED THIS BOZO");
-    if (global.currentUsername === "") {
+    if (!isSignedIn) {
       alert("Must be signed in to like event.");
       return;
     }
@@ -109,7 +111,7 @@ export default function Event({ eventData }) {
   };
 
   const handlePullUpClick = async () => {
-    if (global.currentUsername === "") {
+    if (!isSignedIn) {
       alert("Must be signed in to pull up to event.");
       return;
     } else {

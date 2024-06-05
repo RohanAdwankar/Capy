@@ -15,9 +15,7 @@ import axios from "axios";
 import { createStore, useGlobalState } from "state-pool";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
-require("./components/globalVariables");
-
-const store = createStore({ signedIn: false });
+const store = createStore({ signedIn: false, signedInUsername: "" });
 
 //Get Profile Username
 
@@ -31,8 +29,6 @@ const ProfileName = () => {
           withCredentials: true,
         });
         setUsername(response.data.username);
-        global.currentUsername = response.data.username;
-        console.log("current username is now:", global.currentUsername);
       } catch (error) {
         console.error("Error fetching username:", error);
       }
@@ -79,9 +75,14 @@ function Main() {
   const [isSignedIn, setSignedIn] = store.useState("signedIn", {
     default: false,
   });
+  const [signedInUsername, setSignedInUsername] = store.useState(
+    "signedInUsername",
+    { default: "" }
+  );
 
   useEffect(() => {
     setSignedIn(false);
+    setSignedInUsername("");
   }, []);
 
   const location = useLocation();
@@ -111,122 +112,123 @@ function Main() {
 
   return (
     <div className="App">
-        <div className="flex min-h-screen bg-gradient-to- from-orange-200 to-transparent">
-          <div className="flex flex-col h-screen px-10 py-2 min-w-56 bg-gradient-to-t from-orange-100 to-transparent fixed">
-            <div className="flex items-center my-5 ">
-              <img
-                src={logo}
-                alt="Logo"
-                className="w-12 h-auto mr-2 rounded-full"
-              />
-              <div>
-                <h1 className="text-xl font-bold">Capy</h1>
-                <p className="text-sm roboto-slab font-light text-black">
-                  ok i pull up
-                </p>
-              </div>
+      <div className="flex min-h-screen bg-gradient-to- from-orange-200 to-transparent">
+        <div className="flex flex-col h-screen px-10 py-2 min-w-56 bg-gradient-to-t from-orange-100 to-transparent fixed">
+          <div className="flex items-center my-5 ">
+            <img
+              src={logo}
+              alt="Logo"
+              className="w-12 h-auto mr-2 rounded-full"
+            />
+            <div>
+              <h1 className="text-xl font-bold">Capy</h1>
+              <p className="text-sm roboto-slab font-light text-black">
+                ok i pull up
+              </p>
             </div>
-
-            {/* navigation */}
-            {Object.keys(pages).map((path) => (
-              <button
-                key={path}
-                onClick={() => {
-                  setTitle(pages[path].title);
-                  navigate(path);
-                }}
-                className={boldNavClass(path)}
-              >
-                {pages[path].title}
-              </button>
-            ))}
-
-            {location.pathname !== "/create" && isSignedIn ? (
-              <button
-                onClick={() => {
-                  setTitle("Create Event");
-                  navigate("/create");
-                }}
-                className="mt-auto px-4 py-2 bg-black text-white rounded-full mb-5"
-              >
-                New Event
-              </button>
-            ) : null}
           </div>
 
-          {/* main content */}
-          <main className="flex-grow overflow-y-auto p-10 justify-self-center ml-56">
-            {" "}
-            {/* Adjusted the margin-left */}
-            <div className="flex justify-center roboto-slab font-bold text-2xl">
-              {title}
-            </div>
-            <div className="flex justify-center">
-              <Routes>
-                <Route path="/" element={<AllEvents />} />
-                <Route path="/my" element={<MyEvents />} />
-                <Route path="/friends" element={<Friends />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/create" element={<Event />} />
-                <Route path="/signin" element={<SignIn />} />
-                <Route path="/signout" element={<SignOut />} />
-                <Route path="/signup" element={<SignUp />} />
-                <Route path="/about" element={<About />} />
-              </Routes>
-            </div>
-          </main>
+          {/* navigation */}
+          {Object.keys(pages).map((path) => (
+            <button
+              key={path}
+              onClick={() => {
+                setTitle(pages[path].title);
+                navigate(path);
+              }}
+              className={boldNavClass(path)}
+            >
+              {pages[path].title}
+            </button>
+          ))}
 
-          {/* floating top right section */}
-          <div className="absolute top-0 right-0 flex items-center p-5">
-            <div className="p-0 m-0">
-              {isSignedIn ? (
-                <div className="mr-3">
-                  <h1 className="Profile-name">
-                    <ProfileName />
-                  </h1>
-                  <button
-                    type="button"
-                    variant="contained"
-                    onClick={() => {
-                      navigate("/signout");
-                      setTitle("Sign Out");
-                      setSignedIn(false);
-                    }}
-                    className="font-light text-sky-400 text-right"
-                  >
-                    Sign Out
-                  </button>
-                </div>
-              ) : (
-                <div className="mr-3">
-                  <h1 className="Profile-name">Guest</h1>
-                  <button
-                    type="button"
-                    variant="contained"
-                    onClick={() => {
-                      navigate("/signin");
-                      setTitle("Sign In");
-                    }}
-                    className={
-                      "text-right " +
-                      (location.pathname === "/signin"
-                        ? "font-bold"
-                        : "font-light text-sky-400")
-                    }
-                  >
-                    Sign In
-                  </button>
-                </div>
-              )}
-            </div>
+          {location.pathname !== "/create" && isSignedIn ? (
+            <button
+              onClick={() => {
+                setTitle("Create Event");
+                navigate("/create");
+              }}
+              className="mt-auto px-4 py-2 bg-black text-white rounded-full mb-5"
+            >
+              New Event
+            </button>
+          ) : null}
+        </div>
 
+        {/* main content */}
+        <main className="flex-grow overflow-y-auto p-10 justify-self-center ml-56">
+          {" "}
+          {/* Adjusted the margin-left */}
+          <div className="flex justify-center roboto-slab font-bold text-2xl">
+            {title}
+          </div>
+          <div className="flex justify-center">
+            <Routes>
+              <Route path="/" element={<AllEvents />} />
+              <Route path="/my" element={<MyEvents />} />
+              <Route path="/friends" element={<Friends />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/create" element={<Event />} />
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/signout" element={<SignOut />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/about" element={<About />} />
+            </Routes>
+          </div>
+        </main>
+
+        {/* floating top right section */}
+        <div className="absolute top-0 right-0 flex items-center p-5">
+          <div className="p-0 m-0">
             {isSignedIn ? (
-              <ProfilePicture />
+              <div className="mr-3">
+                <h1 className="Profile-name">
+                  <ProfileName />
+                </h1>
+                <button
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    navigate("/signout");
+                    setTitle("Sign Out");
+                    setSignedIn(false);
+                    setSignedInUsername("");
+                  }}
+                  className="font-light text-sky-400 text-right"
+                >
+                  Sign Out
+                </button>
+              </div>
             ) : (
-              <img src={profile} className="Profile-Img" alt="Profile" />
+              <div className="mr-3">
+                <h1 className="Profile-name">Guest</h1>
+                <button
+                  type="button"
+                  variant="contained"
+                  onClick={() => {
+                    navigate("/signin");
+                    setTitle("Sign In");
+                  }}
+                  className={
+                    "text-right " +
+                    (location.pathname === "/signin"
+                      ? "font-bold"
+                      : "font-light text-sky-400")
+                  }
+                >
+                  Sign In
+                </button>
+              </div>
             )}
           </div>
+
+          {isSignedIn ? (
+            <ProfilePicture />
+          ) : (
+            <img src={profile} className="Profile-Img" alt="Profile" />
+          )}
         </div>
+      </div>
     </div>
   );
 }
