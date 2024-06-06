@@ -298,7 +298,7 @@ export default function Event({ eventData }) {
         <div className="w-1/2">
           <h3 className="text-lg font-bold">Users Going:</h3>
           {usersGoing.length > 0 ? (
-            <div className="flex space-x-2">
+            <div className="flex space-x-2 mb-5">
               {usersGoing.map((user) => (
                 <div key={user._id} className="bg-gray-200 rounded-full px-3 py-1">
                   {user.username}

@@ -137,7 +137,7 @@ export default function Friends() {
   return (
     <div>
       {isSignedIn ? (
-        <div className="min-w-max m-4">
+        <div>
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-3"
             onClick={() => {
@@ -163,19 +163,22 @@ export default function Friends() {
               </button>
             </div>
           )}
-          <div className="flex">
-            <input
-              type="text"
-              placeholder="Search your friends"
-              className="rounded bg-gray-100 p-2 pl-5 mb-2 w-full h-full"
-              onChange={(e) => {
-                setFilter(e.target.value);
-              }}
-            />
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2 h-full">
-              Search
-            </button>
-          </div>
+
+          {friends.length > 0 &&
+            <div className="flex">
+              <input
+                type="text"
+                placeholder="Search your friends"
+                className="rounded bg-gray-100 p-2 pl-5 mb-2 w-full h-full"
+                onChange={(e) => {
+                  setFilter(e.target.value);
+                }}
+              />
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2 h-full">
+                Search
+              </button>
+            </div>
+          }
 
           {status !== "" && <p>{status}</p>}
 

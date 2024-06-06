@@ -39,7 +39,7 @@ export default function UserEvents({ username }) {
   }, [type]);
 
   useEffect(() => {
-    if (type === "RSVP'd") {
+    if (type === "RSVP'd") { 
       if (rsvpedEvents && rsvpedEvents.length > 0)
         setFilteredEvents(rsvpedEvents);
       else setFilteredEvents([]);
@@ -54,7 +54,7 @@ export default function UserEvents({ username }) {
 
   return (
     <div className="block my-5">
-      <div className="flex justify-center mb-5">
+      <div>
         <div className="mr-20">
           <select
             className="rounded bg-gray-100 p-2 pl-5 mb-2 w-full h-full"
