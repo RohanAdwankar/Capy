@@ -4,8 +4,9 @@ import logo from "./assets/capy.png";
 import profile from "./assets/coda.png";
 import Event from "./pages/CreateEvent";
 import Profile from "./pages/Profile";
+import PublicProfile from "./pages/PublicProfile";
 import Friends from "./pages/Friends";
-import MyEvents from "./pages/MyEvents";
+import UserEvents from "./pages/UserEvents";
 import AllEvents from "./pages/AllEvents";
 import SignIn from "./pages/SignIn";
 import SignOut from "./pages/SignOut";
@@ -165,9 +166,16 @@ function Main() {
           <div className="flex justify-center">
             <Routes>
               <Route path="/" element={<AllEvents />} />
-              <Route path="/my" element={<MyEvents />} />
+              <Route
+                path="/my"
+                element={<UserEvents username={signedInUsername} />}
+              />
               <Route path="/friends" element={<Friends />} />
               <Route path="/profile" element={<Profile />} />
+              <Route
+                path="/publicprofile/:username"
+                element={<PublicProfile />}
+              />
               <Route path="/create" element={<Event />} />
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signout" element={<SignOut />} />

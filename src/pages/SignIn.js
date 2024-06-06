@@ -55,6 +55,7 @@ export default function SignIn() {
         console.log(responseText);
         setSignedIn(true);
         setSignedInUsername(userData.username);
+        console.log("USERNAME JOHNNY IS NOW:", signedInUsername);
         navigate("/my");
       })
       .catch((error) => {

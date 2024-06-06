@@ -81,9 +81,9 @@ db.once("open", () => {
   console.log("Connected to the database");
 });
 
-app.get("/api/attendedEvents", async (req, res) => {
+app.get("/api/attendedEvents/:username", async (req, res) => {
   try {
-    const username = req.session.username;
+    const username = req.params.username;
     if (!username) {
       return res.status(401).json({ error: "User not logged in" });
     }
@@ -139,13 +139,17 @@ app.post("/api/createEvent", upload.single("image"), async (req, res) => {
   }
 });
 
-app.get("/api/createdEvents", async (req, res) => {
+app.get("/api/createdEvents/:username", async (req, res) => {
   try {
-    const username = req.session.username;
+    const username = req.params.username;
     if (!username) {
       return res.status(401).json({ error: "User not logged in" });
     }
     const user = await User.findOne({ username }).populate("createdEvents");
+    if (!user) {
+      return res.status(401).json({ error: "User does not exist " });
+    }
+    console.log(user);
     res.status(200).json({ createdEvents: user.createdEvents });
   } catch (error) {
     console.error("Error retreiving created events:", error);
@@ -441,20 +445,27 @@ app.get("/api/events/:page", async (req, res) => {
     const now = new Date();
     const startOfToday = new Date(now.setHours(0, 0, 0, 0));
 
-    console.log(req.params.page)
+    console.log(req.params.page);
     const page = parseInt(req.params.page) || 1;
     const skip = (page - 1) * RESULTS_PER_PAGE;
-    const numEvents = await Event.countDocuments({ date: { $gte: startOfToday } });
+    const numEvents = await Event.countDocuments({
+      date: { $gte: startOfToday },
+    });
 
-    const events = await Event
-      .find({ date: {$gte: startOfToday} })
+    const events = await Event.find({ date: { $gte: startOfToday } })
       .sort({ date: 1 })
       .skip(skip)
       .limit(RESULTS_PER_PAGE)
       .exec();
 
     const hasNextPage = skip + events.length < numEvents;
-    res.json({ events, hasNextPage, numEvents, hasPrevPage: page > 1, start: skip });
+    res.json({
+      events,
+      hasNextPage,
+      numEvents,
+      hasPrevPage: page > 1,
+      start: skip,
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
