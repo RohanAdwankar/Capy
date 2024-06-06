@@ -100,9 +100,6 @@ export default function SignIn() {
         </span>
       </div>
       <br />
-      <input type="checkbox" className="Remember-Me"></input>
-      Remember me?
-      <br />
       <button onClick={handleSubmit} className="Sign-In-Button">
         Sign in
       </button>

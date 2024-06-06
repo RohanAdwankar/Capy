@@ -90,7 +90,7 @@ export default function SignUp() {
 		.then(responseData => {
 			if (typeof responseData === 'string') {
 				setSignedIn(true);
-				navigate("/signup");
+				navigate("/profile");
 				
 			} else {
 				alert(responseData.error);
