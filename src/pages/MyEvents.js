@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
+import { store } from "../Main.js";
 import Event from "../components/Event";
 
 export default function MyEvents() {
+	const [isSignedIn, setSignedIn] = store.useState("signedIn", {
+		default: false,
+	});
+
 	const [type, setType] = useState("RSVP'd");
 	const [filter, setFilter] = useState('');
 	const [createdEvents, setCreatedEvents] = useState([]);
@@ -32,7 +37,7 @@ export default function MyEvents() {
 
 		fetchCreatedEvents();
 		fetchAttendedEvents();
-	}, []);
+	}, [type]);
 
 	useEffect(() => {
 		if (type === "RSVP'd") {
@@ -46,7 +51,15 @@ export default function MyEvents() {
 			else
 				setFilteredEvents([]);
 		}
-	}, [createdEvents, rsvpedEvents, type]);
+	}, [createdEvents, rsvpedEvents]);
+
+	if (!isSignedIn) {
+		return (
+			<div className="block my-5">
+				<p>Please sign in.</p>
+			</div>
+		);
+	}
 
 	return (
 		<div className="block my-5">
@@ -70,7 +83,8 @@ export default function MyEvents() {
 				{
 					filteredEvents.filter((event) => {
 						let title = event.title ? event.title.toLowerCase() : '';
-						return title.includes(filter.toLowerCase());
+						let location = event.location ? event.location.toLowerCase() : '';
+						return title.includes(filter.toLowerCase()) || location.includes(filter.toLowerCase());
 					}).map((event) => (
 						<Event key={event._id} eventData={event} />
 					))
