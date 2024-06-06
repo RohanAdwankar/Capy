@@ -8,6 +8,7 @@ const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
 const defaultImagePath = path.join(__dirname, "assets", "defEvent.jpeg");
+const defaultProfPath = path.join(__dirname, "assets", "capy.png");
 
 const cors = require("cors");
 
@@ -235,7 +236,7 @@ app.post("/api/createUser", async (req, res) => {
       return res.status(400).json({ error: "Email already exists" });
     }
 
-    const defaultProfilePicture = fs.readFileSync("./server/assets/capy.png");
+    const defaultProfilePicture = fs.readFileSync(defaultProfPath);
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
