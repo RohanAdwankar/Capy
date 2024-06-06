@@ -22,7 +22,7 @@ const eventSchema = new mongoose.Schema({
   eventImage: Buffer,
   usersGoing: [{ type: String }],
   usersLiked: [{ type: String }],
-  usersCommented: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+  usersCommented: [{type: String }], //for times sake im just putting name
   comments: [{type: String}]
 });
 

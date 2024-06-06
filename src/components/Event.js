@@ -23,7 +23,9 @@ export default function Event({ eventData }) {
     eventData.usersGoing.length
   );
 
-  const [comment, setComment] = useState(false);
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [userComment, setUserCommented] = useState(
     eventData.usersCommented.includes(signedInUsername) && isSignedIn
   );
@@ -73,20 +75,48 @@ export default function Event({ eventData }) {
     fetchEventImage();
   }, [eventData._id]);
 
+  useEffect(() => {
+    const fetchComments = async () => {
+      try{
+        const response = await axios.get('/api/events/comments/getComments', {
+          params: {eventID: eventData._id}
+        })
+        setComments(response.data.comments || []);
+      } catch(error) {
+        console.error("Failed to fetch comments", error);
+        setComments([]);
+      }
+    };
+
+    if(eventData && eventData._id){
+      fetchComments();
+    }
+  }, [eventData._id]);
+
   const handleCommentClick = async (event) => {
     event.preventDefault();
 
-    const comment = event.target.elements.comment.value;
+    if(!comment.trim()){
+      return;
+    }
+
+    setIsSubmitting(true);
 
     try {
-      await axios.post("/api/events/comments/addComment", {
+      const response = await axios.post('/api/events/comments/addComment', {
         eventID: eventData._id,
-        comment,
+        comment
       });
 
-      console.log("Comment submitted successfully");
+      if(response.status == 200){
+        console.log("Comment submitted successfully");
+        setComments((prevComments) => [...prevComments, comment]);
+        setComment("");
+      }
     } catch (error) {
       console.error("Failed to add comment from form", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -313,14 +343,31 @@ export default function Event({ eventData }) {
             <textarea
               className="w-full border rounded p-2 mb-2"
               placeholder="Type your comment here..."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              disabled={isSubmitting}
             ></textarea>
             <button
               className="bg-blue-500 text-white px-4 py-2 rounded"
               type="submit"
+              disabled={isSubmitting}
             >
+              {isSubmitting ? 'Submitting...' : 'Add Comment'}
               Add Comment
             </button>
           </form>
+          <div>
+            <h3>Comments:</h3>
+            {comments && comments.length > 0 ? (
+              comments.map((comment, index) => (
+                <div key={index} className="bg-gray-200 p-2 mb-2 rounded">
+                  {comment}
+                </div>
+              ))
+            ) : (
+              <p>No comments yet.</p>
+            )}
+          </div>
         </div>
       </div>
     </div>
