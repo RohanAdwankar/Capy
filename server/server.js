@@ -460,15 +460,6 @@ app.get("/api/events/:page", async (req, res) => {
   }
 });
 
-// app.get("/api/user", async (req, res) => {
-//   try {
-//     const user = await User.find();
-//     res.json(user);
-//   } catch (err) {
-//     res.status(500).json({ message: err.message });
-//   }
-// });
-
 app.use(express.static(path.join(__dirname, "..", "build")));
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "build", "index.html"));

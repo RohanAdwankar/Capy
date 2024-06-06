@@ -53,6 +53,34 @@ router.post('/addComment', async (req, res) => {
     }
 });
 
+//get comment route
+router.get('/getComments', async (req, res) => {
+    try {
+        const username = req.session.username;
+        const { eventID } = req.body;
+
+        if(!username){
+            return res.status(401).json({error: "User not logged in"});
+        }
+
+        const event = await Event.findById(eventID);
+
+        if(!event){
+            return res.status(404).json({error: "Event not found"});
+        }
+
+        if(event.comments.length <= 0){
+            return res.status(404).json({error: "No comments to get"});
+        }
+
+      //  const comments = await Event.find({});
+
+        //const user = await Use;
+    }catch(error){
+
+    }
+})
+
 //remove comment route
 
 
