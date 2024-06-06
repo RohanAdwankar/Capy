@@ -33,22 +33,20 @@ const FriendList = ({
           <h3 className="text-xl font-semibold mt-2 text-center">
             {friend.username}
           </h3>
-          {hoveredFriend === friend.username && ( // Show button only when friend is hovered
-            <div>
-              <button
-                onClick={() => onRemoveFriend(friend.username)}
-                className="bg-red-500 hover:bg-re d-700 text-white font-bold py-2 px-4 rounded mt-2 w-full"
-              >
-                Remove Friend
-              </button>
-              <button
-                onClick={() => viewFriendProfile(friend.username)}
-                className="bg-blue-500 hover:bg-re d-700 text-white font-bold py-2 px-4 rounded mt-2 w-full"
-              >
-                View Friend Profile
-              </button>
-            </div>
-          )}
+          <div>
+            <button
+              onClick={() => onRemoveFriend(friend.username)}
+              className="bg-red-500 hover:bg-re d-700 text-white font-bold py-2 px-4 rounded mt-2 w-full"
+            >
+              Remove Friend
+            </button>
+            <button
+              onClick={() => viewFriendProfile(friend.username)}
+              className="bg-blue-500 hover:bg-re d-700 text-white font-bold py-2 px-4 rounded mt-2 w-full"
+            >
+              View Friend Profile
+            </button>
+          </div>
         </div>
       ))}
     </div>
