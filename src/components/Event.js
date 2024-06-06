@@ -353,10 +353,9 @@ export default function Event({ eventData }) {
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Submitting...' : 'Add Comment'}
-              Add Comment
             </button>
           </form>
-          <div>
+          <div className="mt-4">
             <h3>Comments:</h3>
             {comments && comments.length > 0 ? (
               comments.map((comment, index) => (

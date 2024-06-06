@@ -1,22 +1,30 @@
 require("dotenv").config();
+
 const express = require("express");
-const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const cors = require("cors");
 const session = require("express-session");
+
+const multer = require("multer");
+const fs = require("fs");
+const path = require("path");
+const defaultImagePath = path.join(__dirname, "assets", "defEvent.jpeg");
+
+const cors = require("cors");
+
+const bodyParser = require("body-parser");
+
+//Import Models
+const { User, Event } = require("./models");
 
 //All Routes:
 const CommentRouter = require("./CommentRouter");
 const LikeAndAttendRouter = require("./LikeAndAttendRouter");
 // const FriendsRouter = require("./FriendsRouter");
 
-//Import schemas
-const { User, Event } = require("./models");
+const app = express();
+const port = process.env.PORT || 3002;
 
-const fs = require("fs");
-
-const multer = require("multer");
-
+//MiddleWare:
 const storage = multer.memoryStorage();
 const upload = multer({
   storage: storage,
@@ -30,26 +38,6 @@ const secretKey = crypto.randomBytes(32).toString("hex");
 console.log("Generated Secret Key:", secretKey);
 
 const dbURI = process.env.MONGO_URI;
-
-const app = express();
-const port = process.env.PORT || 3002;
-const path = require("path");
-
-app.use(
-  session({
-    secret: secretKey,
-    resave: false,
-    saveUninitialized: true,
-  })
-);
-
-app.use(bodyParser.json());
-app.use(cors());
-
-// Middleware
-app.use(bodyParser.json());
-
-//API Endpoint
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -72,13 +60,80 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(bodyParser.json());
 app.use(express.json());
 
-const db = mongoose.connection;
+app.use(
+  session({
+    secret: secretKey,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
   console.log("Connected to the database");
+});
+
+//API Endpoints
+app.use("/api/events/comments", CommentRouter);
+app.use("/api/events/likes", LikeAndAttendRouter);
+
+//Create Event Route:
+
+app.post("/api/createEvent", upload.single("image"), async (req, res) => {
+  try {
+    console.log("Received request to create event");
+    const { title, location, date, description /*, usersLiked, usersGoing, usersCommented, comments*/ } = req.body;
+    const datePosted = new Date();
+    const user = req.session.username;
+
+    if(!user) {
+      console.error("User not logged in");
+      return res.status(500).json({error: "User not logged in"});
+    }
+
+    const userObj = await User.findOne({ username: user });
+    if (!userObj) {
+      console.error("User not found");
+      return res.status(500).json({ error: "User not found"});
+    }
+
+    // Check if an image file was uploaded
+    const eventImage = req.file
+      ? req.file.buffer
+      : fs.readFileSync(defaultImagePath);
+
+    const newEvent = new Event({
+      user: user.username,
+      title,
+      location,
+      date,
+      description,
+      datePosted,
+      eventImage, // Use the uploaded image if available, otherwise use the default image
+      usersLiked: [],
+      usersGoing: [],
+      usersCommented: [],
+      comments: []
+    });
+
+    console.log("Creating new event with data:", newEvent);
+
+    await newEvent.save();
+
+    // Add the event to the user's createdEvents list
+    await userObj.updateOne({ $push: { createdEvents: newEvent } });
+
+    res.status(201).send("Event created");
+    console.log("Someone created an event:", newEvent);
+  } catch (error) {
+    console.error("Error Creating Event:", error);
+    res.status(500).send("Error creating event");
+  }
 });
 
 app.get("/api/attendedEvents/:username", async (req, res) => {
@@ -93,49 +148,6 @@ app.get("/api/attendedEvents/:username", async (req, res) => {
   } catch (error) {
     console.error("Error getting attended events:", error);
     res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-app.post("/api/createEvent", upload.single("image"), async (req, res) => {
-  try {
-    const { title, location, date, description, usersLiked, usersGoing } =
-      req.body;
-    const datePosted = new Date();
-    const user = req.session.username;
-
-    const userObj = await User.findOne({ username: user });
-    if (!userObj) {
-      return res.status(500).json({ error: "User not logged in" });
-    }
-
-    // Check if an image file was uploaded
-    const eventImage = req.file
-      ? req.file.buffer
-      : fs.readFileSync("./server/assets/defEvent.jpeg");
-
-    const newEvent = new Event({
-      user: user.username,
-      title,
-      location,
-      date,
-      description,
-      datePosted,
-      eventImage, // Use the uploaded image if available, otherwise use the default image
-      usersLiked,
-      usersGoing,
-    });
-
-    await newEvent.save();
-
-    // Add the event to the user's createdEvents list
-    await userObj.updateOne({ $push: { createdEvents: newEvent } });
-
-    res.status(201).send("Event created");
-    console.log("Someone created an event:");
-    // console.log(newEvent);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error creating event");
   }
 });
 
@@ -502,11 +514,6 @@ app.use(express.static(path.join(__dirname, "..", "build")));
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "build", "index.html"));
 });
-
-//router files
-app.use("/api/events/comments", CommentRouter);
-app.use("/api/events/likes", LikeAndAttendRouter);
-// app.use("/api/user/friends", FriendsRouter);
 
 // Start the server
 app.listen(port, () => {

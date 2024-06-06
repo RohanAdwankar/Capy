@@ -43,6 +43,9 @@ export default function CreateEvent() {
         }
       }
 
+      console.log("Event data before submission:", eventData);
+      console.log("Uploaded image:", uploadedImage);
+
       const formData = new FormData();
 
       for (let field in eventData) {
@@ -51,6 +54,10 @@ export default function CreateEvent() {
 
       formData.append("image", uploadedImage);
 
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+      }
+      
       await axios.post("/api/createEvent", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
