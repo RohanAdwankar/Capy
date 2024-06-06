@@ -20,7 +20,7 @@ const { User, Event } = require("./models");
 //All Routes:
 const CommentRouter = require("./CommentRouter");
 const LikeAndAttendRouter = require("./LikeAndAttendRouter");
-// const FriendsRouter = require("./FriendsRouter");
+const FriendsRouter = require("./FriendsRouter");
 
 const app = express();
 const port = process.env.PORT || 3002;
@@ -82,6 +82,7 @@ db.once("open", () => {
 //API Endpoints
 app.use("/api/events/comments", CommentRouter);
 app.use("/api/events/likes", LikeAndAttendRouter);
+app.use("/api/user/friends", FriendsRouter);
 
 //Create Event Route:
 
@@ -334,7 +335,7 @@ app.post("/api/upload", upload.single("image"), async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
+/*
 // //Add Friend
 app.post("/api/user/friends/addFriend", async (req, res) => {
   try {
@@ -449,7 +450,7 @@ app.get("/api/user/friends/getFriends", async (req, res) => {
     console.error("Error fetching friends:", error);
     res.status(500).json({ error: "Internal server error" });
   }
-});
+});*/
 
 app.get("/api/eventImage/:eventId", async (req, res) => {
   try {
