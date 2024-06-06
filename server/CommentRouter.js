@@ -76,8 +76,8 @@ router.get('/getComments', async (req, res) => {
 });
 
 //remove comment route
-/*
-router.delete('/delteComment', async(req, res) => {
+
+router.delete('/deleteComment', async(req, res) => {
     try {
         const {eventID, commentID} = req.body;
         const username = req.session.username;
@@ -86,11 +86,32 @@ router.delete('/delteComment', async(req, res) => {
             return res.status(401).json({error: 'User not logged in'});
         }
 
+        const user = await User.findOne({username});
+        const event = await Event.findById(eventID);
 
+        if(!event){
+            return res.status(404).json({error: 'Event not Found'});
+        }
+
+        const comment = event.comments.id(commentID);
+
+        if(!comment){
+            return res.status(404).json({error: 'Comment not Found'});
+        }
+
+        if(!comment.user.equals(user._id)) {
+            return res.status(403).json({error: 'Not authorized to delete this comment'});
+        }
+
+        event.comments.pull(commentID);
+        await event.save();
+
+        res.status(200).json({message: 'Comment deleted successfully'});
     } catch (error) {
-
+        console.error(error);
+        res.status(500).json({error: 'Failed to delete comment'});
     }
-});*/
+});
 
 
 //like comment??? -- maybe

@@ -118,6 +118,24 @@ export default function Event({ eventData }) {
     }
   };
 
+  const handleDeleteComment = async (commentID) => {
+    try{
+      const response = await axios.delete('/api/events/comments/deleteComment', {
+        data: {
+          eventID: eventData._id,
+          commentID
+        }
+      });
+
+      if (response.status === 200){
+        console.log("Comment deleted successfully");
+        setComments((prevComments) => prevComments.filter(comment => comment._id !== commentID));
+      }
+    } catch(error) {
+      console.error("Failed to delete comment", error);
+    }
+  };
+
   const handleLikeClick = async () => {
     console.log("REACHED THIS BOZO");
     if (!isSignedIn) {
@@ -342,17 +360,26 @@ export default function Event({ eventData }) {
             <h3 className="text-lg font-bold">Comments:</h3>
             {comments.length > 0 ? (
               comments.map((comment, index) => (
-                <div key={index} className="bg-gray-200 p-2 mt-1 mb-1 rounded-lg">
-                  <div className="mr-4">
+                <div key={index} className="bg-gray-200 p-2 mt-1 mb-1 rounded-lg flex items-center">
+                  <div className="mr-4 flex-shrink-0">
                     <img 
                       src={comment.user && comment.user.profilePicture ? `data:image/jpeg;base64,${Buffer.from(comment.user.profilePicture).toString('base64')}` : 'path_to_default_avatar_image'}
                       alt="avatar"
                       className="w-10 h-10 rounded-full"
                     />
                   </div>
-                  <div className = "flex-1">
-                    <strong>{comment.user ? comment.user.username : "Unknown User"}</strong>: {comment.text}
+                  <div className = "flex flex-col flex-grow">
+                    <strong>{comment.user ? comment.user.username : "Unknown User"}</strong>
+                    <p className="mt-1">{comment.text}</p>
                   </div>
+                  {comment.user && comment.user.username === signedInUsername && (
+                    <button
+                      className="ml-2 bg-red-500 text-white px-2 py-1 rounded-lg"
+                      onClick={() => handleDeleteComment(comment._id)}
+                    >
+                      Delete
+                    </button>
+                  )}
                 </div>
               ))
             ) : (
@@ -367,7 +394,7 @@ export default function Event({ eventData }) {
               disabled={isSubmitting}
             ></textarea>
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded"
+              className="bg-blue-500 text-white px-4 py-1 rounded"
               type="submit"
               disabled={isSubmitting}
             >
