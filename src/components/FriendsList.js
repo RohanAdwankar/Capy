@@ -25,11 +25,9 @@ const FriendList = ({ friends, setFriends, onRemoveFriend, filter }) => {
             className="w-24 h-24 rounded-full mx-auto"
           />
           <h3 className="text-xl font-semibold mt-2 text-center">{friend.username}</h3>
-          {hoveredFriend === friend.username && ( // Show button only when friend is hovered
             <button onClick={() => onRemoveFriend(friend.username)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-2 w-full">
               Remove Friend
             </button>
-          )}
         </div>
       ))}
     </div>
