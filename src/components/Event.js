@@ -492,15 +492,16 @@ export default function Event({ eventData }) {
           ? eventData.description.split("").slice(0, 33).join("") + "..."
           : eventData.description}
       </p>
-
-      <div className="mt-4 flex items-center space-x-2">
-        <HeartButton
-          isLiked={userLiked}
-          onClick={() => {
-            handleLikeClick();
-          }}
-        />
-        <p className="text-center">{likes}</p>
+      <div className="mt-4 flex items-center justify-between"> 
+        <div className="flex items-center space-x-2">
+          <HeartButton
+            isLiked={userLiked}
+            onClick={() => {
+              handleLikeClick();
+            }}
+          />
+          <p className="text-center">{likes}</p>
+        </div>
         <button
           onClick={() => setIsModalOpen(true)}
           className="bg-gray-500 text-white px-4 py-2 rounded"

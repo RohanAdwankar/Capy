@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./SignIn.css";
 import { store } from "../Main.js";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import logo from '../assets/coda.png';
 
 
 export default function SignUp() {
@@ -104,45 +105,62 @@ export default function SignUp() {
 	};
 
 	return (
-		<div className="">
-
-            <div>
-				{successMessage && <p>{successMessage}</p>}
-            </div>
-			<br />
-			<input type="text"
-				placeholder="Username"
-				className="rounded-full bg-gray-100 p-2 pl-5 mb-2"
-				value={username}
-				onChange={handleUsernameChange}
-			/> <br />
-            <input type="text"
-				placeholder="Email (UCLA email)"
-				className="rounded-full bg-gray-100 p-2 pl-5 mb-2"
-				value={email}
-				onChange={handleEmailChange}
-			/>
-            <input type="text"
-				placeholder="Re-enter Email"
-				className="rounded-full bg-gray-100 p-2 pl-5 mb-2"
-				value={confirmEmail}
-				onChange={handleConfirmEmailChange}
-			/> <br />
-			<input type="password"
-				placeholder="Password"
-				className="rounded-full bg-gray-100 p-2 pl-5 mb-2"
-				value={password}
-				onChange={handlePasswordChange}
-			/>
-            <input type="password"
-				placeholder="Re-enter Password"
-				className="rounded-full bg-gray-100 p-2 pl-5 mb-2"
-				value={confirmPassword}
-				onChange={handleConfirmPasswordChange}
-			/> <br />
-
-			<br />
-			<button className="Sign-Up-Button" onClick={handleSubmit}>Sign Up</button>
+		<div className="flex items-center justify-center min-h-screen overflow-hidden">
+            <div className="bg-white rounded-lg shadow-lg flex w-3/4 h-3/4 transform -translate-y-20">
+				<div className="w-1/2">
+					<img src={logo} alt="Sign In" className="object-cover h-full w-full rounded-l-lg" />
+				</div>
+				<div className="w-1/2 p-8">
+					<h1 className="text-4xl font-bold mb-6 text-center">Welcome to Capy!</h1>
+					<form className="space-y-4">
+						<input
+							type="text"
+							placeholder="Username"
+							className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+							value={username}
+							onChange={handleUsernameChange}
+						/>
+						<input
+							type="email"
+							placeholder="UCLA-Affiliated Email"
+							className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+							value={email}
+							onChange={handleEmailChange}
+						/>
+						<input
+							type="email"
+							placeholder="Retype Email Address"
+							className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+							value={confirmEmail}
+							onChange={handleConfirmEmailChange}
+						/>
+						<input
+							type="password"
+							placeholder="Password"
+							className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+							value={password}
+							onChange={handlePasswordChange}
+						/>
+						<input
+							type="password"
+							placeholder="Retype Password"
+							className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+							value={confirmPassword}
+							onChange={handleConfirmPasswordChange}
+						/>
+						<button
+							type="submit"
+							className="w-full p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition duration-200"
+							onClick={handleSubmit}
+						>
+							Sign Up
+						</button>
+					</form>
+				</div>
+			</div>
 		</div>
+
+	
+			//	{successMessage && <p>{successMessage}</p>}
 	);
 }
