@@ -292,6 +292,28 @@ export default function Event({ eventData }) {
     );
   };
 
+  const HeartButton = ({onClick, isLiked}) => {
+    return (
+      <button
+        onClick={onClick}
+        className={`p-2 rounded-full focus:outline-none transition duration-200`}
+        >
+        <svg
+          className="w-8 h-8"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          fill={isLiked ? 'red' : 'white'}
+          stroke="black"
+          strokeWidth="2"
+        >
+          <path
+            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+          />
+        </svg>
+      </button>
+    );
+  };
+
   //Display --------------------------------
   return (
     <div className="bg-white shadow-lg rounded-lg p-4">
@@ -471,18 +493,14 @@ export default function Event({ eventData }) {
           : eventData.description}
       </p>
 
-      <div className="mt-4">
-        <button
+      <div className="mt-4 flex items-center space-x-2">
+        <HeartButton
+          isLiked={userLiked}
           onClick={() => {
             handleLikeClick();
           }}
-          className={`px-4 py-2 rounded mr-2 ${
-            userLiked ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
-          }`}
-          // disabled={currentUser === ""}
-        >
-          like ({likes})
-        </button>
+        />
+        <p className="text-center">{likes}</p>
         <button
           onClick={() => setIsModalOpen(true)}
           className="bg-gray-500 text-white px-4 py-2 rounded"
