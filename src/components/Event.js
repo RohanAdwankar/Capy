@@ -197,6 +197,12 @@ export default function Event({ eventData }) {
     }
   };
 
+  const handleModalClick = (e) => {
+    if(e.target === e.currentTarget) {
+      setIsModalOpen(false);
+    }
+  };
+
   let audio = new Audio(song);
 
   const start = () => {
@@ -268,31 +274,27 @@ export default function Event({ eventData }) {
     <div className="bg-white shadow-lg rounded-lg p-4">
       {/* Pop Up for Bigger View */}
       {isModalOpen ? (
-  <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
-    <div className="bg-white p-5 rounded shadow-lg w-3/4 h-3/4 overflow-auto relative">
-      <div className="absolute top-2 right-2">
+  <div 
+    className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50"
+    onClick={handleModalClick}
+  >
+    <div className="bg-white p-5 rounded shadow-lg w-3/4 h-3/4 overflow-auto relative" onClick={(e) => e.stopPropagation()}>
+      <div className="absolute top-8 right-8">
         <button
-          onClick={() => setIsModalOpen(false)}
-          className=" bg-red-500 text-white px-4 py-2 rounded-r"
+          onClick={() => {
+            handlePullUpClick();
+          }}
+          className={`px-4 py-2 rounded-lg
+          ${
+            userIsPullingUp
+              ? "bg-blue-500 text-white"
+              : "bg-gray-200 text-gray-700"
+          }`}
         >
-          Close
+          Pull Up ({numberAttending})
         </button>
       </div>
-      <button
-        onClick={() => {
-          handlePullUpClick();
-        }}
-        className={`absolute top-2 right-20 px-4 py-2 rounded-l
-        ${
-          userIsPullingUp
-            ? "bg-blue-500 text-white"
-            : "bg-gray-200 text-gray-700"
-        }`}
-      >
-        Pull Up ({numberAttending})
-      </button>
-
-      <h1 className="text-4xl mb-4">{eventData.title}</h1>
+      <h1 className="text-4xl mb-4"><strong>{eventData.title}</strong></h1>
       <div className="relative flex items-center mb-4">
         <p>
           {" "}
@@ -309,7 +311,7 @@ export default function Event({ eventData }) {
         {" "}
         {/* flex container*/}
         <div className="w-1/2 mr-4">
-          <div className="saturate-50 flex justify-between items-center mt-4">
+          <div className="saturate-50 flex justify-between items-center">
             {/* Use the fetched event image base64 string */}
             <img
               src={
@@ -321,7 +323,7 @@ export default function Event({ eventData }) {
               className="w-full h-64 object-cover rounded"
             />
           </div>
-          <p className="mb-4">{eventData.description}</p>
+          <p className="mt-4">{eventData.description}</p>
         </div>
         <div className="w-1/2">
           <h3 className="text-lg font-bold">Users Going:</h3>
@@ -336,7 +338,18 @@ export default function Event({ eventData }) {
           ) : (
             <p>No users are going to this event.</p>
           )}
-
+          <div className="mt-4">
+            <h3>Comments:</h3>
+            {comments.length > 0 ? (
+              comments.map((comment, index) => (
+                <div key={index} className="bg-gray-200 p-2 mb-2 rounded">
+                  <strong>{comment.user ? comment.user.username : "Unknown User"}</strong>: {comment.text}
+                </div>
+              ))
+            ) : (
+              <p>No comments yet.</p>
+            )}
+          </div>
           <form onSubmit={handleCommentClick}>
             <textarea
               name="comment"
@@ -352,18 +365,6 @@ export default function Event({ eventData }) {
               {isSubmitting ? 'Submitting...' : 'Add Comment'}
             </button>
           </form>
-          <div className="mt-4">
-            <h3>Comments:</h3>
-            {comments.length > 0 ? (
-              comments.map((comment, index) => (
-                <div key={index} className="bg-gray-200 p-2 mb-2 rounded">
-                  <strong>{comment.user ? comment.user.username : "Unknown User"}</strong>: {comment.text}
-                </div>
-              ))
-            ) : (
-              <p>No comments yet.</p>
-            )}
-          </div>
         </div>
       </div>
     </div>

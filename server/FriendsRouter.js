@@ -1,5 +1,5 @@
-// const express = require("express");
-// const router = express.Router();
+//const express = require("express");
+// /const router = express.Router();
 
 // //Add Friend
 // router.post("/addFriend", async (req, res) => {

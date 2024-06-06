@@ -73,6 +73,21 @@ router.get('/getComments', async (req, res) => {
 });
 
 //remove comment route
+/*
+router.delete('/delteComment', async(req, res) => {
+    try {
+        const {eventID, commentID} = req.body;
+        const username = req.session.username;
+
+        if(!username) {
+            return res.status(401).json({error: 'User not logged in'});
+        }
+
+
+    } catch (error) {
+
+    }
+});*/
 
 
 //like comment??? -- maybe
