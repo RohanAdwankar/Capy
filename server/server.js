@@ -139,6 +139,30 @@ app.post("/api/createEvent", upload.single("image"), async (req, res) => {
   }
 });
 
+app.get("/api/events/:eventId/usersGoing", async (req, res) => {
+  try {
+    const eventId = req.params.eventId;
+
+    // Find the event by its ID and populate the usersGoing field
+    const event = await Event.findById(eventId).populate("usersGoing");
+
+    if (!event) {
+      return res.status(404).json({ error: "Event not found" });
+    }
+
+    // Extract the user objects from the usersGoing array
+    const usersGoing = event.usersGoing.map((user) => ({
+      _id: user._id,
+      username: user.username,
+    }));
+
+    res.json(usersGoing);
+  } catch (error) {
+    console.error("Error fetching users going:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 app.get("/api/createdEvents", async (req, res) => {
   try {
     const username = req.session.username;

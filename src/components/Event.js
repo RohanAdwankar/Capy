@@ -42,6 +42,23 @@ export default function Event({ eventData }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [eventImageBase64, setEventImageBase64] = useState(null);
 
+  const [usersGoing, setUsersGoing] = useState([]);
+
+  useEffect(() => {
+    const fetchUsersGoing = async () => {
+      try {
+        const response = await axios.get(`/api/events/${eventData._id}/usersGoing`);
+        setUsersGoing(response.data);
+      } catch (error) {
+        console.error("Error fetching users going:", error);
+      }
+    };
+  
+    if (isModalOpen) {
+      fetchUsersGoing();
+    }
+  }, [isModalOpen, eventData._id]);
+  
   useEffect(() => {
     // Fetch the event image as base64 string
     async function fetchEventImage() {
@@ -279,6 +296,17 @@ export default function Event({ eventData }) {
                 <p className="mb-4">{eventData.description}</p>
               </div>
               <div className="w-1/2">
+              <h3 className="text-lg font-bold">Users Going:</h3>
+                  {usersGoing.length > 0 ? (
+                    <ul>
+                      {usersGoing.map((user) => (
+                        <li key={user._id}>{user.username}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No users are going to this event.</p>
+                  )}
+      
                 <form onSubmit={handleCommentClick}>
                   <textarea
                     className="w-full border rounded p-2 mb-2"
