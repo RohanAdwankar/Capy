@@ -97,6 +97,11 @@ export default function Event({ eventData }) {
       return;
     }
 
+    if(!isSignedIn){
+      alert("Must be signed in to comment");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
