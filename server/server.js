@@ -117,7 +117,6 @@ app.post("/api/createEvent", upload.single("image"), async (req, res) => {
       eventImage, // Use the uploaded image if available, otherwise use the default image
       usersLiked: [],
       usersGoing: [],
-      usersCommented: [],
       comments: []
     });
 

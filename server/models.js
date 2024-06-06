@@ -1,6 +1,8 @@
 require("dotenv").config();
 const mongoose = require('mongoose');
 
+
+
 const userSchema = new mongoose.Schema({
     username: String,
     password: String,
@@ -10,6 +12,11 @@ const userSchema = new mongoose.Schema({
     myEvents: [{ type: String }],
     signedUpEvents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event'}],
     createdEvents: [{type: mongoose.Schema.Types.ObjectId, ref: 'Event' }],
+});
+
+const commentSchema = new mongoose.Schema({
+  user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+  text: {type: String}
 });
 
 const eventSchema = new mongoose.Schema({
@@ -22,9 +29,10 @@ const eventSchema = new mongoose.Schema({
   eventImage: Buffer,
   usersGoing: [{ type: String }],
   usersLiked: [{ type: String }],
-  usersCommented: [{type: String }], //for times sake im just putting name
-  comments: [{type: String}]
+  comments: [commentSchema]
 });
+
+
 
 eventSchema.index({ date: 1 })
 

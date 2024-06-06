@@ -19,13 +19,29 @@ router.post('/addComment', async (req, res) => {
         }
 
         const user = await User.findOne({username});
+        
+        if(!user) {
+            return res.status(404).json({error: "User not found"});
+        }
 
-        await Event.findByIdAndUpdate(eventID, {
-            $push: {comments: comment},
-            $addToSet: {usersCommented: user._id} //addtoset only adds if its not present
-        });
+        const event = await Event.findById(eventID);
+        
+        if(!event) {
+            return res.status(404).json({error: "Event not found"});
+        }
 
-        res.status(200).json({message: "Comment Successfully Added!"});
+        const userComment = {user: user._id, text: comment};
+
+        event.comments.push(userComment);
+
+        await event.save();
+
+        const updatedEvent = await Event.findById(eventID).populate('comments.user', 'username');
+        const newComment = updatedEvent.comments[updatedEvent.comments.length-1];
+
+
+
+        res.status(200).json({message: "Comment Successfully Added!", newComment});
     } catch (error) {
         console.error(error);
         res.status(500).send("Comment Failed to Add");
@@ -41,11 +57,13 @@ router.get('/getComments', async (req, res) => {
             return res.status(400).json({error: "Event ID required"});
         }
 
-        const event = await Event.findById(eventID);
+        const event = await Event.findById(eventID).populate('comments.user', 'username');
 
         if(!event){
             return res.status(404).json({error: "Event not found"});
         }
+
+        console.log("Event Comments Fetched:", event.comments);
 
         res.status(200).json({comments: event.comments});
     }catch(error){

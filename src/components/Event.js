@@ -23,12 +23,8 @@ export default function Event({ eventData }) {
     eventData.usersGoing.length
   );
 
-  const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [userComment, setUserCommented] = useState(
-    eventData.usersCommented.includes(signedInUsername) && isSignedIn
-  );
 
   const [showAnimation, setShowAnimation] = useState(false);
   const [showPopUpAnimation, setShowPopUpAnimation] = useState(false);
@@ -81,10 +77,9 @@ export default function Event({ eventData }) {
         const response = await axios.get('/api/events/comments/getComments', {
           params: {eventID: eventData._id}
         })
-        setComments(response.data.comments /*|| []*/);
+        setComments(response.data.comments);
       } catch(error) {
         console.error("Failed to fetch comments", error);
-       // setComments([]);
       }
     };
 
@@ -94,7 +89,11 @@ export default function Event({ eventData }) {
   const handleCommentClick = async (event) => {
     event.preventDefault();
 
-    if(!comment.trim()){
+    const commentInput = event.target.elements.comment;
+    const comment = commentInput.value.trim();
+
+    if(!comment){
+      alert("Comment Field cannot be empty");
       return;
     }
 
@@ -108,8 +107,9 @@ export default function Event({ eventData }) {
 
       if(response.status == 200){
         console.log("Comment submitted successfully");
-        setComments((prevComments) => [...prevComments, comment]);
-        setComment("");
+        const newComment = response.data.newComment;
+        setComments((prevComments) => [...prevComments, newComment]);
+        commentInput.value = "";
       }
     } catch (error) {
       console.error("Failed to add comment from form", error);
@@ -339,10 +339,9 @@ export default function Event({ eventData }) {
 
           <form onSubmit={handleCommentClick}>
             <textarea
+              name="comment"
               className="w-full border rounded p-2 mb-2"
               placeholder="Type your comment here..."
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
               disabled={isSubmitting}
             ></textarea>
             <button
@@ -355,10 +354,10 @@ export default function Event({ eventData }) {
           </form>
           <div className="mt-4">
             <h3>Comments:</h3>
-            {/*comments &&*/ comments.length > 0 ? (
+            {comments.length > 0 ? (
               comments.map((comment, index) => (
                 <div key={index} className="bg-gray-200 p-2 mb-2 rounded">
-                  {comment}
+                  <strong>{comment.user ? comment.user.username : "Unknown User"}</strong>: {comment.text}
                 </div>
               ))
             ) : (
