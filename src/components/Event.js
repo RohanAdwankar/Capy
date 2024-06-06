@@ -240,90 +240,92 @@ export default function Event({ eventData }) {
     <div className="bg-white shadow-lg rounded-lg p-4">
       {/* Pop Up for Bigger View */}
       {isModalOpen ? (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-5 rounded shadow-lg w-3/4 h-3/4 overflow-auto relative">
-            <div className="absolute top-2 right-2">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className=" bg-red-500 text-white px-4 py-2 rounded-r"
-              >
-                Close
-              </button>
-            </div>
-            <button
-              onClick={() => {
-                handlePullUpClick();
-              }}
-              className={`absolute top-2 right-20 px-4 py-2 rounded-l
-              ${
-                userIsPullingUp
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
-            >
-              Pull Up ({numberAttending})
-            </button>
+  <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="bg-white p-5 rounded shadow-lg w-3/4 h-3/4 overflow-auto relative">
+      <div className="absolute top-2 right-2">
+        <button
+          onClick={() => setIsModalOpen(false)}
+          className=" bg-red-500 text-white px-4 py-2 rounded-r"
+        >
+          Close
+        </button>
+      </div>
+      <button
+        onClick={() => {
+          handlePullUpClick();
+        }}
+        className={`absolute top-2 right-20 px-4 py-2 rounded-l
+        ${
+          userIsPullingUp
+            ? "bg-blue-500 text-white"
+            : "bg-gray-200 text-gray-700"
+        }`}
+      >
+        Pull Up ({numberAttending})
+      </button>
 
-            <h1 className="text-4xl mb-4">{eventData.title}</h1>
-            <div className="relative flex items-center mb-4">
-              <p>
-                {" "}
-                <EventLocationClick eventData={eventData} />
-              </p>
-              <p>&nbsp;&nbsp;</p>
-              <p>
-                {" "}
-                <EventDateDisplay eventData={eventData} />
-              </p>
-            </div>
+      <h1 className="text-4xl mb-4">{eventData.title}</h1>
+      <div className="relative flex items-center mb-4">
+        <p>
+          {" "}
+          <EventLocationClick eventData={eventData} />
+        </p>
+        <p>&nbsp;&nbsp;</p>
+        <p>
+          {" "}
+          <EventDateDisplay eventData={eventData} />
+        </p>
+      </div>
 
-            <div className="flex flex-row">
-              {" "}
-              {/* flex container*/}
-              <div className="w-1/2 mr-4">
-                <div className="saturate-50 flex justify-between items-center mt-4">
-                  {/* Use the fetched event image base64 string */}
-                  <img
-                    src={
-                      eventImageBase64
-                        ? `data:image/jpeg;base64,${eventImageBase64}`
-                        : defEventPic
-                    }
-                    alt="Event"
-                    className="w-full h-64 object-cover rounded"
-                  />
-                </div>
-                <p className="mb-4">{eventData.description}</p>
-              </div>
-              <div className="w-1/2">
-              <h3 className="text-lg font-bold">Users Going:</h3>
-                  {usersGoing.length > 0 ? (
-                    <ul>
-                      {usersGoing.map((user) => (
-                        <li key={user._id}>{user.username}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>No users are going to this event.</p>
-                  )}
-      
-                <form onSubmit={handleCommentClick}>
-                  <textarea
-                    className="w-full border rounded p-2 mb-2"
-                    placeholder="Type your comment here..."
-                  ></textarea>
-                  <button
-                    className="bg-blue-500 text-white px-4 py-2 rounded"
-                    type="submit"
-                  >
-                    Add Comment
-                  </button>
-                </form>
-              </div>
-            </div>
+      <div className="flex flex-row">
+        {" "}
+        {/* flex container*/}
+        <div className="w-1/2 mr-4">
+          <div className="saturate-50 flex justify-between items-center mt-4">
+            {/* Use the fetched event image base64 string */}
+            <img
+              src={
+                eventImageBase64
+                  ? `data:image/jpeg;base64,${eventImageBase64}`
+                  : defEventPic
+              }
+              alt="Event"
+              className="w-full h-64 object-cover rounded"
+            />
           </div>
+          <p className="mb-4">{eventData.description}</p>
         </div>
-      ) : null}
+        <div className="w-1/2">
+          <h3 className="text-lg font-bold">Users Going:</h3>
+          {usersGoing.length > 0 ? (
+            <div className="flex space-x-2">
+              {usersGoing.map((user) => (
+                <div key={user._id} className="bg-gray-200 rounded-full px-3 py-1">
+                  {user.username}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>No users are going to this event.</p>
+          )}
+
+          <form onSubmit={handleCommentClick}>
+            <textarea
+              className="w-full border rounded p-2 mb-2"
+              placeholder="Type your comment here..."
+            ></textarea>
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+              type="submit"
+            >
+              Add Comment
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+) : null}
 
       {/*Normal Event Component*/}
 
