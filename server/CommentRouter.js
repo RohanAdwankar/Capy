@@ -57,7 +57,10 @@ router.get('/getComments', async (req, res) => {
             return res.status(400).json({error: "Event ID required"});
         }
 
-        const event = await Event.findById(eventID).populate('comments.user', 'username');
+        const event = await Event.findById(eventID).populate({
+            path: 'comments.user', 
+            select: 'username profilePicture'
+        });
 
         if(!event){
             return res.status(404).json({error: "Event not found"});

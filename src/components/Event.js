@@ -339,11 +339,20 @@ export default function Event({ eventData }) {
             <p>No users are going to this event.</p>
           )}
           <div className="mt-4">
-            <h3>Comments:</h3>
+            <h3 className="text-lg font-bold">Comments:</h3>
             {comments.length > 0 ? (
               comments.map((comment, index) => (
-                <div key={index} className="bg-gray-200 p-2 mb-2 rounded">
-                  <strong>{comment.user ? comment.user.username : "Unknown User"}</strong>: {comment.text}
+                <div key={index} className="bg-gray-200 p-2 mt-1 mb-1 rounded-lg">
+                  <div className="mr-4">
+                    <img 
+                      src={comment.user && comment.user.profilePicture ? `data:image/jpeg;base64,${Buffer.from(comment.user.profilePicture).toString('base64')}` : 'path_to_default_avatar_image'}
+                      alt="avatar"
+                      className="w-10 h-10 rounded-full"
+                    />
+                  </div>
+                  <div className = "flex-1">
+                    <strong>{comment.user ? comment.user.username : "Unknown User"}</strong>: {comment.text}
+                  </div>
                 </div>
               ))
             ) : (
