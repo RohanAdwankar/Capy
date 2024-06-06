@@ -81,16 +81,14 @@ export default function Event({ eventData }) {
         const response = await axios.get('/api/events/comments/getComments', {
           params: {eventID: eventData._id}
         })
-        setComments(response.data.comments || []);
+        setComments(response.data.comments /*|| []*/);
       } catch(error) {
         console.error("Failed to fetch comments", error);
-        setComments([]);
+       // setComments([]);
       }
     };
 
-    if(eventData && eventData._id){
-      fetchComments();
-    }
+    fetchComments();
   }, [eventData._id]);
 
   const handleCommentClick = async (event) => {
@@ -357,7 +355,7 @@ export default function Event({ eventData }) {
           </form>
           <div className="mt-4">
             <h3>Comments:</h3>
-            {comments && comments.length > 0 ? (
+            {/*comments &&*/ comments.length > 0 ? (
               comments.map((comment, index) => (
                 <div key={index} className="bg-gray-200 p-2 mb-2 rounded">
                   {comment}

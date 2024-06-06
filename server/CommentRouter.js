@@ -6,6 +6,7 @@ const { User, Event } = require("./models"); // Import User and Event models
 //add comment route
 router.post('/addComment', async (req, res) => {
     try{
+        console.log("Received request to create comment");
         const { eventID, comment } = req.body;
         const username = req.session.username;
 
@@ -18,7 +19,6 @@ router.post('/addComment', async (req, res) => {
         }
 
         const user = await User.findOne({username});
-        const event = await Event.findById(eventID);
 
         await Event.findByIdAndUpdate(eventID, {
             $push: {comments: comment},
@@ -35,21 +35,16 @@ router.post('/addComment', async (req, res) => {
 //get comment route
 router.get('/getComments', async (req, res) => {
     try {
-        const username = req.session.username;
-        const { eventID } = req.body;
+        const { eventID } = req.query;
 
-        if(!username){
-            return res.status(401).json({error: "User not logged in"});
+        if(!eventID){
+            return res.status(400).json({error: "Event ID required"});
         }
 
         const event = await Event.findById(eventID);
 
         if(!event){
             return res.status(404).json({error: "Event not found"});
-        }
-
-        if(event.comments.length === 0){
-            return res.status(404).json({error: "No comments to get"});
         }
 
         res.status(200).json({comments: event.comments});
