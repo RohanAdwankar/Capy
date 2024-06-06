@@ -55,6 +55,7 @@ export default function SignIn() {
         console.log(responseText);
         setSignedIn(true);
         setSignedInUsername(userData.username);
+        console.log("USERNAME JOHNNY IS NOW:", signedInUsername);
         navigate("/my");
       })
       .catch((error) => {
@@ -99,9 +100,6 @@ export default function SignIn() {
           <Icon class="absolute mr-10" icon={icon} size={25} />
         </span>
       </div>
-      <br />
-      <input type="checkbox" className="Remember-Me"></input>
-      Remember me?
       <br />
       <button onClick={handleSubmit} className="Sign-In-Button">
         Sign in

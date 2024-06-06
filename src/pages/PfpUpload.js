@@ -56,7 +56,7 @@ function PfpUpload() {
   return (
     <div>
       <h2>Upload your Square Profile Picture</h2>
-      <input type="file" onChange={handleImageChange} accept="image/*" />
+      <input type="file" onChange={handleImageChange} accept="image/png, image/gif, image/jpeg image/jpg" />
       {imagePreview && (
         <img src={imagePreview} alt="Preview" style={{ maxWidth: '200px', maxHeight: '200px' }} />
       )}

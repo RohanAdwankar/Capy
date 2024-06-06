@@ -4,6 +4,7 @@ import { store } from "../Main.js";
 import Loading from "../components/Loading";
 import axios from "axios";
 import { set } from "mongoose";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 
 export default function Friends() {
   const [isSignedIn, setSignedIn] = store.useState("signedIn", {
@@ -17,6 +18,8 @@ export default function Friends() {
   const [newFriendOpen, setNewFriendOpen] = useState(false);
   const [friends, setFriends] = useState([]);
   const [status, setStatus] = useState("Loading...");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -97,6 +100,31 @@ export default function Friends() {
       }
     }
   };
+  const handleViewFriendProfile = async (friendUsername) => {
+    navigate(`/publicprofile/${friendUsername}`);
+    // try {
+    //   setStatus("Removing " + friendUsername + " from friends...");
+    //   // Make a POST request to remove the friend
+    //   const response = await axios.post("/api/user/friends/removeFriend", {
+    //     friendUsername: friendUsername,
+    //     withCredentials: true,
+    //   });
+    //   // console.log(response.data);
+
+    //   // Update friendDetails by filtering out the removed friend
+    //   setFriends(
+    //     friends.filter((friend) => friend.username !== friendUsername)
+    //   );
+    //   setStatus(friendUsername + " removed successfully");
+    // } catch (error) {
+    //   console.log(error);
+    //   if (error.response && error.response.status === 404) {
+    //     setStatus(`${friendUsername} is not your friend`);
+    //   } else {
+    //     setStatus("Error removing friend");
+    //   }
+    // }
+  };
 
   // // Filter friends based on the search filter
   // const friendsFiltered = friends.filter((friend) => {
@@ -109,7 +137,7 @@ export default function Friends() {
   return (
     <div>
       {isSignedIn ? (
-        <div className="min-w-max m-4">
+        <div>
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-3"
             onClick={() => {
@@ -135,19 +163,22 @@ export default function Friends() {
               </button>
             </div>
           )}
-          <div className="flex">
-            <input
-              type="text"
-              placeholder="Search your friends"
-              className="rounded bg-gray-100 p-2 pl-5 mb-2 w-full h-full"
-              onChange={(e) => {
-                setFilter(e.target.value);
-              }}
-            />
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2 h-full">
-              Search
-            </button>
-          </div>
+
+          {friends.length > 0 &&
+            <div className="flex">
+              <input
+                type="text"
+                placeholder="Search your friends"
+                className="rounded bg-gray-100 p-2 pl-5 mb-2 w-full h-full"
+                onChange={(e) => {
+                  setFilter(e.target.value);
+                }}
+              />
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2 h-full">
+                Search
+              </button>
+            </div>
+          }
 
           {status !== "" && <p>{status}</p>}
 
@@ -157,6 +188,7 @@ export default function Friends() {
               setFriends={setFriends}
               filter={filter}
               onRemoveFriend={handleRemoveFriend}
+              viewFriendProfile={handleViewFriendProfile}
             />
           ) : (
             <p>Click "Add New Friend" to get more friends.</p>

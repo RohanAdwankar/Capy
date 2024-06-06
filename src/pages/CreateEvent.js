@@ -118,7 +118,7 @@ export default function CreateEvent() {
             }}
           ></textarea>{" "}
           <br />
-          <input type="file" onChange={handleImageChange} accept="image/*" />
+          <input type="file" onChange={handleImageChange} accept="image/png, image/gif, image/jpeg image/jpg" />
           <br />
           <button
             className="bg-black text-white rounded-full p-2 px-5 mt-10"
