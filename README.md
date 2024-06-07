@@ -1,4 +1,6 @@
-![Capy Logo](./src/assets/capy.png){ width: 200px; }
+![Capy Logo](./src/assets/capy.png)
+<img src="./src/assets/capy.png" alt="Capy Logo" width="200"/>
+
 # Instructions to Run
 ```
 add .env file to root
