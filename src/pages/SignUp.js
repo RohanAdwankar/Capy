@@ -108,7 +108,7 @@ export default function SignUp() {
 		<div className="flex items-center justify-center min-h-screen overflow-hidden">
             <div className="bg-white rounded-lg shadow-lg flex w-3/4 h-3/4 transform -translate-y-20">
 				<div className="w-1/2">
-					<img src={logo} alt="Sign In" className="object-cover h-full w-full rounded-l-lg" />
+					<img src={logo} alt="Sign " className="object-cover h-full w-full rounded-l-lg" />
 				</div>
 				<div className="w-1/2 p-8">
 					<h1 className="text-4xl font-bold mb-6 text-center">Welcome to Capy!</h1>
@@ -158,9 +158,6 @@ export default function SignUp() {
 					</form>
 				</div>
 			</div>
-		</div>
-
-	
-			//	{successMessage && <p>{successMessage}</p>}
+		</div>	
 	);
 }
