@@ -389,7 +389,7 @@ export default function Event({ eventData }) {
                   {goingLoading ? (
                     <p>Loading...</p>
                   ) : usersGoing.length > 0 ? (
-                    <div className="flex space-x-2 mb-5">
+                    <div className="flex flex-wrap space-y-2 space-x-2 mb-5">
                       {usersGoing.map((user) => (
                         <div key={user._id} className="bg-gray-200 rounded-full px-3 py-1">
                           {user.username}
@@ -469,24 +469,6 @@ export default function Event({ eventData }) {
 
       <div className="relative">
         {/* Add the "Pull Up" button */}
-        <button className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-2 rounded">
-          Pull Up ({numberAttending})
-        </button>
-        <button
-          onClick={() => {
-            // setShowAnimation(!showAnimation);
-            // start();
-            handlePullUpClick();
-          }}
-          className={`absolute top-0 right-0 px-4 py-2 rounded
-          ${
-            userIsPullingUp
-              ? "bg-blue-500 text-white"
-              : "bg-gray-200 text-gray-700"
-          }`}
-        >
-          Pull Up ({numberAttending})
-        </button>
         <img
           src={capy}
           alt="Animation"
@@ -536,8 +518,23 @@ export default function Event({ eventData }) {
           </p>
         </div>
         <button
+          onClick={() => {
+            // setShowAnimation(!showAnimation);
+            // start();
+            handlePullUpClick();
+          }}
+          className={`px-4 py-2 rounded-lg
+          ${
+            userIsPullingUp
+              ? "bg-blue-500 text-white"
+              : "bg-gray-200 text-gray-700"
+          }`}
+        >
+          Pull Up ({numberAttending})
+        </button>
+        <button
           onClick={() => setIsModalOpen(true)}
-          className="bg-gray-500 text-white px-4 py-2 rounded"
+          className="bg-gray-500 text-white px-4 py-2 rounded-lg"
         >
           More Details
         </button>

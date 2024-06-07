@@ -1,5 +1,7 @@
-<img src="./src/assets/capy.png" alt="Capy Logo" width="200"/>
-Capy is a MERN web app that facilitates community by allowing users to create events and "pull up" to them!
+<p align="center">
+  <img src="./src/assets/capy.png" alt="Capy Logo" width="200" class="center"/>
+</p>
+  Capy is a MERN Stack web app that facilitates community by allowing users to create events and "pull up" to them!
 
 # Technologies Used
 MERN stack
