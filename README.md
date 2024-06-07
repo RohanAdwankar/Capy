@@ -1,8 +1,12 @@
 # To run the thingy (easy)
+```
+
 add .env file to root
 npm i 
 npm run build
 node server/server.js
+```
+
 ```
 chmod +x make.sh 
 ./make.sh [-b if you need to run build (use this if changes were made on the frontend)]
