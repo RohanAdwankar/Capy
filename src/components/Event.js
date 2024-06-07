@@ -42,6 +42,8 @@ export default function Event({ eventData }) {
 
   const [usersGoing, setUsersGoing] = useState([]);
 
+  const [goingLoading, setGoingLoading] = useState(true);
+
   useEffect(() => {
     const fetchUsersGoing = async () => {
       try {
@@ -49,6 +51,7 @@ export default function Event({ eventData }) {
           `/api/events/${eventData._id}/usersGoing`
         );
         setUsersGoing(response.data);
+        setGoingLoading(false);
       } catch (error) {
         console.error("Error fetching users going:", error);
       }
@@ -381,21 +384,22 @@ export default function Event({ eventData }) {
                 <p className="mt-4">{eventData.description}</p>
               </div>
               <div className="w-1/2">
-                <h3 className="text-lg font-bold">Users Going:</h3>
-                {usersGoing.length > 0 ? (
-                  <div className="flex space-x-2 mb-5">
-                    {usersGoing.map((user) => (
-                      <div
-                        key={user._id}
-                        className="bg-gray-200 rounded-full px-3 py-1"
-                      >
-                        {user.username}
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p>No users are going to this event.</p>
-                )}
+                <div>
+                  <h3 className="text-lg font-bold">Users Going:</h3>
+                  {goingLoading ? (
+                    <p>Loading...</p>
+                  ) : usersGoing.length > 0 ? (
+                    <div className="flex space-x-2 mb-5">
+                      {usersGoing.map((user) => (
+                        <div key={user._id} className="bg-gray-200 rounded-full px-3 py-1">
+                          {user.username}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p>No users are going to this event.</p>
+                  )}
+                </div>
                 <div className="mt-4">
                   <h3 className="text-lg font-bold">Comments:</h3>
                   {comments.length > 0 ? (
