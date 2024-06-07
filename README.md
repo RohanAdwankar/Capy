@@ -1,4 +1,3 @@
-![Capy Logo](./src/assets/capy.png)
 <img src="./src/assets/capy.png" alt="Capy Logo" width="200"/>
 
 # Instructions to Run
