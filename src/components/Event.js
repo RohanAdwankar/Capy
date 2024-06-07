@@ -391,7 +391,10 @@ export default function Event({ eventData }) {
                   ) : usersGoing.length > 0 ? (
                     <div className="flex flex-wrap space-y-2 space-x-2 mb-5">
                       {usersGoing.map((user) => (
-                        <div key={user._id} className="bg-gray-200 rounded-full px-3 py-1">
+                        <div
+                          key={user._id}
+                          className="bg-gray-200 rounded-full px-3 py-1"
+                        >
                           {user.username}
                         </div>
                       ))}
@@ -506,16 +509,14 @@ export default function Event({ eventData }) {
           : eventData.description}
       </p>
       <div className="mt-4 flex items-center justify-between">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center">
           <HeartButton
             isLiked={userLiked}
             onClick={() => {
               handleLikeClick();
             }}
           />
-          <p className="text-center">
-            {likes} like{likes === 1 ? "" : "s"}
-          </p>
+          <p className="text-center">{likes}</p>
         </div>
         <button
           onClick={() => {

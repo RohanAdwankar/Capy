@@ -70,7 +70,7 @@ export default function UserEvents({ username }) {
               {username === signedInUsername ? "Your" : `${username}'s`} RSVP'd
               Events
             </option>
-            <option value="your">
+            <option value="Created">
               {username === signedInUsername ? "Your" : `${username}'s`} Created
               Events
             </option>
@@ -103,7 +103,9 @@ export default function UserEvents({ username }) {
             );
           })
           .map((event) => (
-            <Event key={event._id} eventData={event} />
+            <div className="p-2">
+              <Event key={event._id} eventData={event} />
+            </div>
           ))}
       </div>
     </div>
