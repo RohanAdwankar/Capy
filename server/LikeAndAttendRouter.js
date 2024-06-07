@@ -16,7 +16,6 @@ router.post("/likeEvent", async (req, res) => {
     }
     // Start updating server
     await event.updateOne({ $push: { usersLiked: username } });
-    console.log("list of users who liked this event:", event.usersLiked);
     res.status(200).json({ message: "You liked this event!" });
   } catch (error) {
     console.error(error);
