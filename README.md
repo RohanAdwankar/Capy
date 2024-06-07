@@ -44,13 +44,14 @@ node server/server.js
 
 “OK I Pull up Capybara.” YouTube, YouTube, 31 Aug. 2022, www.youtube.com/watch?v=s9oQRKsROF8&ab_channel=capybaross. 
 
-
-# Group Members and Emails
-Raymond Kao - rmykao@g.ucla.edu, oogaboogamail123@gmail.com, rmykao@gmail.com
-
 “Upload and Retrieve Image on Mongodb Using Mongoose.” GeeksforGeeks, GeeksforGeeks, 30 Mar. 2023, www.geeksforgeeks.org/upload-and-retrieve-image-on-mongodb-using-mongoose/. 
 
 "AI art generation" HotpotAI, https://hotpot.ai/art-generator.
   (For logo generation)
   
 Theresa Jiang for Capybara Loading Screen Artwork
+
+
+
+# Group Members and Emails
+Raymond Kao - rmykao@g.ucla.edu, oogaboogamail123@gmail.com, rmykao@gmail.com
