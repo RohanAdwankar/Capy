@@ -34,11 +34,11 @@ node server/server.js
 - sign in/sign up with security measures
 
 # Resouces we used:
-https://fontawesome.com/icons
-https://v2.tailwindcss.com/docs
-https://www.youtube.com/watch?v=98BzS5Oz5E4&list=PL4cUxeGkcC9iJ_KkrkBZWZRHVwnzLIoUE
-https://www.youtube.com/watch?v=RGfFpQF0NpE
-https://www.geeksforgeeks.org/upload-and-retrieve-image-on-mongodb-using-mongoose/
-https://www.youtube.com/watch?v=s9oQRKsROF8&ab_channel=capybaross.
+“Documentation - Tailwind CSS.” Documentation - Tailwind CSS, v2.tailwindcss.com/docs. Accessed 7 June 2024. 
+“Find Icons with the Perfect Look & Feel.” Font Awesome, fontawesome.com/icons. Accessed 7 June 2024. 
+“Mern Stack Tutorial #1 - What Is The Mern Stack?” YouTube, YouTube, 15 June 2022, www.youtube.com/watch?v=98BzS5Oz5E4&list=PL4cUxeGkcC9iJ_KkrkBZWZRHVwnzLIoUE. 
+“MongoDB Explained in 10 Minutes | SQL vs NoSQL | Jumpstart.” YouTube, YouTube, 27 July 2021, www.youtube.com/watch?v=RGfFpQF0NpE. 
+“OK I Pull up Capybara.” YouTube, YouTube, 31 Aug. 2022, www.youtube.com/watch?v=s9oQRKsROF8&ab_channel=capybaross. 
+“Upload and Retrieve Image on Mongodb Using Mongoose.” GeeksforGeeks, GeeksforGeeks, 30 Mar. 2023, www.geeksforgeeks.org/upload-and-retrieve-image-on-mongodb-using-mongoose/. 
 
 
