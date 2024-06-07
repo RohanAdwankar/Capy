@@ -55,3 +55,4 @@ Theresa Jiang for Capybara Loading Screen Artwork
 
 # Group Members and Emails
 Raymond Kao - rmykao@g.ucla.edu, oogaboogamail123@gmail.com, rmykao@gmail.com
+Jason Jiang - jasontomjiang@gmail.com
