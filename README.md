@@ -12,9 +12,14 @@ MERN stack:
 
 React Router
 Tailwind
+
 # Instructions to Run
+
+Clone the repository, then add the MONGO_URI environment variable to .env. Be sure to install all dependencies before running the application. 
+
 ```
-add .env file to root
+touch .env
+echo MONGO_URI="your uri here"
 npm i 
 npm run build
 node server/server.js
@@ -55,3 +60,5 @@ Theresa Jiang for Capybara Loading Screen Artwork
 
 # Group Members and Emails
 Raymond Kao - rmykao@g.ucla.edu, oogaboogamail123@gmail.com, rmykao@gmail.com
+Benjamin Man - benjamin.man1001@gmail.com
+
