@@ -205,6 +205,7 @@ async function login(req, res) {
     if (!user) {
       return res.status(401).json({ error: "Invalid username or password" });
     }
+    
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
       req.session.username = username;
@@ -226,6 +227,14 @@ app.post("/api/createUser", async (req, res) => {
     const { username, password, email } = req.body;
 
     const existingUsername = await User.findOne({ username });
+    
+    if (password.length < 8) {
+      return res.status(400).json({ error: "Password must be at least 8 characters long with at least one uppercase letter, one lowercase letter, one digit, and one special character"});
+    }
+    const passswordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
+    if (!passswordRegex.test(password)) {
+      return res.status(400).json({  error: "Password must be at least 8 characters long with at least one uppercase letter, one lowercase letter, one digit, and one special character"});
+    }
 
     if (existingUsername) {
       return res.status(400).json({ error: "Username already exists" });
