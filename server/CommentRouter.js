@@ -66,7 +66,6 @@ router.get('/getComments', async (req, res) => {
             return res.status(404).json({error: "Event not found"});
         }
 
-        console.log("Event Comments Fetched:", event.comments);
 
         res.status(200).json({comments: event.comments});
     }catch(error){
