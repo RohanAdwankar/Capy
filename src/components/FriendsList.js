@@ -25,6 +25,7 @@ const FriendList = ({
           className={`bg-white shadow-lg rounded-lg p-4 m-3 cursor-pointer hover:bg-gray-100 w-64 hover:h-64`}
           onMouseEnter={() => setHoveredFriend(friend.username)}
           onMouseLeave={() => setHoveredFriend(null)}
+          onClick={() => viewFriendProfile(friend.username)}
         >
           <img
             src={`data:image/jpeg;base64,${friend.profilePicture}`}

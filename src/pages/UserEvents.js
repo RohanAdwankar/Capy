@@ -6,7 +6,11 @@ import { store } from "../Main";
 export default function UserEvents({ username }) {
   const [isSignedIn, setSignedIn] = store.useState("signedIn", {
     default: false,
-  })
+  });
+  const [signedInUsername, setSignedInUsername] = store.useState(
+    "signedInUsername",
+    { default: "" }
+  );
   const [type, setType] = useState("RSVP'd");
   const [filter, setFilter] = useState("");
   const [createdEvents, setCreatedEvents] = useState([]);
@@ -39,7 +43,7 @@ export default function UserEvents({ username }) {
   }, [type]);
 
   useEffect(() => {
-    if (type === "RSVP'd") { 
+    if (type === "RSVP'd") {
       if (rsvpedEvents && rsvpedEvents.length > 0)
         setFilteredEvents(rsvpedEvents);
       else setFilteredEvents([]);
@@ -62,15 +66,23 @@ export default function UserEvents({ username }) {
               setType(e.target.value);
             }}
           >
-            <option value="RSVP'd">RSVP'd Events</option>
-            <option value="your">Created Events</option>
+            <option value="RSVP'd">
+              {username === signedInUsername ? "Your" : `${username}'s`} RSVP'd
+              Events
+            </option>
+            <option value="your">
+              {username === signedInUsername ? "Your" : `${username}'s`} Created
+              Events
+            </option>
           </select>
         </div>
         <div className="flex">
           <input
             type="text"
-            placeholder={`Search ${type} events`}
-            className="rounded bg-gray-100 p-2 pl-5 mb-2 w-full h-full"
+            placeholder={`Search ${
+              username === signedInUsername ? "your" : `${username}'s`
+            } ${type} events`}
+            className="rounded bg-gray-100 p-2 pl-5 mb-2 w-96 h-full"
             onChange={(e) => {
               setFilter(e.target.value);
             }}
@@ -85,7 +97,10 @@ export default function UserEvents({ username }) {
           .filter((event) => {
             let title = event.title ? event.title.toLowerCase() : "";
             let location = event.location ? event.location.toLowerCase() : "";
-            return title.includes(filter.toLowerCase()) || location.includes(filter.toLowerCase());
+            return (
+              title.includes(filter.toLowerCase()) ||
+              location.includes(filter.toLowerCase())
+            );
           })
           .map((event) => (
             <Event key={event._id} eventData={event} />
