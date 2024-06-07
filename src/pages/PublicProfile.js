@@ -14,42 +14,25 @@ export default function PublicProfile() {
   const navigate = useNavigate();
 
   return (
-    <div>
-      <h1>Public Profile</h1>
-      <button
-        className="bg-black text-white rounded-full p-2 px-5 ml-10 hover:bg-gray-500"
-        onClick={() => {
-          navigate(`/friends`);
-        }}
-      >
-        Back
-      </button>
-      <p>User ID: {username}</p>
-      <UserEvents username={username} />
-      {/* Fetch and display the user's profile based on the userId */}
+    <div className="relative py-3 sm:max-w-xl sm:mx-auto">
+      <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+        <div className="max-w-md mx-auto">
+          <div>
+            <h1 className="text-2xl font-semibold">{username}'s Profile</h1>
+            <button
+              className="mt-4 bg-indigo-500 text-white rounded-lg p-2 px-5 hover:bg-indigo-700"
+              onClick={() => {
+                navigate(`/friends`);
+              }}
+            >
+              Back
+            </button>
+          </div>
+          <div className="divide-y divide-gray-200">
+            <UserEvents username={username} />
+          </div>
+        </div>
+      </div>
     </div>
-    // <div>
-    // {isSignedIn ? (
-    // 	<div>
-    // 		<div className="place-content-center">
-
-    // 			<div className="flex items-center my-5">
-    // 				<ProfilePicture />
-    // 				<div>
-    // 					<PfpUpload/>
-    // 				</div>
-    // 			</div>
-    // 		</div>
-    // 	</div>
-    // ) : (
-    // 	<div>
-    // 		<div className="flex items-center my-5">
-    // 			<p>Please Sign In</p>
-    // 		</div>
-
-    // 	</div>
-
-    // )}
-    // </div>
   );
 }
