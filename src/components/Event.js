@@ -389,7 +389,7 @@ export default function Event({ eventData }) {
                   {goingLoading ? (
                     <p>Loading...</p>
                   ) : usersGoing.length > 0 ? (
-                    <div className="flex space-x-2 mb-5">
+                    <div className="flex flex-wrap space-y-2 space-x-2 mb-5">
                       {usersGoing.map((user) => (
                         <div key={user._id} className="bg-gray-200 rounded-full px-3 py-1">
                           {user.username}
