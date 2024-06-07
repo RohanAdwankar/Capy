@@ -4,11 +4,11 @@
   Capy is a MERN Stack web app that facilitates community by allowing users to create events and "pull up" to them!
 
 # Technologies Used
-MERN stack
-MonogoDB
-Express.js
-React.js
-Node.js
+MERN stack:
+- MonogoDB
+- Express.js
+- React.js
+- Node.js
 
 React Router
 Tailwind
@@ -33,7 +33,7 @@ node server/server.js
 - add/remove friends
 - sign in/sign up with security measures
 
-Resouces we used:
+# Resouces we used:
 https://fontawesome.com/icons
 https://v2.tailwindcss.com/docs
 https://www.youtube.com/watch?v=98BzS5Oz5E4&list=PL4cUxeGkcC9iJ_KkrkBZWZRHVwnzLIoUE
