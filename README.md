@@ -1,6 +1,5 @@
 # To run the thingy (easy)
 ```
-
 add .env file to root
 npm i 
 npm run build
