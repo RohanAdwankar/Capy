@@ -102,35 +102,7 @@ export default function Friends() {
   };
   const handleViewFriendProfile = async (friendUsername) => {
     navigate(`/publicprofile/${friendUsername}`);
-    // try {
-    //   setStatus("Removing " + friendUsername + " from friends...");
-    //   // Make a POST request to remove the friend
-    //   const response = await axios.post("/api/user/friends/removeFriend", {
-    //     friendUsername: friendUsername,
-    //     withCredentials: true,
-    //   });
-    //   // console.log(response.data);
-
-    //   // Update friendDetails by filtering out the removed friend
-    //   setFriends(
-    //     friends.filter((friend) => friend.username !== friendUsername)
-    //   );
-    //   setStatus(friendUsername + " removed successfully");
-    // } catch (error) {
-    //   console.log(error);
-    //   if (error.response && error.response.status === 404) {
-    //     setStatus(`${friendUsername} is not your friend`);
-    //   } else {
-    //     setStatus("Error removing friend");
-    //   }
-    // }
   };
-
-  // // Filter friends based on the search filter
-  // const friendsFiltered = friends.filter((friend) => {
-  // 	let name = friend.name ? friend.name.toLowerCase() : '';
-  // 	return name.includes(filter.toLowerCase());
-  // });
 
   if (loading) return <Loading />;
 
@@ -164,7 +136,7 @@ export default function Friends() {
             </div>
           )}
 
-          {friends.length > 0 &&
+          {friends.length > 0 && (
             <div className="flex">
               <input
                 type="text"
@@ -178,7 +150,7 @@ export default function Friends() {
                 Search
               </button>
             </div>
-          }
+          )}
 
           {status !== "" && <p>{status}</p>}
 

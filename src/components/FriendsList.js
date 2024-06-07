@@ -9,6 +9,7 @@ const FriendList = ({
   viewFriendProfile,
 }) => {
   const [hoveredFriend, setHoveredFriend] = useState(null);
+  const [hoveredFriendIndex, setHoveredFriendIndex] = useState(null);
 
   // Filter friends based on the search filter
   const friendsFiltered = friends.filter((friend) => {
@@ -21,7 +22,7 @@ const FriendList = ({
       {friendsFiltered.map((friend) => (
         <div
           key={friend.username}
-          className="bg-white shadow-lg rounded-lg p-4 m-3 cursor-pointer hover:bg-gray-100"
+          className={`bg-white shadow-lg rounded-lg p-4 m-3 cursor-pointer hover:bg-gray-100 w-64 hover:h-64`}
           onMouseEnter={() => setHoveredFriend(friend.username)}
           onMouseLeave={() => setHoveredFriend(null)}
         >
@@ -33,20 +34,22 @@ const FriendList = ({
           <h3 className="text-xl font-semibold mt-2 text-center">
             {friend.username}
           </h3>
-          <div>
-            <button
-              onClick={() => onRemoveFriend(friend.username)}
-              className="bg-red-500 hover:bg-re d-700 text-white font-bold py-2 px-4 rounded mt-2 w-full"
-            >
-              Remove Friend
-            </button>
-            <button
-              onClick={() => viewFriendProfile(friend.username)}
-              className="bg-blue-500 hover:bg-re d-700 text-white font-bold py-2 px-4 rounded mt-2 w-full"
-            >
-              View Friend Profile
-            </button>
-          </div>
+          {hoveredFriend === friend.username && ( // Show button only when friend is hovered
+            <div>
+              <button
+                onClick={() => onRemoveFriend(friend.username)}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-2 w-full"
+              >
+                Remove Friend
+              </button>
+              <button
+                onClick={() => viewFriendProfile(friend.username)}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2 w-full"
+              >
+                View Friend Profile
+              </button>
+            </div>
+          )}
         </div>
       ))}
     </div>

@@ -45,18 +45,20 @@ export default function Event({ eventData }) {
   useEffect(() => {
     const fetchUsersGoing = async () => {
       try {
-        const response = await axios.get(`/api/events/${eventData._id}/usersGoing`);
+        const response = await axios.get(
+          `/api/events/${eventData._id}/usersGoing`
+        );
         setUsersGoing(response.data);
       } catch (error) {
         console.error("Error fetching users going:", error);
       }
     };
-  
+
     if (isModalOpen) {
       fetchUsersGoing();
     }
   }, [isModalOpen, eventData._id]);
-  
+
   useEffect(() => {
     // Fetch the event image as base64 string
     async function fetchEventImage() {
@@ -73,12 +75,12 @@ export default function Event({ eventData }) {
 
   useEffect(() => {
     const fetchComments = async () => {
-      try{
-        const response = await axios.get('/api/events/comments/getComments', {
-          params: {eventID: eventData._id}
-        })
+      try {
+        const response = await axios.get("/api/events/comments/getComments", {
+          params: { eventID: eventData._id },
+        });
         setComments(response.data.comments);
-      } catch(error) {
+      } catch (error) {
         console.error("Failed to fetch comments", error);
       }
     };
@@ -92,12 +94,12 @@ export default function Event({ eventData }) {
     const commentInput = event.target.elements.comment;
     const comment = commentInput.value.trim();
 
-    if(!comment){
+    if (!comment) {
       alert("Comment Field cannot be empty");
       return;
     }
 
-    if(!isSignedIn){
+    if (!isSignedIn) {
       alert("Must be signed in to comment");
       return;
     }
@@ -105,12 +107,12 @@ export default function Event({ eventData }) {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post('/api/events/comments/addComment', {
+      const response = await axios.post("/api/events/comments/addComment", {
         eventID: eventData._id,
-        comment
+        comment,
       });
 
-      if(response.status == 200){
+      if (response.status == 200) {
         console.log("Comment submitted successfully");
         const newComment = response.data.newComment;
         setComments((prevComments) => [...prevComments, newComment]);
@@ -124,19 +126,24 @@ export default function Event({ eventData }) {
   };
 
   const handleDeleteComment = async (commentID) => {
-    try{
-      const response = await axios.delete('/api/events/comments/deleteComment', {
-        data: {
-          eventID: eventData._id,
-          commentID
+    try {
+      const response = await axios.delete(
+        "/api/events/comments/deleteComment",
+        {
+          data: {
+            eventID: eventData._id,
+            commentID,
+          },
         }
-      });
+      );
 
-      if (response.status === 200){
+      if (response.status === 200) {
         console.log("Comment deleted successfully");
-        setComments((prevComments) => prevComments.filter(comment => comment._id !== commentID));
+        setComments((prevComments) =>
+          prevComments.filter((comment) => comment._id !== commentID)
+        );
       }
-    } catch(error) {
+    } catch (error) {
       console.error("Failed to delete comment", error);
     }
   };
@@ -221,7 +228,7 @@ export default function Event({ eventData }) {
   };
 
   const handleModalClick = (e) => {
-    if(e.target === e.currentTarget) {
+    if (e.target === e.currentTarget) {
       setIsModalOpen(false);
     }
   };
@@ -292,23 +299,21 @@ export default function Event({ eventData }) {
     );
   };
 
-  const HeartButton = ({onClick, isLiked}) => {
+  const HeartButton = ({ onClick, isLiked }) => {
     return (
       <button
         onClick={onClick}
         className={`p-2 rounded-full focus:outline-none transition duration-200`}
-        >
+      >
         <svg
           className="w-8 h-8"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
-          fill={isLiked ? 'red' : 'white'}
+          fill={isLiked ? "red" : "white"}
           stroke="black"
           strokeWidth="2"
         >
-          <path
-            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-          />
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
         </svg>
       </button>
     );
@@ -319,120 +324,142 @@ export default function Event({ eventData }) {
     <div className="bg-white shadow-lg rounded-lg p-4">
       {/* Pop Up for Bigger View */}
       {isModalOpen ? (
-  <div 
-    className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50"
-    onClick={handleModalClick}
-  >
-    <div className="bg-white p-5 rounded shadow-lg w-3/4 h-3/4 overflow-auto relative" onClick={(e) => e.stopPropagation()}>
-      <div className="absolute top-8 right-8">
-        <button
-          onClick={() => {
-            handlePullUpClick();
-          }}
-          className={`px-4 py-2 rounded-lg
+        <div
+          className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50"
+          onClick={handleModalClick}
+        >
+          <div
+            className="bg-white p-5 rounded shadow-lg w-3/4 h-3/4 overflow-auto relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="absolute top-8 right-8">
+              <button
+                onClick={() => {
+                  handlePullUpClick();
+                }}
+                className={`px-4 py-2 rounded-lg
           ${
             userIsPullingUp
               ? "bg-blue-500 text-white"
               : "bg-gray-200 text-gray-700"
           }`}
-        >
-          Pull Up ({numberAttending})
-        </button>
-      </div>
-      <h1 className="text-4xl mb-4"><strong>{eventData.title}</strong></h1>
-      <div className="relative flex items-center mb-4">
-        <p>
-          {" "}
-          <EventLocationClick eventData={eventData} />
-        </p>
-        <p>&nbsp;&nbsp;</p>
-        <p>
-          {" "}
-          <EventDateDisplay eventData={eventData} />
-        </p>
-      </div>
-
-      <div className="flex flex-row">
-        {" "}
-        {/* flex container*/}
-        <div className="w-1/2 mr-4">
-          <div className="saturate-50 flex justify-between items-center">
-            {/* Use the fetched event image base64 string */}
-            <img
-              src={
-                eventImageBase64
-                  ? `data:image/jpeg;base64,${eventImageBase64}`
-                  : defEventPic
-              }
-              alt="Event"
-              className="w-full h-64 object-cover rounded"
-            />
-          </div>
-          <p className="mt-4">{eventData.description}</p>
-        </div>
-        <div className="w-1/2">
-          <h3 className="text-lg font-bold">Users Going:</h3>
-          {usersGoing.length > 0 ? (
-            <div className="flex space-x-2 mb-5">
-              {usersGoing.map((user) => (
-                <div key={user._id} className="bg-gray-200 rounded-full px-3 py-1">
-                  {user.username}
-                </div>
-              ))}
+              >
+                Pull Up ({numberAttending})
+              </button>
             </div>
-          ) : (
-            <p>No users are going to this event.</p>
-          )}
-          <div className="mt-4">
-            <h3 className="text-lg font-bold">Comments:</h3>
-            {comments.length > 0 ? (
-              comments.map((comment, index) => (
-                <div key={index} className="bg-gray-200 p-2 mt-1 mb-1 rounded-lg flex items-center">
-                  <div className="mr-4 flex-shrink-0">
-                    <img 
-                      src={comment.user && comment.user.profilePicture ? `data:image/jpeg;base64,${Buffer.from(comment.user.profilePicture).toString('base64')}` : 'path_to_default_avatar_image'}
-                      alt="avatar"
-                      className="w-10 h-10 rounded-full"
-                    />
+            <h1 className="text-4xl mb-4">
+              <strong>{eventData.title}</strong>
+            </h1>
+            <div className="relative flex items-center mb-4">
+              <p>
+                {" "}
+                <EventLocationClick eventData={eventData} />
+              </p>
+              <p>&nbsp;&nbsp;</p>
+              <p>
+                {" "}
+                <EventDateDisplay eventData={eventData} />
+              </p>
+            </div>
+
+            <div className="flex flex-row">
+              {" "}
+              {/* flex container*/}
+              <div className="w-1/2 mr-4">
+                <div className="saturate-50 flex justify-between items-center">
+                  {/* Use the fetched event image base64 string */}
+                  <img
+                    src={
+                      eventImageBase64
+                        ? `data:image/jpeg;base64,${eventImageBase64}`
+                        : defEventPic
+                    }
+                    alt="Event"
+                    className="w-full h-64 object-cover rounded"
+                  />
+                </div>
+                <p className="mt-4">{eventData.description}</p>
+              </div>
+              <div className="w-1/2">
+                <h3 className="text-lg font-bold">Users Going:</h3>
+                {usersGoing.length > 0 ? (
+                  <div className="flex space-x-2 mb-5">
+                    {usersGoing.map((user) => (
+                      <div
+                        key={user._id}
+                        className="bg-gray-200 rounded-full px-3 py-1"
+                      >
+                        {user.username}
+                      </div>
+                    ))}
                   </div>
-                  <div className = "flex flex-col flex-grow">
-                    <strong>{comment.user ? comment.user.username : "Unknown User"}</strong>
-                    <p className="mt-1">{comment.text}</p>
-                  </div>
-                  {comment.user && comment.user.username === signedInUsername && (
-                    <button
-                      className="ml-2 bg-red-500 text-white px-2 py-1 rounded-lg"
-                      onClick={() => handleDeleteComment(comment._id)}
-                    >
-                      Delete
-                    </button>
+                ) : (
+                  <p>No users are going to this event.</p>
+                )}
+                <div className="mt-4">
+                  <h3 className="text-lg font-bold">Comments:</h3>
+                  {comments.length > 0 ? (
+                    comments.map((comment, index) => (
+                      <div
+                        key={index}
+                        className="bg-gray-200 p-2 mt-1 mb-1 rounded-lg flex items-center"
+                      >
+                        <div className="mr-4 flex-shrink-0">
+                          <img
+                            src={
+                              comment.user && comment.user.profilePicture
+                                ? `data:image/jpeg;base64,${Buffer.from(
+                                    comment.user.profilePicture
+                                  ).toString("base64")}`
+                                : "path_to_default_avatar_image"
+                            }
+                            alt="avatar"
+                            className="w-10 h-10 rounded-full"
+                          />
+                        </div>
+                        <div className="flex flex-col flex-grow">
+                          <strong>
+                            {comment.user
+                              ? comment.user.username
+                              : "Unknown User"}
+                          </strong>
+                          <p className="mt-1">{comment.text}</p>
+                        </div>
+                        {comment.user &&
+                          comment.user.username === signedInUsername && (
+                            <button
+                              className="ml-2 bg-red-500 text-white px-2 py-1 rounded-lg"
+                              onClick={() => handleDeleteComment(comment._id)}
+                            >
+                              Delete
+                            </button>
+                          )}
+                      </div>
+                    ))
+                  ) : (
+                    <p>No comments yet.</p>
                   )}
                 </div>
-              ))
-            ) : (
-              <p>No comments yet.</p>
-            )}
+                <form onSubmit={handleCommentClick}>
+                  <textarea
+                    name="comment"
+                    className="w-full border rounded p-2 mb-2"
+                    placeholder="Type your comment here..."
+                    disabled={isSubmitting}
+                  ></textarea>
+                  <button
+                    className="bg-blue-500 text-white px-4 py-1 rounded"
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Submitting..." : "Add Comment"}
+                  </button>
+                </form>
+              </div>
+            </div>
           </div>
-          <form onSubmit={handleCommentClick}>
-            <textarea
-              name="comment"
-              className="w-full border rounded p-2 mb-2"
-              placeholder="Type your comment here..."
-              disabled={isSubmitting}
-            ></textarea>
-            <button
-              className="bg-blue-500 text-white px-4 py-1 rounded"
-              type="submit"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Submitting...' : 'Add Comment'}
-            </button>
-          </form>
         </div>
-      </div>
-    </div>
-  </div>
-) : null}
+      ) : null}
 
       {/*Normal Event Component*/}
 
@@ -492,7 +519,7 @@ export default function Event({ eventData }) {
           ? eventData.description.split("").slice(0, 33).join("") + "..."
           : eventData.description}
       </p>
-      <div className="mt-4 flex items-center justify-between"> 
+      <div className="mt-4 flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <HeartButton
             isLiked={userLiked}
@@ -500,7 +527,9 @@ export default function Event({ eventData }) {
               handleLikeClick();
             }}
           />
-          <p className="text-center">{likes}</p>
+          <p className="text-center">
+            {likes} like{likes === 1 ? "" : "s"}
+          </p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
