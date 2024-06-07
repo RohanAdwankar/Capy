@@ -46,4 +46,7 @@ node server/server.js
 
 “Upload and Retrieve Image on Mongodb Using Mongoose.” GeeksforGeeks, GeeksforGeeks, 30 Mar. 2023, www.geeksforgeeks.org/upload-and-retrieve-image-on-mongodb-using-mongoose/. 
 
-Theresa Jiang for Capybara Artwork
+"AI art generation" HotpotAI, https://hotpot.ai/art-generator.
+  (For logo generation)
+  
+Theresa Jiang for Capybara Loading Screen Artwork
