@@ -38,6 +38,7 @@ https://fontawesome.com/icons
 https://v2.tailwindcss.com/docs
 https://www.youtube.com/watch?v=98BzS5Oz5E4&list=PL4cUxeGkcC9iJ_KkrkBZWZRHVwnzLIoUE
 https://www.youtube.com/watch?v=RGfFpQF0NpE
+https://www.geeksforgeeks.org/upload-and-retrieve-image-on-mongodb-using-mongoose/
 https://www.youtube.com/watch?v=s9oQRKsROF8&ab_channel=capybaross.
 
 
