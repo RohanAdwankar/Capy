@@ -51,6 +51,8 @@ node server/server.js
 
 “Upload and Retrieve Image on Mongodb Using Mongoose.” GeeksforGeeks, GeeksforGeeks, 30 Mar. 2023, www.geeksforgeeks.org/upload-and-retrieve-image-on-mongodb-using-mongoose/. 
 
+"3 Column Layouts (Responsive, Flexbox & CSS Grid)" MatthewJamesTaylor, 8 Feb. 2022, https://matthewjamestaylor.com/3-column-layouts.
+
 "AI art generation" HotpotAI, https://hotpot.ai/art-generator.
   (For logo generation)
   
