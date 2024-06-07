@@ -61,5 +61,5 @@ Theresa Jiang for Capybara Loading Screen Artwork
 # Group Members and Emails
 Raymond Kao (Oceanspray21) - rmykao@g.ucla.edu, oogaboogamail123@gmail.com, rmykao@gmail.com
 Benjamin Man (benman604) - benjamin.man1001@gmail.com
-Jason Jiang - jasontomjiang@gmail.con
+Jason Jiang (Zhaotjson) - jasontomjiang@gmail.con
 Anirudh Kannan - akannan05@g.ucla.edu
