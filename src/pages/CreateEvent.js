@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import logo from "../assets/coda.png";
 
 export default function CreateEvent() {
+
   const rightNow = Date.now();
   const oneHourLater = new Date(rightNow + 1000 * 60 * 60);
   const defaultEventTime = new Date(oneHourLater.setMinutes(0, 0, 0)); // 1 hour from now, rounded down to the nearest hour
@@ -66,6 +67,7 @@ export default function CreateEvent() {
       });
 
       setSubmitted(true);
+      
     } catch (error) {
       console.error("Error:", error);
       setError(true);
@@ -74,6 +76,11 @@ export default function CreateEvent() {
 
   const inputFieldClass =
     "w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500";
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleEventSubmission();
+  };
 
   return (
     <div className="mt-5">
@@ -92,7 +99,7 @@ export default function CreateEvent() {
               <h1 className="text-4xl font-bold mb-6 text-center">
                 What's Happening?
               </h1>
-              <form className="space-y-4">
+              <form className="space-y-4" onSubmit={handleSubmit}>
                 <input
                   type="text"
                   placeholder="What are you doing?"
@@ -148,7 +155,7 @@ export default function CreateEvent() {
                 <button
                   // className="w-full p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition duration-200"
                   className="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  onClick={handleEventSubmission}
+                  type="submit"
                 >
                   Create Event
                 </button>
