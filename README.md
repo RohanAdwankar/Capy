@@ -53,6 +53,8 @@ node server/server.js
 
 "3 Column Layouts (Responsive, Flexbox & CSS Grid)" MatthewJamesTaylor, 8 Feb. 2022, https://matthewjamestaylor.com/3-column-layouts.
 
+"State: A Component's Memory" React, https://react.dev/learn/state-a-components-memory.
+
 "AI art generation" HotpotAI, https://hotpot.ai/art-generator.
   (For logo generation)
   
