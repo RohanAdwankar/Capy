@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Event from "../components/Event";
+import Loading from "../components/Loading";
 import { store } from "../Main";
 
 export default function UserEvents({ username }) {
@@ -12,6 +13,7 @@ export default function UserEvents({ username }) {
     { default: "" }
   );
   const [type, setType] = useState("RSVP'd");
+  const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState("");
   const [createdEvents, setCreatedEvents] = useState([]);
   const [rsvpedEvents, setRsvpedEvents] = useState([]);
@@ -23,8 +25,10 @@ export default function UserEvents({ username }) {
         const response = await axios.get(`/api/createdEvents/${username}`);
         setCreatedEvents(response.data.createdEvents);
         console.log("Created Events:", response);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching created events:", error);
+        setIsLoading(false);
       }
     };
 
@@ -33,8 +37,10 @@ export default function UserEvents({ username }) {
         const response = await axios.get(`/api/attendedEvents/${username}`);
         setRsvpedEvents(response.data.attendedEvents);
         console.log("RSVP'd Events:", response);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching RSVP'd events:", error);
+        setIsLoading(false);
       }
     };
 
@@ -55,6 +61,7 @@ export default function UserEvents({ username }) {
   }, [createdEvents, rsvpedEvents]);
 
   if (!isSignedIn) return <p>Please sign in.</p>;
+  if (isLoading) return <Loading />;
 
   return (
     <div className="block my-5">
