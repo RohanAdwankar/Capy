@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import logo from '../assets/coda.png';
-
+import logo from "../assets/coda.png";
 
 export default function CreateEvent() {
   const rightNow = Date.now();
@@ -59,7 +58,7 @@ export default function CreateEvent() {
       for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`);
       }
-      
+
       await axios.post("/api/createEvent", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -73,126 +72,89 @@ export default function CreateEvent() {
     }
   }
 
-  const inputFieldClass = "w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500";
+  const inputFieldClass =
+    "w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500";
 
   return (
     <div className="mt-5">
       {!submitted ? (
         <>
-        <div className="flex items-center justify-center min-h-screen overflow-hidden">
-          <div className="bg-white rounded-lg shadow-lg flex w-3/4 h-3/4 transform -translate-y-20"> 
-            <img src={logo} alt="Sign" className="object-cover h-full w-full rounded-l-lg" />
-          </div>
-
-          <div className="w-1/2 p-8">
-            <h1 className="text-4x1 font-bold mb-6 text-center">What's Happening?</h1>
-            <form className="space-y-4">
-              <input
-                type="text"
-                placeholder="What are you doing?"
-                className={inputFieldClass}
-                onChange={(event) =>
-                  setEventData({ ...eventData, title: event.target.value })
-                }
-              />{" "}
-              <input
-                type="text"
-                placeholder="Where is it at?"
-                className={inputFieldClass}
-                onChange={(event) => {
-                  setEventData({ ...eventData, location: event.target.value });
-                }}
-              />{" "}
-              <DatePicker
-                placeholderText="What day?"
-                selected={eventData.date}
-                className={inputFieldClass}
-                onChange={(date) => {
-                  setEventData({ ...eventData, date: date });
-                }}
+          <div className="flex items-center justify-center min-h-screen overflow-hidden">
+            <div className="bg-white rounded-lg shadow-lg flex w-3/4 h-3/4 transform -translate-y-20">
+              <img
+                src={logo}
+                alt="Sign"
+                className="object-cover h-full w-full rounded-l-lg"
               />
-              <input
-                type="time"
-                placeholder="What time?"
-                value={eventData.time}
-                className={inputFieldClass}
-                onChange={(event) => {
-                  setEventData({ ...eventData, time: event.target.value });
-                }}
-              />{" "}
-              <textarea
-                placeholder="Optional event description. What's going down?"
-                className="rounded-lg bg-gray-100 p-2 pl-5 mt-10 mb-2 w-full"
-                onChange={(event) => {
-                  setEventData({ ...eventData, description: event.target.value });
-                }}
-              ></textarea>{" "}
-              <input type="file" onChange={handleImageChange} accept="image/png, image/gif, image/jpeg image/jpg" />
-              <button
-                className="w-full p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition duration-200"
-                onClick={handleEventSubmission}
-              >
-                Create Event
-              </button>
-            </form>
+            </div>
+
+            <div className="w-1/2 p-8">
+              <h1 className="text-4xl font-bold mb-6 text-center">
+                What's Happening?
+              </h1>
+              <form className="space-y-4">
+                <input
+                  type="text"
+                  placeholder="What are you doing?"
+                  className={inputFieldClass}
+                  onChange={(event) =>
+                    setEventData({ ...eventData, title: event.target.value })
+                  }
+                />{" "}
+                <input
+                  type="text"
+                  placeholder="Where is it at?"
+                  className={inputFieldClass}
+                  onChange={(event) => {
+                    setEventData({
+                      ...eventData,
+                      location: event.target.value,
+                    });
+                  }}
+                />{" "}
+                <DatePicker
+                  placeholderText="What day?"
+                  selected={eventData.date}
+                  className={inputFieldClass}
+                  onChange={(date) => {
+                    setEventData({ ...eventData, date: date });
+                  }}
+                />
+                <input
+                  type="time"
+                  placeholder="What time?"
+                  value={eventData.time}
+                  className={inputFieldClass}
+                  onChange={(event) => {
+                    setEventData({ ...eventData, time: event.target.value });
+                  }}
+                />{" "}
+                <textarea
+                  placeholder="Optional event description. What's going down?"
+                  className="rounded-lg bg-gray-100 p-2 pl-5 mt-10 mb-2 w-full"
+                  onChange={(event) => {
+                    setEventData({
+                      ...eventData,
+                      description: event.target.value,
+                    });
+                  }}
+                ></textarea>{" "}
+                <input
+                  type="file"
+                  onChange={handleImageChange}
+                  accept="image/png, image/gif, image/jpeg image/jpg"
+                  className="block w-full text-sm text-gray-500 file:py-2 file:px-4 file:border-0 file:rounded-full file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                />
+                <button
+                  // className="w-full p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition duration-200"
+                  className="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={handleEventSubmission}
+                >
+                  Create Event
+                </button>
+              </form>
+            </div>
           </div>
-        </div>
-          {/*<input
-            type="text"
-            placeholder="What are you doing?"
-            className={inputFieldClass}
-            onChange={(event) =>
-              setEventData({ ...eventData, title: event.target.value })
-            }
-          />{" "}
-          <br />
-          <input
-            type="text"
-            placeholder="Where is it at?"
-            className={inputFieldClass}
-            onChange={(event) => {
-              setEventData({ ...eventData, location: event.target.value });
-            }}
-          />{" "}
-          <br />
-          {/* <input type="text" placeholder="When?" className={inputFieldClass} onChange={(event) => {
-						setEventData({...eventData, date: event.target.value})
-					}}/> <br /> 
-          <DatePicker
-            placeholderText="What day?"
-            selected={eventData.date}
-            className={inputFieldClass}
-            onChange={(date) => {
-              setEventData({ ...eventData, date: date });
-            }}
-          />
-          <br />
-          <input
-            type="time"
-            placeholder="What time?"
-            value={eventData.time}
-            className={inputFieldClass}
-            onChange={(event) => {
-              setEventData({ ...eventData, time: event.target.value });
-            }}
-          />{" "}
-          <br />
-          <textarea
-            placeholder="Optional event description. What's going down?"
-            className="rounded-lg bg-gray-100 p-2 pl-5 mt-10 mb-2 w-full"
-            onChange={(event) => {
-              setEventData({ ...eventData, description: event.target.value });
-            }}
-          ></textarea>{" "}
-          <br />
-          <input type="file" onChange={handleImageChange} accept="image/png, image/gif, image/jpeg image/jpg" />
-          <br />
-          <button
-            className="bg-black text-white rounded-full p-2 px-5 mt-10"
-            onClick={handleEventSubmission}
-          >
-            Create Event
-          </button>*/}
         </>
       ) : (
         <p>
