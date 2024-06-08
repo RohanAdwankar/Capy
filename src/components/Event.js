@@ -195,10 +195,10 @@ export default function Event({ eventData }) {
     } else {
       if (!userIsPullingUp) {
         console.log("attended on frontend");
+        start();
         setUserIsPullingUp(true);
         setNumberAttending(numberAttending + 1);
         setShowPopUpAnimation(true);
-        start();
         try {
           console.log("attempting to record attendance on backend");
           await axios.post("/api/events/likes/attendEvent", {
