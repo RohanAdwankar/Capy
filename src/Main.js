@@ -98,7 +98,7 @@ function Main() {
     "/": { title: "All Events" },
     "/my": { title: "My Events" },
     "/friends": { title: "Friends" },
-    "/profile": { title: "Profile" },
+    "/profile": { title: "Edit Profile" },
     "/about": { title: "About" },
   };
 
