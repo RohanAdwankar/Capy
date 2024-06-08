@@ -5,7 +5,7 @@
 
 # Technologies Used
 MERN stack:
-- MonogoDB
+- MongoDB
 - Express.js
 - React.js
 - Node.js
